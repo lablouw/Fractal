@@ -24,7 +24,7 @@ public class SmoothColorCalculatorMandelbrot implements ColorCalculator {
 
     private final FractalRenderer fractalRenderer;
     private JPanel settingsPanel;
-    private float spectrumPhase = 0;
+    private float spectrumPhase = 1;
     private float spectrumComp = 1;
     private Complex[][] orbitEndPoints;
     private int[][] orbitLengths;
@@ -73,7 +73,7 @@ public class SmoothColorCalculatorMandelbrot implements ColorCalculator {
             return Color.BLACK;
         }
     }
-    
+
     private Color recalcColor(Complex lastOrbitPoint, int orbitLength, FractalEngine fractalEngine) {
         if (fractalEngine.isBailoutReached(Collections.singletonList(lastOrbitPoint))) {
             float nSmooth = (float) (orbitLength + 1 - Math.log(Math.log(lastOrbitPoint.modulus())) / Math.log(2));
@@ -141,12 +141,11 @@ public class SmoothColorCalculatorMandelbrot implements ColorCalculator {
         int imageHeight = fractalRenderer.getImage().getBufferedImage().getHeight();
         orbitEndPoints = new Complex[imageWidth][imageHeight];
         orbitLengths = new int[imageWidth][imageHeight];
-        
-        compressionSlider.setMaximum(fractalRenderer.getFractalEngine().getMaxIter());
     }
 
     @Override
     public void complete(SynchronizedBufferedImage synchronizedBufferedImage) {
+        compressionSlider.setMaximum(fractalRenderer.getFractalEngine().getMaxIter());
     }
 
 }

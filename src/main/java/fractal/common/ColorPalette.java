@@ -28,8 +28,6 @@ public class ColorPalette extends javax.swing.JPanel {
     JColorChooser cc3 = new JColorChooser();
     JColorChooser cc4 = new JColorChooser();
     
-    JPanel previewPanel = new JPanel();
-    
     JPanel p1 = new JPanel();
     JPanel p2 = new JPanel();
     JPanel p3 = new JPanel();
@@ -86,7 +84,7 @@ public class ColorPalette extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 31, Short.MAX_VALUE)
+            .addGap(0, 40, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -94,6 +92,7 @@ public class ColorPalette extends javax.swing.JPanel {
 
         @Override
         public void mouseClicked(MouseEvent e) {
+//            ColorSelectorDialog d = new ColorSelectorDialog(null, true);
             JDialog d = new JDialog();
             d.setModal(true);
             d.setLayout(new GridLayout(2, 2));
@@ -129,5 +128,8 @@ public class ColorPalette extends javax.swing.JPanel {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     // End of variables declaration//GEN-END:variables
 }

@@ -5,24 +5,13 @@
 package fractal;
 
 import fractal.common.FractalRenderer;
-import fractal.common.FractalViewer;
-import fractal.mandelbrot.JuliaEngine;
 import fractal.mandelbrot.JuliaRenderer;
-import fractal.mandelbrot.MandelbrotEngine;
 import fractal.mandelbrot.MandelbrotRenderer;
-import fractal.mandelbrot.coloring.BandColorCalculator;
-import fractal.mandelbrot.coloring.SmoothColorCalculatorMandelbrot;
 import java.util.ArrayList;
 import java.util.List;
 import fractal.common.Antialiasable;
-import fractal.mandelbrot.coloring.AverageAngleColorCalculator;
-import fractal.mandelbrot.coloring.BuddahColorCalculator;
-import fractal.mandelbrot.coloring.ExperimentalColorCalculator;
-import fractal.mandelbrot.coloring.SmoothColorCalculatorJulia;
-import fractal.newton.NewtonEngine;
 import fractal.newton.NewtonRenderer;
-import fractal.newton.coloring.NewtonIterationsColorCalculator;
-import fractal.newton.coloring.BasinsOfAttractionColorCalulator;
+import fractal.phase.HenonRenderer;
 
 /**
  *
@@ -33,6 +22,7 @@ public class main extends javax.swing.JFrame {
     private final FractalRenderer juliaRenderer;
     private final FractalRenderer mandelbrotRenderer;
     private final FractalRenderer newtonRenderer;
+    private final HenonRenderer henonRenderer;
 
     private final List<Antialiasable> antialiasables = new ArrayList<>();
 
@@ -45,6 +35,7 @@ public class main extends javax.swing.JFrame {
         mandelbrotRenderer = MandelbrotRenderer.getInstance();
         juliaRenderer = JuliaRenderer.getInstance();
         newtonRenderer = NewtonRenderer.getInstance();
+        henonRenderer = HenonRenderer.getInstance();
         
         antialiasables.add((Antialiasable) mandelbrotRenderer);
         antialiasables.add((Antialiasable) juliaRenderer);
@@ -75,13 +66,10 @@ public class main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
-        jPanel1 = new javax.swing.JPanel();
         mandelbrotButton = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
         juliaButton = new javax.swing.JButton();
-        jPanel3 = new javax.swing.JPanel();
         newtonButton = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu2 = new javax.swing.JMenu();
         jRadioButtonMenuItem1 = new javax.swing.JRadioButtonMenuItem();
@@ -98,50 +86,12 @@ public class main extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(mandelbrotButton)
-                .addContainerGap(167, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(65, Short.MAX_VALUE)
-                .addComponent(mandelbrotButton)
-                .addContainerGap())
-        );
-
-        jTabbedPane1.addTab("Mandelbrot", jPanel1);
-
         juliaButton.setText("Draw Julia");
         juliaButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 juliaButtonActionPerformed(evt);
             }
         });
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(juliaButton)
-                .addContainerGap(201, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(65, Short.MAX_VALUE)
-                .addComponent(juliaButton)
-                .addContainerGap())
-        );
-
-        jTabbedPane1.addTab("Julia", jPanel2);
 
         newtonButton.setText("Draw Newton");
         newtonButton.addActionListener(new java.awt.event.ActionListener() {
@@ -150,24 +100,12 @@ public class main extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(newtonButton)
-                .addContainerGap(185, Short.MAX_VALUE))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(65, Short.MAX_VALUE)
-                .addComponent(newtonButton)
-                .addContainerGap())
-        );
-
-        jTabbedPane1.addTab("Newton", jPanel3);
+        jButton1.setText("Draw Hennon");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jMenu2.setText("Antialiasing");
 
@@ -214,15 +152,25 @@ public class main extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1)
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(mandelbrotButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(juliaButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(newtonButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(317, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1)
-                .addContainerGap())
+                .addComponent(mandelbrotButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(juliaButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(newtonButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1)
+                .addContainerGap(182, Short.MAX_VALUE))
         );
 
         pack();
@@ -298,6 +246,14 @@ public class main extends javax.swing.JFrame {
         newtonRenderer.render(width, height, newtonRenderer.getFractalEngine().getDefaultView().getFirst(), newtonRenderer.getFractalEngine().getDefaultView().getSecond());
     }//GEN-LAST:event_newtonButtonActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        int width = 640;
+        int height = 480;
+        henonRenderer.getFractalViewer().setVisible(true);
+
+        henonRenderer.render(width, height, henonRenderer.getFractalEngine().getDefaultView().getFirst(), henonRenderer.getFractalEngine().getDefaultView().getSecond());
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -341,16 +297,13 @@ public class main extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem1;
     private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem2;
     private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem3;
     private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem4;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JButton juliaButton;
     private javax.swing.JButton mandelbrotButton;
     private javax.swing.JButton newtonButton;
