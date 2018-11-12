@@ -291,14 +291,14 @@ public class HenonEngine implements FractalEngine {
 
         @Override
         public void move() {
-            double rn = Math.sin(a*i) - Math.cos(b*r) * Math.sin(a);
+            double rn = Math.sin(a*i) - Math.cos(b*r);
             i = Math.sin(c*r) - Math.cos(d*i);
             r = rn;
             if (i == Double.NaN || r == Double.NaN || age > 100) {
                 r = RANDOM.nextDouble();
                 i = RANDOM.nextDouble()*2 - 1;
                 
-                rn = Math.sin(a*i) - Math.cos(b*r) * Math.sin(a);
+                rn = Math.sin(a*i) - Math.cos(b*r);
                 i = Math.sin(c*r) - Math.cos(d*i);
                 r = rn;
             
