@@ -5,12 +5,24 @@
 package fractal;
 
 import fractal.common.FractalRenderer;
+import fractal.common.FractalViewer;
+import fractal.mandelbrot.JuliaEngine;
 import fractal.mandelbrot.JuliaRenderer;
+import fractal.mandelbrot.MandelbrotEngine;
 import fractal.mandelbrot.MandelbrotRenderer;
+import fractal.mandelbrot.coloring.BandColorCalculator;
+import fractal.mandelbrot.coloring.SmoothColorCalculatorMandelbrot;
 import java.util.ArrayList;
 import java.util.List;
 import fractal.common.Antialiasable;
+import fractal.mandelbrot.coloring.AverageAngleColorCalculator;
+import fractal.mandelbrot.coloring.BuddahColorCalculator;
+import fractal.mandelbrot.coloring.ExperimentalColorCalculator;
+import fractal.mandelbrot.coloring.SmoothColorCalculatorJulia;
+import fractal.newton.NewtonEngine;
 import fractal.newton.NewtonRenderer;
+import fractal.newton.coloring.NewtonIterationsColorCalculator;
+import fractal.newton.coloring.BasinsOfAttractionColorCalulator;
 import fractal.phase.HenonRenderer;
 
 /**

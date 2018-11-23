@@ -145,6 +145,7 @@ public class SmoothColorCalculatorMandelbrot implements ColorCalculator {
 
     @Override
     public void complete(SynchronizedBufferedImage synchronizedBufferedImage) {
+        
         compressionSlider.setMaximum(fractalRenderer.getFractalEngine().getMaxIter());
     }
 

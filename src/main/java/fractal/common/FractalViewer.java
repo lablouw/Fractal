@@ -4,6 +4,7 @@
  */
 package fractal.common;
 
+import fractal.common.Mappers.Mapper;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -93,6 +94,11 @@ public class FractalViewer extends javax.swing.JFrame {
         jXImagePanel1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseMoved(java.awt.event.MouseEvent evt) {
                 jXImagePanel1MouseMoved(evt);
+            }
+        });
+        jXImagePanel1.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
+            public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
+                jXImagePanel1MouseWheelMoved(evt);
             }
         });
         jXImagePanel1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -452,6 +458,44 @@ public class FractalViewer extends javax.swing.JFrame {
     private void jXImagePanel1ComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jXImagePanel1ComponentResized
         jLabel9.setText("Draw area Resolution: " + jXImagePanel1.getWidth() + " X " + jXImagePanel1.getHeight());
     }//GEN-LAST:event_jXImagePanel1ComponentResized
+
+    private void jXImagePanel1MouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_jXImagePanel1MouseWheelMoved
+        fractalRenderer.stopRendering();
+        
+        Mapper mapper = fractalRenderer.getMapper();
+        
+        double imageWidth = (double)fractalRenderer.getImage().getBufferedImage().getWidth();
+        double imageHeight = (double)fractalRenderer.getImage().getBufferedImage().getHeight();
+        
+        double scaleRatio = Math.min((double) jXImagePanel1.getWidth() / (double) jXImagePanel1.getImage().getWidth(null), (double) jXImagePanel1.getHeight() / (double) jXImagePanel1.getImage().getHeight(null));
+        int scaledImageWidth = (int) (jXImagePanel1.getImage().getWidth(null) * scaleRatio);
+        int scaledImageHeight = (int) (jXImagePanel1.getImage().getHeight(null) * scaleRatio);
+        int xSub = (jXImagePanel1.getWidth() - scaledImageWidth) / 2;
+        int ySub = (jXImagePanel1.getHeight() - scaledImageHeight) / 2;
+        double relativeX = (double) ((evt.getX() - xSub)) / scaleRatio;
+        double relativeY = imageHeight - (double) ((evt.getY() - ySub)) / scaleRatio;
+        
+        double fracRight = relativeX/(double)fractalRenderer.getImage().getBufferedImage().getWidth();
+        double fracTop = relativeY/(double)fractalRenderer.getImage().getBufferedImage().getHeight();
+        
+        double zoomStrength = 0.2;//20% = 10% on each side if zooming into center
+        
+        double cutoffLeft = fracRight * imageWidth * zoomStrength * -evt.getWheelRotation();
+        double cutoffRight = (1-fracRight) * imageWidth * zoomStrength * -evt.getWheelRotation();
+        double cutoffBottom = fracTop * imageHeight * zoomStrength * -evt.getWheelRotation();
+        double cutoffTop = (1-fracTop) * imageHeight * zoomStrength * -evt.getWheelRotation();
+        
+        int newTop = (int) Math.round(cutoffTop);
+        int newBottom = (int) Math.round(imageHeight - cutoffBottom);
+        int newLeft = (int) Math.round(cutoffLeft);
+        int newRight = (int) Math.round(imageWidth - cutoffRight);
+        
+        Complex newTopLeft = mapper.mapToComplex(newLeft, newTop);
+        Complex newBottomRight = mapper.mapToComplex(newRight, newBottom);
+        
+        fractalRenderer.render((Integer) resolutionXSpinner.getValue(), (Integer) resolutionYSpinner.getValue(), newTopLeft, newBottomRight);
+        
+    }//GEN-LAST:event_jXImagePanel1MouseWheelMoved
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel colorOptionsPanel;
