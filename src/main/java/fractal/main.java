@@ -24,6 +24,7 @@ import fractal.newton.NewtonRenderer;
 import fractal.newton.coloring.NewtonIterationsColorCalculator;
 import fractal.newton.coloring.BasinsOfAttractionColorCalulator;
 import fractal.phase.HenonRenderer;
+import fractal.walkers.WalkerRenderer;
 
 /**
  *
@@ -35,6 +36,7 @@ public class main extends javax.swing.JFrame {
     private final FractalRenderer mandelbrotRenderer;
     private final FractalRenderer newtonRenderer;
     private final HenonRenderer henonRenderer;
+    private final WalkerRenderer walkerRenderer;
 
     private final List<Antialiasable> antialiasables = new ArrayList<>();
 
@@ -48,6 +50,7 @@ public class main extends javax.swing.JFrame {
         juliaRenderer = JuliaRenderer.getInstance();
         newtonRenderer = NewtonRenderer.getInstance();
         henonRenderer = HenonRenderer.getInstance();
+        walkerRenderer = WalkerRenderer.getInstance();
         
         antialiasables.add((Antialiasable) mandelbrotRenderer);
         antialiasables.add((Antialiasable) juliaRenderer);
@@ -82,6 +85,7 @@ public class main extends javax.swing.JFrame {
         juliaButton = new javax.swing.JButton();
         newtonButton = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu2 = new javax.swing.JMenu();
         jRadioButtonMenuItem1 = new javax.swing.JRadioButtonMenuItem();
@@ -116,6 +120,13 @@ public class main extends javax.swing.JFrame {
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Draw Walkers");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
             }
         });
 
@@ -164,11 +175,13 @@ public class main extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(mandelbrotButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(juliaButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(newtonButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(mandelbrotButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(juliaButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(newtonButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(317, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -182,7 +195,9 @@ public class main extends javax.swing.JFrame {
                 .addComponent(newtonButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
-                .addContainerGap(182, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton2)
+                .addContainerGap(153, Short.MAX_VALUE))
         );
 
         pack();
@@ -266,6 +281,14 @@ public class main extends javax.swing.JFrame {
         henonRenderer.render(width, height, henonRenderer.getFractalEngine().getDefaultView().getFirst(), henonRenderer.getFractalEngine().getDefaultView().getSecond());
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        int width = 640;
+        int height = 480;
+        walkerRenderer.getFractalViewer().setVisible(true);
+
+        walkerRenderer.render(width, height, walkerRenderer.getFractalEngine().getDefaultView().getFirst(), walkerRenderer.getFractalEngine().getDefaultView().getSecond());
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -310,6 +333,7 @@ public class main extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem1;

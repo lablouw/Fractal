@@ -149,7 +149,7 @@ public class HenonEngine implements FractalEngine {
             @Override
             public void mouseReleased(MouseEvent e) {
                 theta = ((double) aSlider.getValue() / 1000d) * 2 * Math.PI;
-                aLabel.setText("\\u03F4 = 2*\u03c0 * " + aSlider.getValue() / 1000d);
+                aLabel.setText("\u03F4 = 2*\u03c0 * " + aSlider.getValue() / 1000d);
                 henonRenderer.stopRendering();
                 henonRenderer.render(henonRenderer.getImage().getBufferedImage().getWidth(), henonRenderer.getImage().getBufferedImage().getHeight(), henonRenderer.getMapper().getTopLeft(), henonRenderer.getMapper().getBottomRight());
             }
