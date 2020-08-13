@@ -180,8 +180,6 @@ public class BuddahColorCalculator implements ColorCalculator {
         maxIterPanel.add(maxIterSpinnerBlue);
         p.add(maxIterPanel);
         
-        
-        
         return p;
     }
     

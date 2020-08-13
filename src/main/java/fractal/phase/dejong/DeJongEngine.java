@@ -3,18 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fractal.phase;
+package fractal.phase.dejong;
 
 import fractal.common.Complex;
 import fractal.common.FractalEngine;
+import fractal.common.FractalRenderer;
 import fractal.common.Pair;
+import fractal.phase.Traveler;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,13 +23,12 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSlider;
 
 /**
  *
- * @author CP316928
+ * @author Lloyd
  */
-public class HenonEngine implements FractalEngine {
+public class DeJongEngine implements FractalEngine {
 
     private static final Random RANDOM = new Random();
     private boolean stopped = true;
@@ -46,11 +45,11 @@ public class HenonEngine implements FractalEngine {
     private final int numCores = Runtime.getRuntime().availableProcessors();
 
     private List<TravelerRunner> runners = new ArrayList<>();
-    private final HenonRenderer henonRenderer;
+    private final FractalRenderer renderer;
     private JPanel settingsPanel;
 
-    HenonEngine(HenonRenderer henonRenderer) {
-        this.henonRenderer = henonRenderer;
+    DeJongEngine(FractalRenderer renderer) {
+        this.renderer = renderer;
     }
 
     public void start() {
@@ -106,36 +105,19 @@ public class HenonEngine implements FractalEngine {
         settingsPanel.setLayout(new GridLayout(0, 1));
 
         //Hennon settings
-        settingsPanel.add(aLabel);
-        final JSlider aSlider = new JSlider(0, 1000);
-        aSlider.setValue(0);
-        aSlider.addMouseListener(new MouseListener() {
+        JButton randomizeButton = new JButton("Randomize");
+        randomizeButton.addActionListener(new ActionListener() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                theta = ((double) aSlider.getValue() / 1000d) * 2 * Math.PI;
-                aLabel.setText("\u03F4 = 2*\u03c0 * " + aSlider.getValue() / 1000d);
-                henonRenderer.stopRendering();
-                henonRenderer.render(henonRenderer.getImage().getBufferedImage().getWidth(), henonRenderer.getImage().getBufferedImage().getHeight(), henonRenderer.getMapper().getTopLeft(), henonRenderer.getMapper().getBottomRight());
+            public void actionPerformed(ActionEvent e) {
+                a = RANDOM.nextDouble() * 4 - 2;
+                b = RANDOM.nextDouble() * 4 - 2;
+                c = RANDOM.nextDouble() * 4 - 2;
+                d = RANDOM.nextDouble() * 4 - 2;
+                renderer.stopRendering();
+                renderer.render(renderer.getImage().getBufferedImage().getWidth(), renderer.getImage().getBufferedImage().getHeight(), renderer.getMapper().getTopLeft(), renderer.getMapper().getBottomRight());
             }
         });
-
-        settingsPanel.add(aSlider);
+        settingsPanel.add(randomizeButton);
 
         JButton stopButton = new JButton("Stop");
         stopButton.addActionListener(new ActionListener() {
@@ -164,7 +146,7 @@ public class HenonEngine implements FractalEngine {
 
         private TravelerRunner() {
             for (int i = 0; i < numWalkers / numCores; i++) {
-                HenonTraveler t = new HenonTraveler();
+                DeJongTraveler t = new DeJongTraveler();
                 travelers.add(t);
             }
         }
@@ -175,8 +157,8 @@ public class HenonEngine implements FractalEngine {
                 for (Traveler t : travelers) {
                     t.move();
                     int rgb = (((t.getColor().getRed() << 8) + t.getColor().getGreen()) << 8) + t.getColor().getBlue();
-                    Point p = henonRenderer.getMapper().mapToImage(t.getPosition());
-                    henonRenderer.enginePerformedCalculation(p.x, p.y, Collections.singletonList(new Complex(rgb, rgb)));// quite the hack passing color back through the orbit vars...
+                    Point p = renderer.getMapper().mapToImage(t.getPosition());
+                    renderer.enginePerformedCalculation(p.x, p.y, Collections.singletonList(new Complex(rgb, rgb)));// quite the hack passing color back through the orbit vars...
                 }
             }
         }
@@ -187,27 +169,33 @@ public class HenonEngine implements FractalEngine {
 
     }
 
-    private class HenonTraveler implements Traveler {
+    private class DeJongTraveler implements Traveler {
 
         private double r;
-        private double i = 0;
+        private double i;
         private Color color;
         private int age = 0;
 
-        private HenonTraveler() {
-            r = RANDOM.nextDouble() * 5;
-            color = henonRenderer.getActiveColorCalculator().calcColor(0, 0, Collections.singletonList(new Complex(r, i)), null);
+        private DeJongTraveler() {
+            r = RANDOM.nextDouble();
+            i = RANDOM.nextDouble() * 2 - 1;
+            color = Color.WHITE;//henonRenderer.getActiveColorCalculator().calcColor(0, 0, Collections.singletonList(new Complex(r, i)), null);
         }
 
         @Override
         public void move() {
-            double rn = r * Math.cos(theta) - (i - r * r) * Math.sin(theta);
-            i = r * Math.sin(theta) + (i - r * r) * Math.cos(theta);
+            double rn = Math.sin(a * i) - Math.cos(b * r);
+            i = Math.sin(c * r) - Math.cos(d * i);
             r = rn;
-            if (i == Double.NaN || r == Double.NaN || age > 100000) {
-                i = 0;
-                r = RANDOM.nextDouble() * 5;
-                color = henonRenderer.getActiveColorCalculator().calcColor(0, 0, Collections.singletonList(new Complex(r, i)), null);
+            if (i == Double.NaN || r == Double.NaN || age > 100) {
+                r = RANDOM.nextDouble();
+                i = RANDOM.nextDouble() * 2 - 1;
+
+                rn = Math.sin(a * i) - Math.cos(b * r);
+                i = Math.sin(c * r) - Math.cos(d * i);
+                r = rn;
+
+                color = Color.WHITE;//henonRenderer.getActiveColorCalculator().calcColor(0, 0, Collections.singletonList(new Complex(r, i)), null);
                 age = 0;
             } else {
                 age++;
@@ -225,4 +213,5 @@ public class HenonEngine implements FractalEngine {
         }
 
     }
+
 }
