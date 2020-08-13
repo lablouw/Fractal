@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fractal.phase;
+package fractal.phase.henon;
 
 import fractal.common.Complex;
 import fractal.common.FractalRenderer;

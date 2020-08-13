@@ -23,7 +23,7 @@ import fractal.newton.NewtonEngine;
 import fractal.newton.NewtonRenderer;
 import fractal.newton.coloring.NewtonIterationsColorCalculator;
 import fractal.newton.coloring.BasinsOfAttractionColorCalulator;
-import fractal.phase.HenonRenderer;
+import fractal.phase.henon.HenonRenderer;
 import fractal.phase.dejong.DeJongRenderer;
 import fractal.walkers.WalkerRenderer;
 
