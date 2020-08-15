@@ -5,24 +5,12 @@
 package fractal;
 
 import fractal.common.FractalRenderer;
-import fractal.common.FractalViewer;
-import fractal.mandelbrot.JuliaEngine;
 import fractal.mandelbrot.JuliaRenderer;
-import fractal.mandelbrot.MandelbrotEngine;
 import fractal.mandelbrot.MandelbrotRenderer;
-import fractal.mandelbrot.coloring.BandColorCalculator;
-import fractal.mandelbrot.coloring.SmoothColorCalculatorMandelbrot;
 import java.util.ArrayList;
 import java.util.List;
 import fractal.common.Antialiasable;
-import fractal.mandelbrot.coloring.AverageAngleColorCalculator;
-import fractal.mandelbrot.coloring.BuddahColorCalculator;
-import fractal.mandelbrot.coloring.ExperimentalColorCalculator;
-import fractal.mandelbrot.coloring.SmoothColorCalculatorJulia;
-import fractal.newton.NewtonEngine;
 import fractal.newton.NewtonRenderer;
-import fractal.newton.coloring.NewtonIterationsColorCalculator;
-import fractal.newton.coloring.BasinsOfAttractionColorCalulator;
 import fractal.phase.henon.HenonRenderer;
 import fractal.phase.dejong.DeJongRenderer;
 import fractal.walkers.WalkerRenderer;
@@ -59,20 +47,6 @@ public class main extends javax.swing.JFrame {
         antialiasables.add((Antialiasable) juliaRenderer);
         antialiasables.add((Antialiasable) newtonRenderer);
 
-//        mandelbrotRenderer.addColorCalculator(new SmoothColorCalculatorMandelbrot(mandelbrotRenderer));
-//        mandelbrotRenderer.addColorCalculator(new BandColorCalculator());
-//        mandelbrotRenderer.addColorCalculator(new BuddahColorCalculator(mandelbrotRenderer));
-//        mandelbrotRenderer.addColorCalculator(new AverageAngleColorCalculator());
-//        mandelbrotRenderer.addColorCalculator(new ExperimentalColorCalculator());
-
-//        juliaRenderer.addColorCalculator(new SmoothColorCalculatorJulia(juliaRenderer));
-//        juliaRenderer.addColorCalculator(new BandColorCalculator());
-//        juliaRenderer.addColorCalculator(new BuddahColorCalculator(juliaRenderer));
-//        juliaRenderer.addColorCalculator(new AverageAngleColorCalculator());
-//        juliaRenderer.addColorCalculator(new ExperimentalColorCalculator());
-
-//        newtonRenderer.addColorCalculator(new NewtonIterationsColorCalculator(newtonRenderer));
-//        newtonRenderer.addColorCalculator(new BasinsOfAttractionColorCalulator());
     }
 
     /**
@@ -218,20 +192,16 @@ public class main extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void mandelbrotButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mandelbrotButtonActionPerformed
-        int width = 640;
-        int height = 480;
-//        mandelbrotRenderer.setFractalEngine(new MandelbrotEngine());
-//        mandelbrotRenderer.setFractalViewer(new FractalViewer(mandelbrotRenderer));
+        int width = 1920;
+        int height = 1080;
         mandelbrotRenderer.getFractalViewer().setVisible(true);
 
         mandelbrotRenderer.render(width, height, mandelbrotRenderer.getFractalEngine().getDefaultView().getFirst(), mandelbrotRenderer.getFractalEngine().getDefaultView().getSecond());
     }//GEN-LAST:event_mandelbrotButtonActionPerformed
 
     private void juliaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_juliaButtonActionPerformed
-        int width = 640;
-        int height = 480;
-//        juliaRenderer.setFractalEngine(new JuliaEngine());
-//        juliaRenderer.setFractalViewer(new FractalViewer(juliaRenderer));
+        int width = 1920;
+        int height = 1080;
         juliaRenderer.getFractalViewer().setVisible(true);
 
         juliaRenderer.render(width, height, juliaRenderer.getFractalEngine().getDefaultView().getFirst(), juliaRenderer.getFractalEngine().getDefaultView().getSecond());
@@ -278,34 +248,31 @@ public class main extends javax.swing.JFrame {
     }//GEN-LAST:event_jRadioButtonMenuItem4ActionPerformed
 
     private void newtonButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newtonButtonActionPerformed
-        int width = 640;
-        int height = 480;
-//        newtonRenderer.setFractalEngine(new NewtonEngine());
-//        newtonRenderer.setFractalViewer(new FractalViewer(newtonRenderer));
-        newtonRenderer.getFractalViewer().setVisible(true);
+        int width = 1920;
+        int height = 1080;
 
         newtonRenderer.render(width, height, newtonRenderer.getFractalEngine().getDefaultView().getFirst(), newtonRenderer.getFractalEngine().getDefaultView().getSecond());
     }//GEN-LAST:event_newtonButtonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        int width = 640;
-        int height = 480;
+        int width = 1920;
+        int height = 1080;
         henonRenderer.getFractalViewer().setVisible(true);
 
         henonRenderer.render(width, height, henonRenderer.getFractalEngine().getDefaultView().getFirst(), henonRenderer.getFractalEngine().getDefaultView().getSecond());
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        int width = 640;
-        int height = 480;
+        int width = 1920;
+        int height = 1080;
         walkerRenderer.getFractalViewer().setVisible(true);
 
         walkerRenderer.render(width, height, walkerRenderer.getFractalEngine().getDefaultView().getFirst(), walkerRenderer.getFractalEngine().getDefaultView().getSecond());
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        int width = 640;
-        int height = 480;
+        int width = 1920;
+        int height = 1080;
         deJongRenderer.getFractalViewer().setVisible(true);
 
         deJongRenderer.render(width, height, deJongRenderer.getFractalEngine().getDefaultView().getFirst(), deJongRenderer.getFractalEngine().getDefaultView().getSecond());

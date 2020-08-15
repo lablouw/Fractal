@@ -34,8 +34,8 @@ public class FractalViewer extends javax.swing.JFrame {
         this.fractalRenderer = fractalRenderer;
         setTitle(fractalRenderer.getName());
 
+        colorOptionsPanel.setLayout(new GridLayout(1, 1));
         if (fractalRenderer.getActiveColorCalculator() != null && fractalRenderer.getActiveColorCalculator().getSettingsComponent() != null) {
-            colorOptionsPanel.setLayout(new GridLayout(1, 1));
             colorOptionsPanel.add(fractalRenderer.getActiveColorCalculator().getSettingsComponent());
         } else {
             colorOptionsPanel.setVisible(false);
@@ -79,13 +79,15 @@ public class FractalViewer extends javax.swing.JFrame {
         resolutionYSpinner = new javax.swing.JSpinner();
         jLabel7 = new javax.swing.JLabel();
         jSpinner4 = new javax.swing.JSpinner();
-        colorOptionsPanel = new javax.swing.JPanel();
-        engineOperionsPanel = new javax.swing.JPanel();
-        fractalOptionsPanel = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jPanel3 = new javax.swing.JPanel();
+        engineOperionsPanel = new javax.swing.JPanel();
+        fractalOptionsPanel = new javax.swing.JPanel();
+        colorOptionsPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -160,11 +162,11 @@ public class FractalViewer extends javax.swing.JFrame {
 
         jLabel3.setText("Resolution:");
 
-        resolutionXSpinner.setValue(640);
+        resolutionXSpinner.setValue(1920);
 
         jLabel2.setText("X");
 
-        resolutionYSpinner.setValue(480);
+        resolutionYSpinner.setValue(1080);
 
         jLabel7.setText("Anti Alias Grid Width:");
 
@@ -195,7 +197,7 @@ public class FractalViewer extends javax.swing.JFrame {
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(resolutionYSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {resolutionXSpinner, resolutionYSpinner});
@@ -216,18 +218,13 @@ public class FractalViewer extends javax.swing.JFrame {
                     .addComponent(jLabel7)))
         );
 
-        colorOptionsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Color Options"));
+        jLabel4.setText("jLabel4");
 
-        javax.swing.GroupLayout colorOptionsPanelLayout = new javax.swing.GroupLayout(colorOptionsPanel);
-        colorOptionsPanel.setLayout(colorOptionsPanelLayout);
-        colorOptionsPanelLayout.setHorizontalGroup(
-            colorOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        colorOptionsPanelLayout.setVerticalGroup(
-            colorOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
+        jLabel8.setText("Mouse Position:");
+
+        jLabel9.setText("Draw area Resolution:");
+
+        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         engineOperionsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Engine Options"));
 
@@ -235,7 +232,7 @@ public class FractalViewer extends javax.swing.JFrame {
         engineOperionsPanel.setLayout(engineOperionsPanelLayout);
         engineOperionsPanelLayout.setHorizontalGroup(
             engineOperionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 258, Short.MAX_VALUE)
         );
         engineOperionsPanelLayout.setVerticalGroup(
             engineOperionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -255,13 +252,39 @@ public class FractalViewer extends javax.swing.JFrame {
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
-        jLabel4.setText("jLabel4");
+        colorOptionsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Color Options"));
 
-        jLabel8.setText("Mouse Position:");
+        javax.swing.GroupLayout colorOptionsPanelLayout = new javax.swing.GroupLayout(colorOptionsPanel);
+        colorOptionsPanel.setLayout(colorOptionsPanelLayout);
+        colorOptionsPanelLayout.setHorizontalGroup(
+            colorOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        colorOptionsPanelLayout.setVerticalGroup(
+            colorOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
 
-        jLabel9.setText("Draw area Resolution:");
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(engineOperionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(fractalOptionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(colorOptionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(engineOperionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(fractalOptionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(colorOptionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0))
+        );
 
-        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jScrollPane1.setViewportView(jPanel3);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -295,12 +318,10 @@ public class FractalViewer extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(saveButton)
                         .addGap(22, 22, 22))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(colorOptionsPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(engineOperionsPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(fractalOptionsPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1))
                         .addContainerGap())))
         );
 
@@ -325,12 +346,8 @@ public class FractalViewer extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(engineOperionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 549, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(fractalOptionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(colorOptionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 420, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(redrawButton)
                             .addComponent(saveButton)
@@ -511,6 +528,8 @@ public class FractalViewer extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSpinner jSpinner4;
     private org.jdesktop.swingx.JXImagePanel jXImagePanel1;

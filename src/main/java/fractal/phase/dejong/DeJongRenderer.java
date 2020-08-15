@@ -10,6 +10,7 @@ import fractal.common.FractalRenderer;
 import fractal.common.FractalViewer;
 import fractal.common.SynchronizedBufferedImage;
 import fractal.phase.coloring.PhaseColorer;
+import fractal.phase.coloring.WhiteColorer;
 import java.awt.Color;
 import java.awt.Point;
 import java.util.List;
@@ -24,18 +25,18 @@ public class DeJongRenderer extends FractalRenderer {
     private static DeJongRenderer INSTANCE = null;
     private final DeJongEngine deJongEngine;
     private long lastGuiUpddate = System.currentTimeMillis();
-    
-    
+
     public static DeJongRenderer getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new DeJongRenderer();
         }
         return INSTANCE;
     }
-    
+
     private DeJongRenderer() {
         this.fractalEngine = new DeJongEngine(this);
         deJongEngine = (DeJongEngine) fractalEngine;
+        addColorCalculator(new WhiteColorer());
         addColorCalculator(new PhaseColorer());
         this.fractalViewer = new FractalViewer(this);
     }
@@ -70,12 +71,12 @@ public class DeJongRenderer extends FractalRenderer {
 
     @Override
     public void enginePerformedCalculation(int x, int y, List<Complex> orbit) {
-        
-        if (x >= 0 && x < synchronizedBufferedImage.getBufferedImage().getWidth() &&
-                y >= 0 && y < synchronizedBufferedImage.getBufferedImage().getHeight()) {
+
+        if (x >= 0 && x < synchronizedBufferedImage.getBufferedImage().getWidth()
+                && y >= 0 && y < synchronizedBufferedImage.getBufferedImage().getHeight()) {
             synchronizedBufferedImage.setColor(x, y, new Color((int) orbit.get(0).r));
         }
-        
+
         if (System.currentTimeMillis() - lastGuiUpddate > 1000) {
             updateGui();
             lastGuiUpddate = System.currentTimeMillis();
@@ -93,5 +94,5 @@ public class DeJongRenderer extends FractalRenderer {
     @Override
     public void performSpecialClickAction(Complex clickLocation) {
     }
-    
+
 }

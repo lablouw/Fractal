@@ -34,8 +34,8 @@ public abstract class FractalRenderer {
     protected FractalViewer fractalViewer;
     protected long lastRenderTime;
     protected long t0;
-    protected int imageWidth = 640;
-    protected int imageHeight = 480;
+    protected int imageWidth = 1920;
+    protected int imageHeight = 1080;
     protected SynchronizedBufferedImage synchronizedBufferedImage = new SynchronizedBufferedImage(imageWidth, imageHeight);
     protected List<ColorCalculator> colorCalculators = new ArrayList<>();
     protected boolean busy = false;

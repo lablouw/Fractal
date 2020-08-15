@@ -74,13 +74,11 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" max="-2" attributes="0">
                   <Component id="jButton3" max="32767" attributes="0"/>
-                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                      <Component id="jButton2" max="32767" attributes="0"/>
-                      <Component id="mandelbrotButton" alignment="0" max="32767" attributes="0"/>
-                      <Component id="juliaButton" alignment="0" max="32767" attributes="0"/>
-                      <Component id="newtonButton" alignment="0" max="32767" attributes="0"/>
-                      <Component id="jButton1" alignment="0" max="32767" attributes="0"/>
-                  </Group>
+                  <Component id="jButton2" max="32767" attributes="0"/>
+                  <Component id="mandelbrotButton" alignment="0" max="32767" attributes="0"/>
+                  <Component id="juliaButton" alignment="0" max="32767" attributes="0"/>
+                  <Component id="newtonButton" alignment="0" max="32767" attributes="0"/>
+                  <Component id="jButton1" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace pref="317" max="32767" attributes="0"/>
           </Group>

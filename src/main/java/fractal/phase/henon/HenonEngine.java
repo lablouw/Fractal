@@ -37,15 +37,9 @@ public class HenonEngine implements FractalEngine {
     int numWalkers = 10000;
 
     private double theta = 1;
-    private double a = RANDOM.nextDouble() * 4 - 2;
-    private double b = RANDOM.nextDouble() * 4 - 2;
-    private double c = RANDOM.nextDouble() * 4 - 2;
-    private double d = RANDOM.nextDouble() * 4 - 2;
-
-    private JLabel aLabel = new JLabel("a = 2*\u03c0 * 1");
+    private final JLabel aLabel = new JLabel("a = 2*\u03c0 * 1");
 
     private final int numCores = Runtime.getRuntime().availableProcessors();
-
     private List<TravelerRunner> runners = new ArrayList<>();
     private final HenonRenderer henonRenderer;
     private JPanel settingsPanel;
@@ -111,22 +105,10 @@ public class HenonEngine implements FractalEngine {
         final JSlider aSlider = new JSlider(0, 1000);
         aSlider.setValue(0);
         aSlider.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-            }
-
+            @Override public void mouseClicked(MouseEvent e) {}
+            @Override public void mousePressed(MouseEvent e) {}
+            @Override public void mouseEntered(MouseEvent e) {}
+            @Override public void mouseExited(MouseEvent e) {}
             @Override
             public void mouseReleased(MouseEvent e) {
                 theta = ((double) aSlider.getValue() / 1000d) * 2 * Math.PI;
@@ -225,5 +207,9 @@ public class HenonEngine implements FractalEngine {
             return color;
         }
 
+        @Override
+        public int getAge() {
+            return age;
+        }
     }
 }

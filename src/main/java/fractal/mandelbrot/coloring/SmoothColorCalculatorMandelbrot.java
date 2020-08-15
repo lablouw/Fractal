@@ -91,8 +91,7 @@ public class SmoothColorCalculatorMandelbrot implements ColorCalculator {
     }
 
     private void initSettingsPanel() {
-        settingsPanel = new JPanel();
-        settingsPanel.setLayout(new GridLayout(0, 1));
+        settingsPanel = new JPanel(new GridLayout(0, 1));
 
         settingsPanel.add(colorPalette);
 

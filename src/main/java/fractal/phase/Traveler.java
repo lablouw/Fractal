@@ -19,4 +19,6 @@ public interface Traveler {
     Complex getPosition();
 
     Color getColor();
+
+    public int getAge();
 }
