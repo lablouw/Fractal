@@ -250,6 +250,7 @@ public class main extends javax.swing.JFrame {
     private void newtonButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newtonButtonActionPerformed
         int width = 1920;
         int height = 1080;
+        newtonRenderer.getFractalViewer().setVisible(true);
 
         newtonRenderer.render(width, height, newtonRenderer.getFractalEngine().getDefaultView().getFirst(), newtonRenderer.getFractalEngine().getDefaultView().getSecond());
     }//GEN-LAST:event_newtonButtonActionPerformed
