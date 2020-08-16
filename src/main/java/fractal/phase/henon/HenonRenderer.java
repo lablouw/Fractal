@@ -9,6 +9,7 @@ import fractal.common.Complex;
 import fractal.common.FractalRenderer;
 import fractal.common.FractalViewer;
 import fractal.common.SynchronizedBufferedImage;
+import fractal.main;
 import fractal.phase.coloring.PhaseColorer;
 import java.awt.Color;
 import java.awt.Point;
@@ -79,7 +80,7 @@ public class HenonRenderer extends FractalRenderer {
             synchronizedBufferedImage.setColor(x, y, new Color((int) orbit.get(0).r));
         }
         
-        if (System.currentTimeMillis() - lastGuiUpddate > 1000) {
+        if (System.currentTimeMillis() - lastGuiUpddate > main.getGuiUpdateInterval()) {
             updateGui();
             lastGuiUpddate = System.currentTimeMillis();
         }

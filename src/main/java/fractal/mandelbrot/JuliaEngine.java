@@ -288,7 +288,7 @@ public class JuliaEngine implements FractalEngine {
     }
 
     @Override
-    public void complete() {
+    public void notifyRenderComplete() {
     }
     
     boolean isUseGPUFull() {

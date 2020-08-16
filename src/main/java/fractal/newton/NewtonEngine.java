@@ -171,7 +171,7 @@ public class NewtonEngine implements FractalEngine {
     }
 
     @Override
-    public void complete() {
+    public void notifyRenderComplete() {
     }
     
 }

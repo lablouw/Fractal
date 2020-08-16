@@ -137,7 +137,7 @@ public class HenonEngine implements FractalEngine {
     }
 
     @Override
-    public void complete() {
+    public void notifyRenderComplete() {
     }
 
     private class TravelerRunner implements Runnable {

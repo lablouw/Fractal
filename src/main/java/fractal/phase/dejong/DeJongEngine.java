@@ -57,12 +57,7 @@ public class DeJongEngine implements FractalEngine {
     DeJongEngine(FractalRenderer renderer) {
         this.runners = new ArrayList<>();
         this.renderer = renderer;
-        if (settingsPanel == null) {
-            settingsPanel = (JPanel) getSettingsComponent();
-            for (ActionListener al : randomizeButton.getActionListeners()) {
-                al.actionPerformed(null);
-            }
-        }
+        settingsPanel = (JPanel) getSettingsComponent();
         INSTANCE = this;
     }
 
@@ -147,6 +142,9 @@ public class DeJongEngine implements FractalEngine {
             public void stateChanged(ChangeEvent e) {
                 a = (double)sliderA.getValue()/1000d;
                 labelA.setText(a+"");
+                stop();
+                renderer.clearImage();
+                start();
             }
         });
         sliderB.addChangeListener(new ChangeListener() {
@@ -154,6 +152,9 @@ public class DeJongEngine implements FractalEngine {
             public void stateChanged(ChangeEvent e) {
                 b = (double)sliderB.getValue()/1000d;
                 labelB.setText(b+"");
+                stop();
+                renderer.clearImage();
+                start();
             }
         });
         sliderC.addChangeListener(new ChangeListener() {
@@ -161,6 +162,9 @@ public class DeJongEngine implements FractalEngine {
             public void stateChanged(ChangeEvent e) {
                 c = (double)sliderC.getValue()/1000d;
                 labelC.setText(c+"");
+                stop();
+                renderer.clearImage();
+                start();
             }
         });
         sliderD.addChangeListener(new ChangeListener() {
@@ -168,6 +172,9 @@ public class DeJongEngine implements FractalEngine {
             public void stateChanged(ChangeEvent e) {
                 d = (double)sliderD.getValue()/1000d;
                 labelD.setText(d+"");
+                stop();
+                renderer.clearImage();
+                start();
             }
         });
         settingsPanel.add(panelA);
@@ -252,7 +259,7 @@ public class DeJongEngine implements FractalEngine {
     }
 
     @Override
-    public void complete() {
+    public void notifyRenderComplete() {
     }
 
     private class TravelerRunner implements Runnable {

@@ -113,15 +113,19 @@ public abstract class FractalRenderer {
             @Override
             public void run() {
                 renderFractal();
-                complete();
+                notifyRenderComplete();
                 updateGui();
             }
         }).start();
     }
 
-    public void complete() {
+    public void notifyRenderComplete() {
         activeColorCalculator.complete(synchronizedBufferedImage);
-        fractalEngine.complete();
+        fractalEngine.notifyRenderComplete();
+    }
+    
+    public void clearImage() {
+        synchronizedBufferedImage = new SynchronizedBufferedImage(imageWidth, imageHeight);
     }
 
     public synchronized void updateGui() {

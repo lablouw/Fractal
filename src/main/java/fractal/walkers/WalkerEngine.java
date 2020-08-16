@@ -83,7 +83,7 @@ public class WalkerEngine implements FractalEngine {
     }
 
     @Override
-    public void complete() {
+    public void notifyRenderComplete() {
     }
     
     private class WalkerRunner implements Runnable {

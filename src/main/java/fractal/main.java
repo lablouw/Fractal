@@ -21,6 +21,8 @@ import fractal.walkers.WalkerRenderer;
  */
 public class main extends javax.swing.JFrame {
 
+    private static int guiUpdateInterval = 100;
+    
     private final FractalRenderer juliaRenderer;
     private final FractalRenderer mandelbrotRenderer;
     private final FractalRenderer newtonRenderer;
@@ -335,4 +337,9 @@ public class main extends javax.swing.JFrame {
     private javax.swing.JButton mandelbrotButton;
     private javax.swing.JButton newtonButton;
     // End of variables declaration//GEN-END:variables
+
+    public static int getGuiUpdateInterval() {
+        return guiUpdateInterval;
+    }
+
 }

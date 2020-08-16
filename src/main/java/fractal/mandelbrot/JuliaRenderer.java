@@ -18,6 +18,7 @@ import javax.swing.JComponent;
 import fractal.common.Antialiasable;
 import fractal.common.FractalViewer;
 import fractal.common.ImageUtils;
+import fractal.main;
 import fractal.mandelbrot.coloring.AverageAngleColorCalculator;
 import fractal.mandelbrot.coloring.BandColorCalculator;
 import fractal.mandelbrot.coloring.BevelColorCalculator;
@@ -113,7 +114,7 @@ public class JuliaRenderer extends FractalRenderer implements Antialiasable {
             synchronizedBufferedImage.setColor(points.get(i).x, points.get(i).y, activeColorCalculator.calcColor(points.get(i).x, points.get(i).y, orbits.get(i), fractalEngine));
         }
 
-        if (System.currentTimeMillis() - lastGuiUpddate > 1000) {
+        if (System.currentTimeMillis() - lastGuiUpddate > main.getGuiUpdateInterval()) {
             updateGui();
             lastGuiUpddate = System.currentTimeMillis();
         }
@@ -123,7 +124,7 @@ public class JuliaRenderer extends FractalRenderer implements Antialiasable {
     public void enginePerformedCalculation(int x, int y, List<Complex> orbit) {
         synchronizedBufferedImage.setColor(x, y, activeColorCalculator.calcColor(x, y, orbit, fractalEngine));
 
-        if (System.currentTimeMillis() - lastGuiUpddate > 1000) {
+        if (System.currentTimeMillis() - lastGuiUpddate > main.getGuiUpdateInterval()) {
             updateGui();
             lastGuiUpddate = System.currentTimeMillis();
         }
@@ -133,7 +134,7 @@ public class JuliaRenderer extends FractalRenderer implements Antialiasable {
     public void enginePerformedCalculation(int x, int y, List<Complex> orbit, Color color) {
         synchronizedBufferedImage.setColor(x, y, color);
 
-        if (System.currentTimeMillis() - lastGuiUpddate > 1000) {
+        if (System.currentTimeMillis() - lastGuiUpddate > main.getGuiUpdateInterval()) {
             updateGui();
             lastGuiUpddate = System.currentTimeMillis();
         }
@@ -142,7 +143,7 @@ public class JuliaRenderer extends FractalRenderer implements Antialiasable {
     void enginePerformedCalculation(int x, int y, Complex lastOrbitPoint, int orbitLength) {
         synchronizedBufferedImage.setColor(x, y, activeColorCalculator.calcColor(x, y, lastOrbitPoint, orbitLength, fractalEngine));
 
-        if (System.currentTimeMillis() - lastGuiUpddate > 1000) {
+        if (System.currentTimeMillis() - lastGuiUpddate > main.getGuiUpdateInterval()) {
             updateGui();
             lastGuiUpddate = System.currentTimeMillis();
         }

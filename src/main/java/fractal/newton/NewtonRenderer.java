@@ -11,6 +11,7 @@ import fractal.common.FractalRenderer;
 import fractal.common.FractalViewer;
 import fractal.common.SynchronizedBufferedImage;
 import fractal.common.ImageUtils;
+import fractal.main;
 import fractal.newton.coloring.BasinsOfAttractionColorCalulator;
 import fractal.newton.coloring.NewtonIterationsColorCalculator;
 import java.awt.Color;
@@ -201,7 +202,7 @@ public class NewtonRenderer extends FractalRenderer implements Antialiasable {
             orbitLengths[points.get(i).x][points.get(i).y] = orbit.size();
         }
         
-        if (System.currentTimeMillis()-lastGuiUpddate > 1000)
+        if (System.currentTimeMillis()-lastGuiUpddate > main.getGuiUpdateInterval())
         {
             updateGui();
             lastGuiUpddate = System.currentTimeMillis();
@@ -214,7 +215,7 @@ public class NewtonRenderer extends FractalRenderer implements Antialiasable {
         orbitEndPoints[x][y] = orbit.get(orbit.size()-1);
         orbitLengths[x][y] = orbit.size();
         
-        if (System.currentTimeMillis()-lastGuiUpddate > 1000)
+        if (System.currentTimeMillis()-lastGuiUpddate > main.getGuiUpdateInterval())
         {
             updateGui();
             lastGuiUpddate = System.currentTimeMillis();
@@ -227,7 +228,7 @@ public class NewtonRenderer extends FractalRenderer implements Antialiasable {
         orbitEndPoints[x][y] = orbit.get(orbit.size()-1);
         orbitLengths[x][y] = orbit.size();
         
-        if (System.currentTimeMillis()-lastGuiUpddate > 1000)
+        if (System.currentTimeMillis()-lastGuiUpddate > main.getGuiUpdateInterval())
         {
             updateGui();
             lastGuiUpddate = System.currentTimeMillis();
