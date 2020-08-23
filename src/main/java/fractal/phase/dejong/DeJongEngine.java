@@ -39,7 +39,7 @@ public class DeJongEngine implements FractalEngine {
     private boolean stopped = true;
     private int numTravelers = 10000;
     private int maxTravelerAge = 200;
-//    private int skipInitIters = 0;
+    private int skipInitIters = 0;
 
     private double a;
     private double b;
@@ -197,20 +197,20 @@ public class DeJongEngine implements FractalEngine {
         agePanel.add(maxAgeSpinner);
         settingsPanel.add(agePanel);
         
-//        //Skip initail iters
-//        JSpinner skipIterSpinner = new JSpinner();
-//        skipIterSpinner.setValue(20);
-//        skipIterSpinner.addChangeListener(new ChangeListener() {
-//            @Override
-//            public void stateChanged(ChangeEvent e) {
-//                skipInitIters = (int) maxAgeSpinner.getValue();
-//            }
-//        });
-//        JLabel skipIterLabel = new JLabel("Skip initial iters:");
-//        JPanel skipIterPanel = new JPanel(new GridLayout(0,2));
-//        agePanel.add(skipIterLabel);
-//        agePanel.add(skipIterSpinner);
-//        settingsPanel.add(skipIterPanel);
+        //Skip initail iters
+        JSpinner skipIterSpinner = new JSpinner();
+        skipIterSpinner.setValue(0);
+        skipIterSpinner.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                skipInitIters = (int) skipIterSpinner.getValue();
+            }
+        });
+        JLabel skipIterLabel = new JLabel("Skip initial iters:");
+        JPanel skipIterPanel = new JPanel(new GridLayout(0,2));
+        agePanel.add(skipIterLabel);
+        agePanel.add(skipIterSpinner);
+        settingsPanel.add(skipIterPanel);
         
         
         
@@ -281,8 +281,7 @@ public class DeJongEngine implements FractalEngine {
                     t.move();
                     int rgb = (((t.getColor().getRed() << 8) + t.getColor().getGreen()) << 8) + t.getColor().getBlue();
                     Point p = renderer.getMapper().mapToImage(t.getPosition());
-//                    if (!stopped && t.getAge() > skipInitIters) {
-                    if (!stopped) {
+                    if (!stopped && t.getAge() > skipInitIters) {
                         renderer.enginePerformedCalculation(p.x, p.y, Collections.singletonList(new Complex(rgb, rgb)));// quite the hack passing color back through the orbit vars...
                     }
                 }
@@ -320,7 +319,8 @@ public class DeJongEngine implements FractalEngine {
                 i = Math.sin(c * r) - Math.cos(d * i);
                 r = rn;
 
-                age = 0;
+                age = 1;
+                color = renderer.getActiveColorCalculator().calcColor(0, 0, new Complex(r, i), age, INSTANCE);
             } else {
                 color = renderer.getActiveColorCalculator().calcColor(0, 0, new Complex(r, i), age, INSTANCE);
                 age++;
