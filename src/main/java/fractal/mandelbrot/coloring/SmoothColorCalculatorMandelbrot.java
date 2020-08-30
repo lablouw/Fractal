@@ -52,8 +52,7 @@ public class SmoothColorCalculatorMandelbrot implements ColorCalculator {
         orbitLengths[x][y] = orbit.size();
         if (fractalEngine.isBailoutReached(orbit)) {
             float nSmooth = (float) (orbit.size() + 1 - Math.log(Math.log(orbit.get(orbit.size() - 1).modulus())) / Math.log(2));
-//            return new Color(Color.HSBtoRGB((nSmooth / ((float) fractalRenderer.getFractalEngine().getMaxIter()) - spectrum) * spectrumComp, 1, 1));
-            float a = ((nSmooth / ((float) fractalRenderer.getFractalEngine().getMaxIter()) - spectrumPhase) * spectrumComp) % 1;
+            float a = ((nSmooth / (float) fractalRenderer.getFractalEngine().getMaxIter()) * spectrumComp + spectrumPhase) % 1;
             return colorPalette.getColor(a);
         } else {
             return Color.BLACK;
@@ -66,8 +65,7 @@ public class SmoothColorCalculatorMandelbrot implements ColorCalculator {
         orbitLengths[x][y] = orbitLength;
         if (fractalEngine.isBailoutReached(Collections.singletonList(lastOrbitPoint))) {
             float nSmooth = (float) (orbitLength + 1 - Math.log(Math.log(lastOrbitPoint.modulus())) / Math.log(2));
-//            return new Color(Color.HSBtoRGB((nSmooth / ((float) fractalRenderer.getFractalEngine().getMaxIter()) - spectrum) * spectrumComp, 1, 1));
-            float a = ((nSmooth / ((float) fractalRenderer.getFractalEngine().getMaxIter()) - spectrumPhase) * spectrumComp) % 1;
+            float a = ((nSmooth / (float) fractalRenderer.getFractalEngine().getMaxIter()) * spectrumComp + spectrumPhase) % 1;
             return colorPalette.getColor(a);
         } else {
             return Color.BLACK;
@@ -77,8 +75,7 @@ public class SmoothColorCalculatorMandelbrot implements ColorCalculator {
     private Color recalcColor(Complex lastOrbitPoint, int orbitLength, FractalEngine fractalEngine) {
         if (fractalEngine.isBailoutReached(Collections.singletonList(lastOrbitPoint))) {
             float nSmooth = (float) (orbitLength + 1 - Math.log(Math.log(lastOrbitPoint.modulus())) / Math.log(2));
-//            return new Color(Color.HSBtoRGB((nSmooth / ((float) fractalRenderer.getFractalEngine().getMaxIter()) - spectrum) * spectrumComp, 1, 1));
-            float a = ((nSmooth / ((float) fractalRenderer.getFractalEngine().getMaxIter()) - spectrumPhase) * spectrumComp) % 1;
+            float a = ((nSmooth / (float) fractalRenderer.getFractalEngine().getMaxIter()) * spectrumComp + spectrumPhase) % 1;
             return colorPalette.getColor(a);
         } else {
             return Color.BLACK;
