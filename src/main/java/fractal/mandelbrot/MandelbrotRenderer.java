@@ -4,19 +4,26 @@
  */
 package fractal.mandelbrot;
 
-import fractal.common.*;
+import fractal.common.Antialiasable;
+import fractal.common.Complex;
+import fractal.common.FractalRenderer;
+import fractal.common.FractalViewer;
+import fractal.common.ImageUtils;
+import fractal.common.SynchronizedBufferedImage;
 import fractal.main;
 import fractal.mandelbrot.coloring.AverageAngleColorCalculator;
 import fractal.mandelbrot.coloring.BandColorCalculator;
 import fractal.mandelbrot.coloring.BevelColorCalculator;
 import fractal.mandelbrot.coloring.BuddahColorCalculator;
 import fractal.mandelbrot.coloring.ExperimentalColorCalculator;
-import fractal.mandelbrot.coloring.SmoothColorCalculatorJulia;
 import fractal.mandelbrot.coloring.SmoothColorCalculatorMandelbrot;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Point;
+import org.jdesktop.swingx.JXLabel;
+import org.jdesktop.swingx.JXPanel;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
@@ -27,22 +34,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import org.jdesktop.swingx.JXImagePanel;
-import org.jdesktop.swingx.JXLabel;
-import org.jdesktop.swingx.JXPanel;
 
 /**
  *
  * @author lloyd
  */
-public class MandelbrotRenderer extends FractalRenderer implements Antialiasable {
+public class MandelbrotRenderer extends FractalRenderer<MandelbrotEngine> implements Antialiasable {
 
     //Used for rightClick actions
     private static final String PERTURBATION = "Perturbation";
@@ -102,7 +99,7 @@ public class MandelbrotRenderer extends FractalRenderer implements Antialiasable
     protected void renderFractal() {
         busy = true;
         lastGuiUpddate = System.currentTimeMillis();
-        if (!((MandelbrotEngine)fractalEngine).isUseGPUFull() && !((MandelbrotEngine)fractalEngine).isUseGPUFast()) {
+        if (!fractalEngine.isUseGPUFull() && !fractalEngine.isUseGPUFast()) {
             ExecutorService es = Executors.newFixedThreadPool(numCores);
             mandelbrotCalculatorsCPU = new ArrayList<>();
             List<Future> futures = new ArrayList<>();
@@ -315,7 +312,7 @@ public class MandelbrotRenderer extends FractalRenderer implements Antialiasable
 //                ((JuliaEngine)juliaPreviewRenderer.getFractalEngine()).setBailout(((MandelbrotEngine) fractalEngine).getBailout());
 //                ((JuliaEngine)juliaPreviewRenderer.getFractalEngine()).setExponent(((MandelbrotEngine) fractalEngine).getExponent());
 //                ((JuliaEngine)juliaPreviewRenderer.getFractalEngine()).setMaxIter(((MandelbrotEngine) fractalEngine).getMaxIter());
-                ((JuliaEngine)juliaPreviewRenderer.getFractalEngine()).setC(pointOnImage);
+                juliaPreviewRenderer.getFractalEngine().setC(pointOnImage);
                 juliaPreviewViewer.drawNow();
             }
         }
@@ -356,11 +353,11 @@ public class MandelbrotRenderer extends FractalRenderer implements Antialiasable
     @Override
     public void performSpecialClickAction(Complex clickLocation) {
         if (JULIA.equals(specialAction)) {
-            ((JuliaEngine) juliaPreviewRenderer.getFractalEngine()).setC(clickLocation);
+            juliaPreviewRenderer.getFractalEngine().setC(clickLocation);
             juliaPreviewRenderer.getFractalViewer().setVisible(true);
             juliaPreviewRenderer.render(imageWidth, imageHeight, juliaPreviewRenderer.getFractalEngine().getDefaultView().getFirst(), juliaPreviewRenderer.getFractalEngine().getDefaultView().getSecond());
         } else if (PERTURBATION.equals(specialAction)) {
-            ((MandelbrotEngine) fractalEngine).setPerterbation(clickLocation);
+            fractalEngine.setPerterbation(clickLocation);
             renderFractal();
         }
     }

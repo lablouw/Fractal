@@ -19,11 +19,10 @@ import javax.swing.JComponent;
  *
  * @author cp316928
  */
-public class WalkerRenderer extends FractalRenderer {
+public class WalkerRenderer extends FractalRenderer<WalkerEngine> {
 
     private static WalkerRenderer INSTANCE = null;
-    private final WalkerEngine walkerEngine;
-    private long lastGuiUpddate = System.currentTimeMillis();
+    private long lastGuiUpdate = System.currentTimeMillis();
     
     @Override
     public String getName() {
@@ -38,8 +37,7 @@ public class WalkerRenderer extends FractalRenderer {
     }
     
     private WalkerRenderer() {
-        this.fractalEngine = new WalkerEngine(this);
-        walkerEngine = (WalkerEngine) fractalEngine;
+        fractalEngine = new WalkerEngine(this);
         addColorCalculator(new PhaseColorer());
         this.fractalViewer = new FractalViewer(this);
     }
@@ -55,12 +53,12 @@ public class WalkerRenderer extends FractalRenderer {
 
     @Override
     protected void renderFractal() {
-        walkerEngine.start();
+        fractalEngine.start();
     }
 
     @Override
     public void stopRendering() {
-        walkerEngine.stop();
+        fractalEngine.stop();
     }
 
     @Override
@@ -74,9 +72,9 @@ public class WalkerRenderer extends FractalRenderer {
             synchronizedBufferedImage.setColor(x, y, new Color((int) orbit.get(0).r));
         }
         
-        if (System.currentTimeMillis() - lastGuiUpddate > 50) {
+        if (System.currentTimeMillis() - lastGuiUpdate > 50) {
             updateGui();
-            lastGuiUpddate = System.currentTimeMillis();
+            lastGuiUpdate = System.currentTimeMillis();
         }
     }
 

@@ -20,11 +20,10 @@ import javax.swing.JComponent;
  *
  * @author CP316928
  */
-public class HenonRenderer extends FractalRenderer {
+public class HenonRenderer extends FractalRenderer<HenonEngine> {
 
     private static HenonRenderer INSTANCE = null;
-    private final HenonEngine henonEngine;
-    private long lastGuiUpddate = System.currentTimeMillis();
+    private long lastGuiUpdate = System.currentTimeMillis();
     
     
     public static HenonRenderer getInstance() {
@@ -35,8 +34,7 @@ public class HenonRenderer extends FractalRenderer {
     }
     
     private HenonRenderer() {
-        this.fractalEngine = new HenonEngine(this);
-        henonEngine = (HenonEngine) fractalEngine;
+        fractalEngine = new HenonEngine(this);
         addColorCalculator(new PhaseColorer());
         this.fractalViewer = new FractalViewer(this);
     }
@@ -48,7 +46,7 @@ public class HenonRenderer extends FractalRenderer {
 
     @Override
     public void mouseMoved(Complex pointOnImage) {
-        if (henonEngine.isStopped()) {
+        if (fractalEngine.isStopped()) {
             
         }
     }
@@ -60,12 +58,12 @@ public class HenonRenderer extends FractalRenderer {
 
     @Override
     protected void renderFractal() {
-        henonEngine.start();
+        fractalEngine.start();
     }
 
     @Override
     public void stopRendering() {
-        henonEngine.stop();
+        fractalEngine.stop();
     }
 
     @Override
@@ -80,9 +78,9 @@ public class HenonRenderer extends FractalRenderer {
             synchronizedBufferedImage.setColor(x, y, new Color((int) orbit.get(0).r));
         }
         
-        if (System.currentTimeMillis() - lastGuiUpddate > main.getGuiUpdateInterval()) {
+        if (System.currentTimeMillis() - lastGuiUpdate > main.getGuiUpdateInterval()) {
             updateGui();
-            lastGuiUpddate = System.currentTimeMillis();
+            lastGuiUpdate = System.currentTimeMillis();
         }
     }
 

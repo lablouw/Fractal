@@ -32,9 +32,9 @@ public class MandelbrotCalculatorGPU4 implements Runnable {
 
         imageWidth = mandelbrotRenderer.getImage().getBufferedImage().getWidth();
         imageHeight = mandelbrotRenderer.getImage().getBufferedImage().getHeight();
-        mandelbrotEngine = (MandelbrotEngine) mandelbrotRenderer.getFractalEngine();
+        mandelbrotEngine = mandelbrotRenderer.getFractalEngine();
 
-        mandelbrotEngine.initGPUKernel(imageWidth, imageHeight, mandelbrotRenderer.getMapper());
+        mandelbrotEngine.initGPUKernel(imageWidth, imageHeight);
     }
 
     @Override
@@ -42,13 +42,11 @@ public class MandelbrotCalculatorGPU4 implements Runnable {
         if (mandelbrotRenderer.getAA() == Antialiasable.NONE) {
             for (xOffset = 0; xOffset < imageWidth; xOffset += mandelbrotEngine.getSubImageWidth()) {
                 for (yOffset = 0; yOffset < imageHeight; yOffset += mandelbrotEngine.getSubImageHeight()) {
+                    mandelbrotEngine.doRunGPU(xOffset, yOffset, mandelbrotRenderer.getMapper());
                     if (stopped) {
                         return;
                     }
-                    mandelbrotEngine.doRunGPU(xOffset, yOffset, mandelbrotRenderer.getMapper());
-
                     doPostProcess();
-
                 }
             }
         }

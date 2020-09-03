@@ -45,7 +45,7 @@ public class MandelbrotCalculatorGPU5 implements Runnable {
 
         imageWidth = mandelbrotRenderer.getImage().getBufferedImage().getWidth();
         imageHeight = mandelbrotRenderer.getImage().getBufferedImage().getHeight();
-        mandelbrotEngine = (MandelbrotEngine) mandelbrotRenderer.getFractalEngine();
+        mandelbrotEngine = mandelbrotRenderer.getFractalEngine();
 
         long gpuMemAvailable = ((OpenCLDevice) Device.best()).getMaxMemAllocSize();
 

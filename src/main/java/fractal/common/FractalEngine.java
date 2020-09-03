@@ -8,18 +8,15 @@ import java.util.List;
 import javax.swing.JComponent;
 
 /**
- *
  * @author lloyd
  */
-public interface FractalEngine
-{
-    public List<Complex> calcOrbit(Complex c);
-    public void setMaxIter(int maxIter);
-    public int getMaxIter();
-    public Pair<Complex, Complex> getDefaultView();
-    public boolean isBailoutReached(List<Complex> orbit);
-    public JComponent getSettingsComponent();
-    public void init();
-
-    public void notifyRenderComplete();
+public interface FractalEngine {
+	List<Complex> calcOrbit(Complex c);
+	void setMaxIter(int maxIter);
+	int getMaxIter();
+	Pair<Complex, Complex> getDefaultView();
+	boolean isBailoutReached(List<Complex> orbit);
+	JComponent getSettingsComponent();
+	void init();
+	void notifyRenderComplete();
 }

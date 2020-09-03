@@ -28,7 +28,7 @@ public class MandelbrotEngine implements FractalEngine {
     private double bailout = 2;
     private int maxIter = 500;
     private Complex perterbation = new Complex();
-    private  double bailoutSquared = bailout * bailout;
+    private double bailoutSquared = bailout * bailout;
     private MandelbrotGPUKernelFull mandelbrotGPUKernelFull = null;
     private MandelbrotGPUKernelFast mandelbrotGPUKernelFast = null;
     
@@ -150,7 +150,7 @@ public class MandelbrotEngine implements FractalEngine {
         return orbit;
     }
     
-    public void initGPUKernel(int imageWidth, int imageHeight, Mapper mapper) {
+    public void initGPUKernel(int imageWidth, int imageHeight) {
         if (useGPUFull) {
             if (mandelbrotGPUKernelFull == null) {
                 mandelbrotGPUKernelFull = new MandelbrotGPUKernelFull();

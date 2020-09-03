@@ -32,7 +32,7 @@ public class JuliaCalculatorGPU implements Runnable {
 
         imageWidth = juliaRenderer.getImage().getBufferedImage().getWidth();
         imageHeight = juliaRenderer.getImage().getBufferedImage().getHeight();
-        juliaEngine = (JuliaEngine) juliaRenderer.getFractalEngine();
+        juliaEngine = juliaRenderer.getFractalEngine();
 
         juliaEngine.initGPUKernel(imageWidth, imageHeight, juliaRenderer.getMapper());
     }
@@ -42,10 +42,10 @@ public class JuliaCalculatorGPU implements Runnable {
         if (juliaRenderer.getAA() == Antialiasable.NONE) {
             for (xOffset = 0; xOffset < imageWidth; xOffset += juliaEngine.getSubImageWidth()) {
                 for (yOffset = 0; yOffset < imageHeight; yOffset += juliaEngine.getSubImageHeight()) {
+                    juliaEngine.doRunGPU(xOffset, yOffset, juliaRenderer.getMapper());
                     if (stopped) {
                         return;
                     }
-                    juliaEngine.doRunGPU(xOffset, yOffset, juliaRenderer.getMapper());
 
                     doPostProcess();
 

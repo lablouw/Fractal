@@ -7,8 +7,8 @@ package fractal.mandelbrot;
 
 import fractal.common.Antialiasable;
 import fractal.common.Complex;
-import java.awt.Color;
-import java.awt.Point;
+
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 

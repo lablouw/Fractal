@@ -21,11 +21,10 @@ import javax.swing.JComponent;
  *
  * @author Lloyd
  */
-public class DeJongRenderer extends FractalRenderer {
+public class DeJongRenderer extends FractalRenderer<DeJongEngine> {
 
     private static DeJongRenderer INSTANCE = null;
-    private final DeJongEngine deJongEngine;
-    private long lastGuiUpddate = System.currentTimeMillis();
+    private long lastGuiUpdate = System.currentTimeMillis();
 
     public static DeJongRenderer getInstance() {
         if (INSTANCE == null) {
@@ -35,8 +34,7 @@ public class DeJongRenderer extends FractalRenderer {
     }
 
     private DeJongRenderer() {
-        this.fractalEngine = new DeJongEngine(this);
-        deJongEngine = (DeJongEngine) fractalEngine;
+        fractalEngine = new DeJongEngine(this);
         addColorCalculator(new WhiteColorer());
         addColorCalculator(new PhaseColorer());
         this.fractalViewer = new FractalViewer(this);
@@ -58,12 +56,12 @@ public class DeJongRenderer extends FractalRenderer {
 
     @Override
     protected void renderFractal() {
-        deJongEngine.start();
+        fractalEngine.start();
     }
 
     @Override
     public void stopRendering() {
-        deJongEngine.stop();
+        fractalEngine.stop();
     }
 
     @Override
@@ -78,9 +76,9 @@ public class DeJongRenderer extends FractalRenderer {
             synchronizedBufferedImage.setColor(x, y, new Color((int) orbit.get(0).r));
         }
 
-        if (System.currentTimeMillis() - lastGuiUpddate > main.getGuiUpdateInterval()) {
+        if (System.currentTimeMillis() - lastGuiUpdate > main.getGuiUpdateInterval()) {
             updateGui();
-            lastGuiUpddate = System.currentTimeMillis();
+            lastGuiUpdate = System.currentTimeMillis();
         }
     }
 

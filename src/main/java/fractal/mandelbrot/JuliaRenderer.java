@@ -38,7 +38,7 @@ import javax.swing.event.ChangeListener;
  *
  * @author lloyd
  */
-public class JuliaRenderer extends FractalRenderer implements Antialiasable {
+public class JuliaRenderer extends FractalRenderer<JuliaEngine> implements Antialiasable {
 
     private final int numCores = Runtime.getRuntime().availableProcessors();
     private long lastGuiUpddate;
@@ -73,7 +73,7 @@ public class JuliaRenderer extends FractalRenderer implements Antialiasable {
     protected void renderFractal() {
         busy = true;
         lastGuiUpddate = System.currentTimeMillis();
-        if (!((JuliaEngine)fractalEngine).isUseGPUFull() && !((JuliaEngine)fractalEngine).isUseGPUFast()) {
+        if (!fractalEngine.isUseGPUFull() && !fractalEngine.isUseGPUFast()) {
             ExecutorService es = Executors.newFixedThreadPool(numCores);
             currentCalculators = new ArrayList<>();
             List<Future> futures = new ArrayList<>();

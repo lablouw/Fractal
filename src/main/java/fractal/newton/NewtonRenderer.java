@@ -36,7 +36,7 @@ import org.jdesktop.swingx.JXLabel;
  *
  * @author cp316928
  */
-public class NewtonRenderer extends FractalRenderer implements Antialiasable {
+public class NewtonRenderer extends FractalRenderer<NewtonEngine> implements Antialiasable {
 
     private final int numCores = Runtime.getRuntime().availableProcessors();
     private ExecutorService es;
@@ -154,8 +154,8 @@ public class NewtonRenderer extends FractalRenderer implements Antialiasable {
         try {
             fxRoot = functionParser.buildTree(fx);
             dfdxRoot = functionParser.buildTree(dfdx);
-            ((NewtonEngine)fractalEngine).setFxRootNode(fxRoot);
-            ((NewtonEngine)fractalEngine).setDfdxRootNode(dfdxRoot);
+            fractalEngine.setFxRootNode(fxRoot);
+            fractalEngine.setDfdxRootNode(dfdxRoot);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

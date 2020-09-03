@@ -21,7 +21,7 @@ import fractal.walkers.WalkerRenderer;
  */
 public class main extends javax.swing.JFrame {
 
-    private static int guiUpdateInterval = 100;
+    private static int guiUpdateInterval = 100;//TODO: per renderer
     
     private final FractalRenderer juliaRenderer;
     private final FractalRenderer mandelbrotRenderer;

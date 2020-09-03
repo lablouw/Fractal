@@ -26,11 +26,11 @@ import org.jdesktop.swingx.VerticalLayout;
  *
  * @author lloyd
  */
-public abstract class FractalRenderer {
+public abstract class FractalRenderer<T extends FractalEngine> {
 
     private Mapper mapper;
     protected ColorCalculator activeColorCalculator;
-    protected FractalEngine fractalEngine;
+    protected T fractalEngine;
     protected FractalViewer fractalViewer;
     protected long lastRenderTime;
     protected long t0;
@@ -73,7 +73,7 @@ public abstract class FractalRenderer {
         this.activeColorCalculator = colorCalculator;
     }
 
-    public FractalEngine getFractalEngine() {
+    public T getFractalEngine() {
         return fractalEngine;
     }
 
@@ -153,7 +153,7 @@ public abstract class FractalRenderer {
     }
 
     public JComponent getSettingsComponent() {
-        JComboBox<ColorCalculator> colComboBox = new JComboBox<ColorCalculator>();
+        JComboBox<ColorCalculator> colComboBox = new JComboBox<>();
         for (ColorCalculator cc : colorCalculators) {
             colComboBox.addItem(cc);
         }
