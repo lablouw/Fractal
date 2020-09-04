@@ -59,10 +59,8 @@ public class MandelbrotCalculatorGPU4 implements Runnable {
                 for (int y = 0; y < mandelbrotEngine.getSubImageHeight(); y++) {
                     if (y + yOffset < imageHeight) {
                         if (mandelbrotEngine.isUseGPUFull()) {
-                            //TODO: (test) if (stopped) {return;}
                             mandelbrotRenderer.enginePerformedCalculation(x + xOffset, y + yOffset, mandelbrotEngine.getGPUOrbit(x, y));
                         } else if (mandelbrotEngine.isUseGPUFast()) {
-                            //TODO: (test) if (stopped) {return;}
                             mandelbrotRenderer.enginePerformedCalculation(x + xOffset, y + yOffset, mandelbrotEngine.getLastOrbitPoint(x, y), mandelbrotEngine.getOrbitLength(x, y));
                         }
                     }

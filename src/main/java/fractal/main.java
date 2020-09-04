@@ -67,11 +67,6 @@ public class main extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu2 = new javax.swing.JMenu();
-        jRadioButtonMenuItem1 = new javax.swing.JRadioButtonMenuItem();
-        jRadioButtonMenuItem2 = new javax.swing.JRadioButtonMenuItem();
-        jRadioButtonMenuItem3 = new javax.swing.JRadioButtonMenuItem();
-        jRadioButtonMenuItem4 = new javax.swing.JRadioButtonMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -116,44 +111,6 @@ public class main extends javax.swing.JFrame {
                 jButton3ActionPerformed(evt);
             }
         });
-
-        jMenu2.setText("Antialiasing");
-
-        jRadioButtonMenuItem1.setSelected(true);
-        jRadioButtonMenuItem1.setText("None");
-        jRadioButtonMenuItem1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButtonMenuItem1ActionPerformed(evt);
-            }
-        });
-        jMenu2.add(jRadioButtonMenuItem1);
-
-        jRadioButtonMenuItem2.setText("2x");
-        jRadioButtonMenuItem2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButtonMenuItem2ActionPerformed(evt);
-            }
-        });
-        jMenu2.add(jRadioButtonMenuItem2);
-
-        jRadioButtonMenuItem3.setText("3x");
-        jRadioButtonMenuItem3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButtonMenuItem3ActionPerformed(evt);
-            }
-        });
-        jMenu2.add(jRadioButtonMenuItem3);
-
-        jRadioButtonMenuItem4.setText("4x");
-        jRadioButtonMenuItem4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButtonMenuItem4ActionPerformed(evt);
-            }
-        });
-        jMenu2.add(jRadioButtonMenuItem4);
-
-        jMenuBar1.add(jMenu2);
-
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -164,12 +121,11 @@ public class main extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(mandelbrotButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(juliaButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(newtonButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(mandelbrotButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(juliaButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(newtonButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(317, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -187,7 +143,7 @@ public class main extends javax.swing.JFrame {
                 .addComponent(jButton3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2)
-                .addContainerGap(124, Short.MAX_VALUE))
+                .addContainerGap(145, Short.MAX_VALUE))
         );
 
         pack();
@@ -208,46 +164,6 @@ public class main extends javax.swing.JFrame {
 
         juliaRenderer.render(width, height, juliaRenderer.getFractalEngine().getDefaultView().getFirst(), juliaRenderer.getFractalEngine().getDefaultView().getSecond());
     }//GEN-LAST:event_juliaButtonActionPerformed
-
-    private void jRadioButtonMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonMenuItem1ActionPerformed
-        jRadioButtonMenuItem1.setSelected(true);
-        jRadioButtonMenuItem2.setSelected(false);
-        jRadioButtonMenuItem3.setSelected(false);
-        jRadioButtonMenuItem4.setSelected(false);
-        for (Antialiasable antialiasable : antialiasables) {
-            antialiasable.setAA(Antialiasable.NONE);
-        }
-    }//GEN-LAST:event_jRadioButtonMenuItem1ActionPerformed
-
-    private void jRadioButtonMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonMenuItem2ActionPerformed
-        jRadioButtonMenuItem1.setSelected(false);
-        jRadioButtonMenuItem2.setSelected(true);
-        jRadioButtonMenuItem3.setSelected(false);
-        jRadioButtonMenuItem4.setSelected(false);
-        for (Antialiasable antialiasable : antialiasables) {
-            antialiasable.setAA(Antialiasable.AA2);
-        }
-    }//GEN-LAST:event_jRadioButtonMenuItem2ActionPerformed
-
-    private void jRadioButtonMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonMenuItem3ActionPerformed
-        jRadioButtonMenuItem1.setSelected(false);
-        jRadioButtonMenuItem2.setSelected(false);
-        jRadioButtonMenuItem3.setSelected(true);
-        jRadioButtonMenuItem4.setSelected(false);
-        for (Antialiasable antialiasable : antialiasables) {
-            antialiasable.setAA(Antialiasable.AA3);
-        }
-    }//GEN-LAST:event_jRadioButtonMenuItem3ActionPerformed
-
-    private void jRadioButtonMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonMenuItem4ActionPerformed
-        jRadioButtonMenuItem1.setSelected(false);
-        jRadioButtonMenuItem2.setSelected(false);
-        jRadioButtonMenuItem3.setSelected(false);
-        jRadioButtonMenuItem4.setSelected(true);
-        for (Antialiasable antialiasable : antialiasables) {
-            antialiasable.setAA(Antialiasable.AA4);
-        }
-    }//GEN-LAST:event_jRadioButtonMenuItem4ActionPerformed
 
     private void newtonButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newtonButtonActionPerformed
         int width = 1920;
@@ -327,12 +243,7 @@ public class main extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem1;
-    private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem2;
-    private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem3;
-    private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem4;
     private javax.swing.JButton juliaButton;
     private javax.swing.JButton mandelbrotButton;
     private javax.swing.JButton newtonButton;
