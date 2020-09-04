@@ -8,7 +8,6 @@ package fractal.phase.dejong;
 import fractal.common.Complex;
 import fractal.common.FractalRenderer;
 import fractal.common.FractalViewer;
-import fractal.common.SynchronizedBufferedImage;
 import fractal.main;
 import fractal.phase.coloring.PhaseColorer;
 import fractal.phase.coloring.WhiteColorer;
@@ -55,7 +54,7 @@ public class DeJongRenderer extends FractalRenderer<DeJongEngine> {
     }
 
     @Override
-    protected void renderFractal() {
+    protected void render() {
         fractalEngine.start();
     }
 
@@ -84,10 +83,6 @@ public class DeJongRenderer extends FractalRenderer<DeJongEngine> {
 
     @Override
     public void enginePerformedCalculation(int x, int y, List<Complex> orbit, Color color) {
-    }
-
-    @Override
-    public void engineCompleted(SynchronizedBufferedImage image) {
     }
 
     @Override

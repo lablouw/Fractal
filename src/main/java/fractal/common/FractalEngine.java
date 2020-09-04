@@ -12,11 +12,18 @@ import javax.swing.JComponent;
  */
 public interface FractalEngine {
 	List<Complex> calcOrbit(Complex c);
+
 	void setMaxIter(int maxIter);
+
 	int getMaxIter();
+
 	Pair<Complex, Complex> getDefaultView();
+
 	boolean isBailoutReached(List<Complex> orbit);
+
 	JComponent getSettingsComponent();
+
 	void init();
+
 	void notifyRenderComplete();
 }

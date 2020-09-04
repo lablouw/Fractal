@@ -4,25 +4,24 @@
  */
 package fractal.common;
 
-import java.awt.Color;
+import javax.swing.*;
+import java.awt.*;
 import java.util.List;
-import javax.swing.JComponent;
 
 /**
- *
  * @author lloyd
  */
 public interface ColorCalculator {
 
-    public Color calcColor(int x, int y, List<Complex> orbit, FractalEngine fractalEngine);
+	Color calcColor(int x, int y, List<Complex> orbit, FractalEngine fractalEngine);
 
-    public JComponent getSettingsComponent();
+	JComponent getSettingsComponent();
 
-    public String getName();
+	String getName();
 
-    public void init(FractalRenderer fractalRenderer);
+	void init(FractalRenderer fractalRenderer);
 
-    public void complete(SynchronizedBufferedImage synchronizedBufferedImage);
+	void complete(SynchronizedBufferedImage synchronizedBufferedImage);
 
-    public Color calcColor(int x, int y, Complex lastOrbitPoint, int orbitLength, FractalEngine fractalEngine);
+	Color calcColor(int x, int y, Complex lastOrbitPoint, int orbitLength, FractalEngine fractalEngine);
 }

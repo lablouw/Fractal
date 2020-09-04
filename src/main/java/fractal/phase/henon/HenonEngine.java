@@ -8,14 +8,12 @@ package fractal.phase.henon;
 import fractal.common.Complex;
 import fractal.common.FractalEngine;
 import fractal.common.Pair;
-import fractal.phase.Traveler;
-import java.awt.Color;
+import fractal.common.Traveler;
+
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,6 +23,8 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  *
@@ -48,7 +48,7 @@ public class HenonEngine implements FractalEngine {
         this.henonRenderer = henonRenderer;
     }
 
-    public void start() {
+    public synchronized void start() {
         stopped = false;
         runners = new ArrayList<>();
         for (int i = 0; i < numCores; i++) {
@@ -58,9 +58,9 @@ public class HenonEngine implements FractalEngine {
         }
     }
 
-    public void stop() {
-        for (TravelerRunner w : runners) {
-            w.stop();
+    public synchronized void stop() {
+        for (TravelerRunner runner : runners) {
+            runner.stop();
         }
         stopped = true;
     }
@@ -104,16 +104,14 @@ public class HenonEngine implements FractalEngine {
         settingsPanel.add(aLabel);
         final JSlider aSlider = new JSlider(0, 1000);
         aSlider.setValue(0);
-        aSlider.addMouseListener(new MouseListener() {
-            @Override public void mouseClicked(MouseEvent e) {}
-            @Override public void mousePressed(MouseEvent e) {}
-            @Override public void mouseEntered(MouseEvent e) {}
-            @Override public void mouseExited(MouseEvent e) {}
+
+        aSlider.addChangeListener(new ChangeListener() {
             @Override
-            public void mouseReleased(MouseEvent e) {
+            public void stateChanged(ChangeEvent e) {
                 theta = ((double) aSlider.getValue() / 1000d) * 2 * Math.PI;
                 aLabel.setText("\u03F4 = 2*\u03c0 * " + aSlider.getValue() / 1000d);
                 henonRenderer.stopRendering();
+                henonRenderer.clearImage();
                 henonRenderer.render(henonRenderer.getImage().getBufferedImage().getWidth(), henonRenderer.getImage().getBufferedImage().getHeight(), henonRenderer.getMapper().getTopLeft(), henonRenderer.getMapper().getBottomRight());
             }
         });
@@ -170,46 +168,27 @@ public class HenonEngine implements FractalEngine {
 
     }
 
-    private class HenonTraveler implements Traveler {
-
-        private double r;
-        private double i = 0;
-        private Color color;
-        private int age = 0;
+    private class HenonTraveler extends Traveler {
 
         private HenonTraveler() {
-            r = RANDOM.nextDouble() * 5;
-            color = henonRenderer.getActiveColorCalculator().calcColor(0, 0, Collections.singletonList(new Complex(r, i)), null);
+            position.r = RANDOM.nextDouble() * 5;
+            color = henonRenderer.getActiveColorCalculator().calcColor(0, 0, Collections.singletonList(position), null);
         }
 
         @Override
         public void move() {
-            double rn = r * Math.cos(theta) - (i - r * r) * Math.sin(theta);
-            i = r * Math.sin(theta) + (i - r * r) * Math.cos(theta);
-            r = rn;
-            if (i == Double.NaN || r == Double.NaN || age > 100000) {
-                i = 0;
-                r = RANDOM.nextDouble() * 5;
-                color = henonRenderer.getActiveColorCalculator().calcColor(0, 0, Collections.singletonList(new Complex(r, i)), null);
+            double rn = position.r * Math.cos(theta) - (position.i - position.r * position.r) * Math.sin(theta);
+            position.i = position.r * Math.sin(theta) + (position.i - position.r * position.r) * Math.cos(theta);
+            position.r = rn;
+            if (age > 100000) {
+                position.i = 0;
+                position.r = RANDOM.nextDouble() * 5;
+                color = henonRenderer.getActiveColorCalculator().calcColor(0, 0, Collections.singletonList(position), null);
                 age = 0;
             } else {
                 age++;
             }
         }
 
-        @Override
-        public Complex getPosition() {
-            return new Complex(r, i);
-        }
-
-        @Override
-        public Color getColor() {
-            return color;
-        }
-
-        @Override
-        public int getAge() {
-            return age;
-        }
     }
 }

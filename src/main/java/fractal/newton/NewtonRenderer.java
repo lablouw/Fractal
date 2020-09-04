@@ -46,7 +46,7 @@ public class NewtonRenderer extends FractalRenderer<NewtonEngine> implements Ant
     private int aa = 1;
     private SynchronizedBufferedImage orbitImageBase;
     private boolean orbitPreview = false;
-    private long lastGuiUpddate;
+    private long lastGuiUpdate;
     private String fx = "x^3+1";
     private String dfdx = "3*x^2";
     
@@ -147,7 +147,7 @@ public class NewtonRenderer extends FractalRenderer<NewtonEngine> implements Ant
 //    }
 
     @Override
-    protected void renderFractal() {
+    protected void render() {
         busy = true;
         FunctionParser functionParser = new FunctionParser();
         TreeNode fxRoot, dfdxRoot;
@@ -202,10 +202,10 @@ public class NewtonRenderer extends FractalRenderer<NewtonEngine> implements Ant
             orbitLengths[points.get(i).x][points.get(i).y] = orbit.size();
         }
         
-        if (System.currentTimeMillis()-lastGuiUpddate > main.getGuiUpdateInterval())
+        if (System.currentTimeMillis()- lastGuiUpdate > main.getGuiUpdateInterval())
         {
             updateGui();
-            lastGuiUpddate = System.currentTimeMillis();
+            lastGuiUpdate = System.currentTimeMillis();
         }
     }
 
@@ -215,10 +215,10 @@ public class NewtonRenderer extends FractalRenderer<NewtonEngine> implements Ant
         orbitEndPoints[x][y] = orbit.get(orbit.size()-1);
         orbitLengths[x][y] = orbit.size();
         
-        if (System.currentTimeMillis()-lastGuiUpddate > main.getGuiUpdateInterval())
+        if (System.currentTimeMillis()- lastGuiUpdate > main.getGuiUpdateInterval())
         {
             updateGui();
-            lastGuiUpddate = System.currentTimeMillis();
+            lastGuiUpdate = System.currentTimeMillis();
         }
     }
 
@@ -228,18 +228,13 @@ public class NewtonRenderer extends FractalRenderer<NewtonEngine> implements Ant
         orbitEndPoints[x][y] = orbit.get(orbit.size()-1);
         orbitLengths[x][y] = orbit.size();
         
-        if (System.currentTimeMillis()-lastGuiUpddate > main.getGuiUpdateInterval())
+        if (System.currentTimeMillis()- lastGuiUpdate > main.getGuiUpdateInterval())
         {
             updateGui();
-            lastGuiUpddate = System.currentTimeMillis();
+            lastGuiUpdate = System.currentTimeMillis();
         }
     }
     
-    @Override
-    public void engineCompleted(SynchronizedBufferedImage image) {
-        
-    }
-
     @Override
     public int getAA() {
         return aa;

@@ -29,6 +29,7 @@ import org.jdesktop.swingx.VerticalLayout;
 public abstract class FractalRenderer<T extends FractalEngine> {
 
     private Mapper mapper;
+    private List<ColorCalculator> colorCalculators = new ArrayList<>();
     protected ColorCalculator activeColorCalculator;
     protected T fractalEngine;
     protected FractalViewer fractalViewer;
@@ -37,26 +38,18 @@ public abstract class FractalRenderer<T extends FractalEngine> {
     protected int imageWidth = 1920;
     protected int imageHeight = 1080;
     protected SynchronizedBufferedImage synchronizedBufferedImage = new SynchronizedBufferedImage(imageWidth, imageHeight);
-    protected List<ColorCalculator> colorCalculators = new ArrayList<>();
     protected boolean busy = false;
 
-    public void addColorCalculator(ColorCalculator colorCalculator) {
+    protected void addColorCalculator(ColorCalculator colorCalculator) {
         if (colorCalculators.isEmpty()) {
             this.activeColorCalculator = colorCalculator;
         }
         colorCalculators.add(colorCalculator);
     }
 
-    public void setImageDimensions(int imageWidth, int imageHeight) {
-        this.imageWidth = imageWidth;
-        this.imageHeight = imageHeight;
-    }
-
     public Mapper getMapper() {
-        if (mapper == null) {
-            if (fractalEngine != null) {
-                mapper = new LinearMapper(fractalEngine.getDefaultView().getFirst(), fractalEngine.getDefaultView().getSecond(), imageWidth, imageHeight);
-            }
+        if (mapper == null && fractalEngine != null) {
+        	mapper = new LinearMapper(fractalEngine.getDefaultView().getFirst(), fractalEngine.getDefaultView().getSecond(), imageWidth, imageHeight);
         }
         return mapper;
     }
@@ -79,10 +72,6 @@ public abstract class FractalRenderer<T extends FractalEngine> {
 
     public FractalViewer getFractalViewer() {
         return fractalViewer;
-    }
-
-    public long getLastRenderTime() {
-        return lastRenderTime;
     }
 
     public SynchronizedBufferedImage getImage() {
@@ -112,14 +101,14 @@ public abstract class FractalRenderer<T extends FractalEngine> {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                renderFractal();
+                render();
                 notifyRenderComplete();
                 updateGui();
             }
         }).start();
     }
 
-    public void notifyRenderComplete() {
+    private void notifyRenderComplete() {
         activeColorCalculator.complete(synchronizedBufferedImage);
         fractalEngine.notifyRenderComplete();
     }
@@ -193,7 +182,7 @@ public abstract class FractalRenderer<T extends FractalEngine> {
 
     protected abstract JComponent getCustomSettingsComponent();
     
-    protected abstract void renderFractal();
+    protected abstract void render();
 
     public abstract void stopRendering();
 
@@ -202,8 +191,6 @@ public abstract class FractalRenderer<T extends FractalEngine> {
     public abstract void enginePerformedCalculation(int x, int y, List<Complex> orbit);
 
     public abstract void enginePerformedCalculation(int x, int y, List<Complex> orbit, Color color);
-
-    public abstract void engineCompleted(SynchronizedBufferedImage image);
 
     public abstract void performSpecialClickAction(Complex clickLocation);
 

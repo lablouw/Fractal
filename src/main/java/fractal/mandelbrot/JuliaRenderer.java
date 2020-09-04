@@ -41,7 +41,7 @@ import javax.swing.event.ChangeListener;
 public class JuliaRenderer extends FractalRenderer<JuliaEngine> implements Antialiasable {
 
     private final int numCores = Runtime.getRuntime().availableProcessors();
-    private long lastGuiUpddate;
+    private long lastGuiUpdate;
     private List<JuliaCalculatorCPU> currentCalculators = new ArrayList<>();
     private JuliaCalculatorGPU juliaCalculatorGPU;
     private int aa = 1;
@@ -70,9 +70,9 @@ public class JuliaRenderer extends FractalRenderer<JuliaEngine> implements Antia
     }
 
     @Override
-    protected void renderFractal() {
+    protected void render() {
         busy = true;
-        lastGuiUpddate = System.currentTimeMillis();
+        lastGuiUpdate = System.currentTimeMillis();
         if (!fractalEngine.isUseGPUFull() && !fractalEngine.isUseGPUFast()) {
             ExecutorService es = Executors.newFixedThreadPool(numCores);
             currentCalculators = new ArrayList<>();
@@ -114,9 +114,9 @@ public class JuliaRenderer extends FractalRenderer<JuliaEngine> implements Antia
             synchronizedBufferedImage.setColor(points.get(i).x, points.get(i).y, activeColorCalculator.calcColor(points.get(i).x, points.get(i).y, orbits.get(i), fractalEngine));
         }
 
-        if (System.currentTimeMillis() - lastGuiUpddate > main.getGuiUpdateInterval()) {
+        if (System.currentTimeMillis() - lastGuiUpdate > main.getGuiUpdateInterval()) {
             updateGui();
-            lastGuiUpddate = System.currentTimeMillis();
+            lastGuiUpdate = System.currentTimeMillis();
         }
     }
 
@@ -124,9 +124,9 @@ public class JuliaRenderer extends FractalRenderer<JuliaEngine> implements Antia
     public void enginePerformedCalculation(int x, int y, List<Complex> orbit) {
         synchronizedBufferedImage.setColor(x, y, activeColorCalculator.calcColor(x, y, orbit, fractalEngine));
 
-        if (System.currentTimeMillis() - lastGuiUpddate > main.getGuiUpdateInterval()) {
+        if (System.currentTimeMillis() - lastGuiUpdate > main.getGuiUpdateInterval()) {
             updateGui();
-            lastGuiUpddate = System.currentTimeMillis();
+            lastGuiUpdate = System.currentTimeMillis();
         }
     }
 
@@ -134,24 +134,19 @@ public class JuliaRenderer extends FractalRenderer<JuliaEngine> implements Antia
     public void enginePerformedCalculation(int x, int y, List<Complex> orbit, Color color) {
         synchronizedBufferedImage.setColor(x, y, color);
 
-        if (System.currentTimeMillis() - lastGuiUpddate > main.getGuiUpdateInterval()) {
+        if (System.currentTimeMillis() - lastGuiUpdate > main.getGuiUpdateInterval()) {
             updateGui();
-            lastGuiUpddate = System.currentTimeMillis();
+            lastGuiUpdate = System.currentTimeMillis();
         }
     }
     
     void enginePerformedCalculation(int x, int y, Complex lastOrbitPoint, int orbitLength) {
         synchronizedBufferedImage.setColor(x, y, activeColorCalculator.calcColor(x, y, lastOrbitPoint, orbitLength, fractalEngine));
 
-        if (System.currentTimeMillis() - lastGuiUpddate > main.getGuiUpdateInterval()) {
+        if (System.currentTimeMillis() - lastGuiUpdate > main.getGuiUpdateInterval()) {
             updateGui();
-            lastGuiUpddate = System.currentTimeMillis();
+            lastGuiUpdate = System.currentTimeMillis();
         }
-    }
-
-    @Override
-    public void engineCompleted(SynchronizedBufferedImage image) {
-
     }
 
     @Override

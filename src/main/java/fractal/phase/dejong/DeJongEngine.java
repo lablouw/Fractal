@@ -9,8 +9,8 @@ import fractal.common.Complex;
 import fractal.common.FractalEngine;
 import fractal.common.FractalRenderer;
 import fractal.common.Pair;
-import fractal.phase.Traveler;
-import java.awt.Color;
+import fractal.common.Traveler;
+
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -51,7 +51,6 @@ public class DeJongEngine implements FractalEngine {
     private List<TravelerRunner> runners;
     private final FractalRenderer renderer;
     
-    JButton randomizeButton;
     private JPanel settingsPanel;
 
     DeJongEngine(FractalRenderer renderer) {
@@ -61,17 +60,17 @@ public class DeJongEngine implements FractalEngine {
         INSTANCE = this;
     }
 
-    public void start() {
+    public synchronized void start() {
         stopped = false;
         runners = new ArrayList<>();
         for (int i = 0; i < numCores; i++) {
-            TravelerRunner w = new TravelerRunner();
-            runners.add(w);
-            new Thread(w).start();
+            TravelerRunner runner = new TravelerRunner();
+            runners.add(runner);
+            new Thread(runner).start();
         }
     }
 
-    public void stop() {
+    public synchronized void stop() {
         for (TravelerRunner w : runners) {
             w.stop();
         }
@@ -211,10 +210,9 @@ public class DeJongEngine implements FractalEngine {
         agePanel.add(skipIterLabel);
         agePanel.add(skipIterSpinner);
         settingsPanel.add(skipIterPanel);
-        
-        
-        
-        randomizeButton = new JButton("Randomize");
+
+
+        JButton randomizeButton = new JButton("Randomize");
         randomizeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -294,53 +292,31 @@ public class DeJongEngine implements FractalEngine {
 
     }
 
-    private class DeJongTraveler implements Traveler {
-
-        private double r;
-        private double i;
-        private Color color;
-        private int age = 0;
+    private class DeJongTraveler extends Traveler {
 
         private DeJongTraveler() {
-            r = RANDOM.nextDouble();
-            i = RANDOM.nextDouble() * 2 - 1;
+            position.r = RANDOM.nextDouble();
+            position.i = RANDOM.nextDouble() * 2 - 1;
         }
 
-        @Override
         public void move() {
-            double rn = Math.sin(a * i) - Math.cos(b * r);
-            i = Math.sin(c * r) - Math.cos(d * i);
-            r = rn;
-            if (i == Double.NaN || r == Double.NaN || age > maxTravelerAge) {
-                r = RANDOM.nextDouble();
-                i = RANDOM.nextDouble() * 2 - 1;
+            double rn = Math.sin(a * position.i) - Math.cos(b * position.r);
+            position.i = Math.sin(c * position.r) - Math.cos(d * position.i);
+            position.r = rn;
+            age++;
+            if (age > maxTravelerAge) {
+                position.r = RANDOM.nextDouble();
+                position.i = RANDOM.nextDouble() * 2 - 1;
 
-                rn = Math.sin(a * i) - Math.cos(b * r);
-                i = Math.sin(c * r) - Math.cos(d * i);
-                r = rn;
+                rn = Math.sin(a * position.i) - Math.cos(b * position.r);
+                position.i = Math.sin(c * position.r) - Math.cos(d * position.i);
+                position.r = rn;
 
                 age = 1;
-                color = renderer.getActiveColorCalculator().calcColor(0, 0, new Complex(r, i), age, INSTANCE);
-            } else {
-                color = renderer.getActiveColorCalculator().calcColor(0, 0, new Complex(r, i), age, INSTANCE);
-                age++;
             }
+            color = renderer.getActiveColorCalculator().calcColor(0, 0, position, age, INSTANCE);
         }
 
-        @Override
-        public Complex getPosition() {
-            return new Complex(r, i);
-        }
-
-        @Override
-        public Color getColor() {
-            return color;
-        }
-        
-        @Override
-        public int getAge() {
-            return age;
-        }
     }
 
 }

@@ -21,7 +21,7 @@ public class JuliaCalculatorGPU implements Runnable {
     private int xOffset = 0;
     private int yOffset = 0;
 
-    boolean stopped = false;
+    private boolean stopped = false;
 
     public JuliaCalculatorGPU(JuliaRenderer mandelbrotRenderer) {
         this.juliaRenderer = mandelbrotRenderer;
@@ -61,8 +61,10 @@ public class JuliaCalculatorGPU implements Runnable {
                 for (int y = 0; y < juliaEngine.getSubImageHeight(); y++) {
                     if (y + yOffset < imageHeight) {
                         if (juliaEngine.isUseGPUFull()) {
+                            //TODO: (test) if (stopped) {return;}
                             juliaRenderer.enginePerformedCalculation(x + xOffset, y + yOffset, juliaEngine.getGPUOrbit(x, y));
                         } else if (juliaEngine.isUseGPUFast()) {
+                            //TODO: (test) if (stopped) {return;}
                             juliaRenderer.enginePerformedCalculation(x + xOffset, y + yOffset, juliaEngine.getLastOrbitPoint(x, y), juliaEngine.getOrbitLength(x, y));
                         }
                     }

@@ -4,7 +4,6 @@
  */
 package fractal.common;
 
-import fractal.common.Mappers.Mapper;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -42,10 +41,10 @@ public class FractalViewer extends javax.swing.JFrame {
         }
 
         if (fractalRenderer.getFractalEngine().getSettingsComponent() != null) {
-            engineOperionsPanel.setLayout(new GridLayout(1, 1));
-            engineOperionsPanel.add(fractalRenderer.getFractalEngine().getSettingsComponent());
+            engineOptionsPanel.setLayout(new GridLayout(1, 1));
+            engineOptionsPanel.add(fractalRenderer.getFractalEngine().getSettingsComponent());
         } else {
-            engineOperionsPanel.setVisible(false);
+            engineOptionsPanel.setVisible(false);
         }
 
         if (fractalRenderer.getSettingsComponent() != null) {
@@ -85,7 +84,7 @@ public class FractalViewer extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel3 = new javax.swing.JPanel();
-        engineOperionsPanel = new javax.swing.JPanel();
+        engineOptionsPanel = new javax.swing.JPanel();
         fractalOptionsPanel = new javax.swing.JPanel();
         colorOptionsPanel = new javax.swing.JPanel();
 
@@ -226,10 +225,10 @@ public class FractalViewer extends javax.swing.JFrame {
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-        engineOperionsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Engine Options"));
+        engineOptionsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Engine Options"));
 
-        javax.swing.GroupLayout engineOperionsPanelLayout = new javax.swing.GroupLayout(engineOperionsPanel);
-        engineOperionsPanel.setLayout(engineOperionsPanelLayout);
+        javax.swing.GroupLayout engineOperionsPanelLayout = new javax.swing.GroupLayout(engineOptionsPanel);
+        engineOptionsPanel.setLayout(engineOperionsPanelLayout);
         engineOperionsPanelLayout.setHorizontalGroup(
             engineOperionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 258, Short.MAX_VALUE)
@@ -269,14 +268,14 @@ public class FractalViewer extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(engineOperionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(engineOptionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(fractalOptionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(colorOptionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(engineOperionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(engineOptionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(fractalOptionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -477,10 +476,6 @@ public class FractalViewer extends javax.swing.JFrame {
     }//GEN-LAST:event_jXImagePanel1ComponentResized
 
     private void jXImagePanel1MouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_jXImagePanel1MouseWheelMoved
-        fractalRenderer.stopRendering();
-        
-        Mapper mapper = fractalRenderer.getMapper();
-        
         double imageWidth = (double)fractalRenderer.getImage().getBufferedImage().getWidth();
         double imageHeight = (double)fractalRenderer.getImage().getBufferedImage().getHeight();
         
@@ -507,8 +502,8 @@ public class FractalViewer extends javax.swing.JFrame {
         int newLeft = (int) Math.round(cutoffLeft);
         int newRight = (int) Math.round(imageWidth - cutoffRight);
         
-        Complex newTopLeft = mapper.mapToComplex(newLeft, newTop);
-        Complex newBottomRight = mapper.mapToComplex(newRight, newBottom);
+        Complex newTopLeft = fractalRenderer.getMapper().mapToComplex(newLeft, newTop);
+        Complex newBottomRight = fractalRenderer.getMapper().mapToComplex(newRight, newBottom);
         
         fractalRenderer.render((Integer) resolutionXSpinner.getValue(), (Integer) resolutionYSpinner.getValue(), newTopLeft, newBottomRight);
         
@@ -516,7 +511,7 @@ public class FractalViewer extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel colorOptionsPanel;
-    private javax.swing.JPanel engineOperionsPanel;
+    private javax.swing.JPanel engineOptionsPanel;
     private javax.swing.JPanel fractalOptionsPanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

@@ -42,7 +42,7 @@ public class BevelColorCalculator implements ColorCalculator {
     private double heightGreen = 1.5;
     private double heightBlue = 1.5;
 
-    Complex[][] imageNormals;
+    private Complex[][] imageNormals;
 
     @Override
     public Color calcColor(int x, int y, List<Complex> orbit, FractalEngine fractalEngine) {

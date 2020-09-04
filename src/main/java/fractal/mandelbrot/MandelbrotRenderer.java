@@ -47,7 +47,7 @@ public class MandelbrotRenderer extends FractalRenderer<MandelbrotEngine> implem
 
     private String specialAction = JULIA;
 
-    private long lastGuiUpddate;
+    private long lastGuiUpdate;
 
     private final int numCores = Runtime.getRuntime().availableProcessors();
     private List<MandelbrotCalculatorCPU> mandelbrotCalculatorsCPU = new ArrayList<>();
@@ -96,9 +96,9 @@ public class MandelbrotRenderer extends FractalRenderer<MandelbrotEngine> implem
     }
 
     @Override
-    protected void renderFractal() {
+    protected void render() {
         busy = true;
-        lastGuiUpddate = System.currentTimeMillis();
+        lastGuiUpdate = System.currentTimeMillis();
         if (!fractalEngine.isUseGPUFull() && !fractalEngine.isUseGPUFast()) {
             ExecutorService es = Executors.newFixedThreadPool(numCores);
             mandelbrotCalculatorsCPU = new ArrayList<>();
@@ -168,7 +168,7 @@ public class MandelbrotRenderer extends FractalRenderer<MandelbrotEngine> implem
                 Logger.getLogger(MandelbrotRenderer.class.getName()).log(Level.SEVERE, null, ex);
             }
             es.shutdown();
-            System.gc();
+//            System.gc();
             
         }
         lastRenderTime = System.currentTimeMillis() - t0;
@@ -181,9 +181,9 @@ public class MandelbrotRenderer extends FractalRenderer<MandelbrotEngine> implem
             synchronizedBufferedImage.setColor(points.get(i).x, points.get(i).y, activeColorCalculator.calcColor(points.get(i).x, points.get(i).y, orbits.get(i), fractalEngine));
         }
 
-        if (System.currentTimeMillis() - lastGuiUpddate > main.getGuiUpdateInterval()) {
+        if (System.currentTimeMillis() - lastGuiUpdate > main.getGuiUpdateInterval()) {
             updateGui();
-            lastGuiUpddate = System.currentTimeMillis();
+            lastGuiUpdate = System.currentTimeMillis();
         }
     }
 
@@ -191,9 +191,9 @@ public class MandelbrotRenderer extends FractalRenderer<MandelbrotEngine> implem
     public void enginePerformedCalculation(int x, int y, List<Complex> orbit) {
         synchronizedBufferedImage.setColor(x, y, activeColorCalculator.calcColor(x, y, orbit, fractalEngine));
 
-        if (System.currentTimeMillis() - lastGuiUpddate > main.getGuiUpdateInterval()) {
+        if (System.currentTimeMillis() - lastGuiUpdate > main.getGuiUpdateInterval()) {
             updateGui();
-            lastGuiUpddate = System.currentTimeMillis();
+            lastGuiUpdate = System.currentTimeMillis();
         }
     }
 
@@ -201,23 +201,19 @@ public class MandelbrotRenderer extends FractalRenderer<MandelbrotEngine> implem
     public void enginePerformedCalculation(int x, int y, List<Complex> orbit, Color color) {
         synchronizedBufferedImage.setColor(x, y, color);
 
-        if (System.currentTimeMillis() - lastGuiUpddate > main.getGuiUpdateInterval()) {
+        if (System.currentTimeMillis() - lastGuiUpdate > main.getGuiUpdateInterval()) {
             updateGui();
-            lastGuiUpddate = System.currentTimeMillis();
+            lastGuiUpdate = System.currentTimeMillis();
         }
     }
     
     void enginePerformedCalculation(int x, int y, Complex lastOrbitPoint, int orbitLength) {
         synchronizedBufferedImage.setColor(x, y, activeColorCalculator.calcColor(x, y, lastOrbitPoint, orbitLength, fractalEngine));
 
-        if (System.currentTimeMillis() - lastGuiUpddate > main.getGuiUpdateInterval()) {
+        if (System.currentTimeMillis() - lastGuiUpdate > main.getGuiUpdateInterval()) {
             updateGui();
-            lastGuiUpddate = System.currentTimeMillis();
+            lastGuiUpdate = System.currentTimeMillis();
         }
-    }
-
-    @Override
-    public void engineCompleted(SynchronizedBufferedImage image) {
     }
 
     @Override
@@ -309,9 +305,6 @@ public class MandelbrotRenderer extends FractalRenderer<MandelbrotEngine> implem
             }
 
             if (!juliaPreviewRenderer.isBusy()) {
-//                ((JuliaEngine)juliaPreviewRenderer.getFractalEngine()).setBailout(((MandelbrotEngine) fractalEngine).getBailout());
-//                ((JuliaEngine)juliaPreviewRenderer.getFractalEngine()).setExponent(((MandelbrotEngine) fractalEngine).getExponent());
-//                ((JuliaEngine)juliaPreviewRenderer.getFractalEngine()).setMaxIter(((MandelbrotEngine) fractalEngine).getMaxIter());
                 juliaPreviewRenderer.getFractalEngine().setC(pointOnImage);
                 juliaPreviewViewer.drawNow();
             }
@@ -323,10 +316,7 @@ public class MandelbrotRenderer extends FractalRenderer<MandelbrotEngine> implem
             }
             
             if (!mandelbrotPreviewRenderer.isBusy()) {
-//                ((MandelbrotEngine)mandelbrotPreviewRenderer.getFractalEngine()).setBailout(((MandelbrotEngine) fractalEngine).getBailout());
-//                ((MandelbrotEngine)mandelbrotPreviewRenderer.getFractalEngine()).setExponent(((MandelbrotEngine) fractalEngine).getExponent());
-//                ((MandelbrotEngine)mandelbrotPreviewRenderer.getFractalEngine()).setMaxIter(((MandelbrotEngine) fractalEngine).getMaxIter());
-                ((MandelbrotEngine)mandelbrotPreviewRenderer.getFractalEngine()).setPerterbation(pointOnImage);
+                mandelbrotPreviewRenderer.getFractalEngine().setPerterbation(pointOnImage);
                 mandelbrotPreviewViewer.drawNow();
             }
         }
@@ -358,7 +348,8 @@ public class MandelbrotRenderer extends FractalRenderer<MandelbrotEngine> implem
             juliaPreviewRenderer.render(imageWidth, imageHeight, juliaPreviewRenderer.getFractalEngine().getDefaultView().getFirst(), juliaPreviewRenderer.getFractalEngine().getDefaultView().getSecond());
         } else if (PERTURBATION.equals(specialAction)) {
             fractalEngine.setPerterbation(clickLocation);
-            renderFractal();
+            stopRendering();
+            render();
         }
     }
 
