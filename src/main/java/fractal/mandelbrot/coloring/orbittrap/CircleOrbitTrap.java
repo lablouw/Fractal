@@ -11,16 +11,17 @@ import fractal.common.Complex;
  *
  * @author Lloyd
  */
-public class CircleOrbitTrap implements OrbitTrap {
+public class CircleOrbitTrap extends OrbitTrap {
 
-    private final Complex center;
-    private final double radius;
-
-    public CircleOrbitTrap(Complex center, double radius) {
-        this.center = center;
-        this.radius = radius;
-    }
+    private Complex center;
+    private double radius;
     
+    @Override
+    public void setDefiningPoints(Complex p1, Complex p2) {
+        this.center = p1;
+        this.radius = Math.sqrt(Math.pow(p2.r-p1.r, 2) + Math.pow(p2.i-p1.i, 2));
+    }
+
     @Override
     public double distanceFrom(Complex p) {
         return Math.abs(p.sub(center).modulus() - radius)*2;
@@ -30,5 +31,5 @@ public class CircleOrbitTrap implements OrbitTrap {
     public String getName() {
         return "Circle";
     }
-    
+
 }

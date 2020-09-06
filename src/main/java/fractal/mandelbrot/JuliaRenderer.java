@@ -64,7 +64,7 @@ public class JuliaRenderer extends FractalRenderer<JuliaEngine> implements Antia
         addColorCalculator(new BuddahColorCalculator(this));
         addColorCalculator(new AverageAngleColorCalculator());
         addColorCalculator(new BevelColorCalculator());
-        addColorCalculator(new OrbitTrapColorCalculator());
+        addColorCalculator(new OrbitTrapColorCalculator(this));
         
         this.fractalViewer = new FractalViewer(this);
     }

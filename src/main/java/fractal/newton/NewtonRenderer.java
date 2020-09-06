@@ -12,6 +12,7 @@ import fractal.common.FractalViewer;
 import fractal.common.SynchronizedBufferedImage;
 import fractal.common.ImageUtils;
 import fractal.main;
+import fractal.mandelbrot.coloring.OrbitTrapColorCalculator;
 import fractal.newton.coloring.BasinsOfAttractionColorCalulator;
 import fractal.newton.coloring.NewtonIterationsColorCalculator;
 import java.awt.Color;
@@ -63,6 +64,7 @@ public class NewtonRenderer extends FractalRenderer<NewtonEngine> implements Ant
         this.fractalEngine = new NewtonEngine();
         addColorCalculator(new NewtonIterationsColorCalculator(this));
         addColorCalculator(new BasinsOfAttractionColorCalulator());
+        addColorCalculator(new OrbitTrapColorCalculator(this));
         
         this.fractalViewer = new FractalViewer(this);
     }

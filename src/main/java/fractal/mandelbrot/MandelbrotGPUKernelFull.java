@@ -84,6 +84,7 @@ public class MandelbrotGPUKernelFull extends Kernel {
         List<Complex> orbit = new ArrayList<>();
         int orbitStartIndex = x * maxIter + y * maxIter * subImageWidth;
         int iter = 0;
+        //TODO: Investigate returning & processing 2 double arrays rather than list.add(new())
         while (iter < maxIter && orbitsR[orbitStartIndex + iter] != Double.MAX_VALUE) {
             orbit.add(new Complex(orbitsR[orbitStartIndex + iter], orbitsI[orbitStartIndex + iter]));
             iter++;

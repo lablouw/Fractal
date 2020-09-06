@@ -26,10 +26,14 @@ public class SmoothColorCalculatorMandelbrot implements ColorCalculator {
     private JPanel settingsPanel;
     private float spectrumPhase = 1;
     private float spectrumComp = 1;
+    private float gamma = 1;
     private Complex[][] orbitEndPoints;
     private int[][] orbitLengths;
+    
     private final JSlider compressionSlider = new JSlider(1, 2000);
     private final JSlider phaseSlider = new JSlider(0, 255);
+    private final JSlider gammaSlider = new JSlider(-100, 100);
+    private final JLabel gammaLabel = new JLabel("Spectrum Gamma = 1");
     private final ColorPalette colorPalette = new ColorPalette();
 
     public SmoothColorCalculatorMandelbrot(final FractalRenderer renderer) {
@@ -124,6 +128,28 @@ public class SmoothColorCalculatorMandelbrot implements ColorCalculator {
             }
         });
         settingsPanel.add(compressionSlider);
+        
+        settingsPanel.add(gammaLabel);
+        gammaSlider.setValue(1);
+        gammaSlider.addMouseListener(new MouseListener() {
+            @Override public void mouseClicked(MouseEvent e) {}
+            @Override public void mousePressed(MouseEvent e) {}
+            @Override public void mouseEntered(MouseEvent e) {}
+            @Override public void mouseExited(MouseEvent e) {}
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (gammaSlider.getValue() >= 1) {
+                    gamma = gammaSlider.getValue()/10f;
+                } else if (gammaSlider.getValue() < 1) {
+                    gamma = 1f/((-gammaSlider.getValue()+2)/10f);
+                }
+                gammaLabel.setText("Spectrum Gamma = "+gamma);
+                
+                redraw();
+            }
+        });
+        settingsPanel.add(gammaSlider);
     }
 
     @Override
@@ -141,7 +167,6 @@ public class SmoothColorCalculatorMandelbrot implements ColorCalculator {
 
     @Override
     public void complete(SynchronizedBufferedImage synchronizedBufferedImage) {
-        
         compressionSlider.setMaximum(fractalRenderer.getFractalEngine().getMaxIter());
     }
 

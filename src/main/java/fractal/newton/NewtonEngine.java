@@ -75,7 +75,9 @@ public class NewtonEngine implements FractalEngine {
                 z0 = z1;
                 iter++;
             } while (diff >= bailout && iter < maxIter);
-            orbit.add(z1);
+            if (z1 != null) {
+                orbit.add(z1);
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }

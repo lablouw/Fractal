@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
+import org.jdesktop.swingx.JXImagePanel;
 
 /**
  *
@@ -538,6 +539,10 @@ public class FractalViewer extends javax.swing.JFrame {
     public void setImage(BufferedImage bufferedImage) {
         jXImagePanel1.setImage(bufferedImage);
         jLabel1.setText(bufferedImage.getWidth() + " X " + bufferedImage.getHeight());
+    }
+    
+    public JXImagePanel getImagePanel(){
+        return jXImagePanel1;
     }
 
     public void setRenderTime(long lastRenderTime) {
