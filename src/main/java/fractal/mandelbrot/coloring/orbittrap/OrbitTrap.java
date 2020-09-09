@@ -7,9 +7,12 @@ package fractal.mandelbrot.coloring.orbittrap;
 
 import fractal.common.Complex;
 import fractal.common.FractalRenderer;
+
+import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import javax.swing.JButton;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.image.BufferedImage;
 
 /**
  *
@@ -19,55 +22,69 @@ public abstract class OrbitTrap {
 
     private MouseListener[] tempListeners;
     private FractalRenderer fractalRenderer;
-    private OrbitTrap orbitTrap;
-    
+
     public abstract String getName();
-    public abstract void setDefiningPoints(Complex p1, Complex p2);
-    public abstract double distanceFrom(Complex p);
+    public abstract void setDefiningPoints(Complex c1, Complex c2);
+    public abstract double distanceFrom(Complex c);
+    public abstract BufferedImage drawOrbitTrap(BufferedImage baseImage, FractalRenderer fractalRenderer);
     
-    public void doUserDefined(FractalRenderer fractalRenderer, OrbitTrap orbitTrap, JButton buttonToEnable) {
+    public void doUserDefined(FractalRenderer fractalRenderer, JButton buttonToEnable) {
         this.fractalRenderer = fractalRenderer;
-        this.orbitTrap = orbitTrap;
         tempListeners = fractalRenderer.getFractalViewer().getImagePanel().getMouseListeners();
         for (MouseListener ml : tempListeners) {
             fractalRenderer.getFractalViewer().getImagePanel().removeMouseListener(ml);
         }
-        
-         fractalRenderer.getFractalViewer().getImagePanel().addMouseListener(new OrbitTrapDefeiningMouseListener(buttonToEnable));
+
+        OrbitTrapDefiningMouseListener orbitTrapDefiningMouseListener = new OrbitTrapDefiningMouseListener(buttonToEnable);
+        fractalRenderer.getFractalViewer().getImagePanel().addMouseListener(orbitTrapDefiningMouseListener);
+        fractalRenderer.getFractalViewer().getImagePanel().addMouseMotionListener(orbitTrapDefiningMouseListener);
+
     }
 
-    private class OrbitTrapDefeiningMouseListener implements MouseListener {
-        Complex p1, p2;
+    private class OrbitTrapDefiningMouseListener extends MouseMotionAdapter implements MouseListener {
+        private Complex p1;
+        private Complex p2;
         private final JButton buttonToEnable;
+        private BufferedImage baseImage;
 
-        private OrbitTrapDefeiningMouseListener(JButton buttonToEnable) {
+        private OrbitTrapDefiningMouseListener(JButton buttonToEnable) {
             this.buttonToEnable = buttonToEnable;
+            this.baseImage = fractalRenderer.getFractalViewer().getImage();
         }
 
-        @Override public void mouseClicked(MouseEvent e) {}
-        @Override public void mouseEntered(MouseEvent e) {}
-        @Override public void mouseExited(MouseEvent e) {}
-        
-        @Override
         public void mousePressed(MouseEvent e) {
-            p1 = fractalRenderer.getMapper().mapToComplex(e.getX(), e.getY());
+            p1 = fractalRenderer.getMapper().mapToComplex(e.getX(), e.getY(), fractalRenderer.getFractalViewer().getImagePanel());
         }
 
-        @Override
         public void mouseReleased(MouseEvent e) {
-            p2 = fractalRenderer.getMapper().mapToComplex(e.getX(), e.getY());
+            p2 = fractalRenderer.getMapper().mapToComplex(e.getX(), e.getY(), fractalRenderer.getFractalViewer().getImagePanel());
             fractalRenderer.getFractalViewer().getImagePanel().removeMouseListener(this);
+            fractalRenderer.getFractalViewer().getImagePanel().removeMouseMotionListener(this);
             for (MouseListener ml : tempListeners) {
                 fractalRenderer.getFractalViewer().getImagePanel().addMouseListener(ml);
             }
 
-            orbitTrap.setDefiningPoints(p1, p2);
+            setDefiningPoints(p1, p2);
             buttonToEnable.setEnabled(true);
             buttonToEnable.setText("Specify trap");
+            fractalRenderer.render(
+                    fractalRenderer.getImage().getBufferedImage().getWidth(),
+                    fractalRenderer.getImage().getBufferedImage().getHeight(),
+                    fractalRenderer.getMapper().getTopLeft(),
+                    fractalRenderer.getMapper().getBottomRight());
         }
 
+        public void mouseDragged(MouseEvent e) {
+            p2 = fractalRenderer.getMapper().mapToComplex(e.getX(), e.getY(), fractalRenderer.getFractalViewer().getImagePanel());
+            setDefiningPoints(p1, p2);
+            fractalRenderer.getFractalViewer().setImage(drawOrbitTrap(baseImage, fractalRenderer));
+        }
+
+        public void mouseClicked(MouseEvent e) {}
+        public void mouseEntered(MouseEvent e) {}
+        public void mouseExited(MouseEvent e) {}
+        public void mouseMoved(MouseEvent e) {}
     }
-    
-    
-    
+
+
 }

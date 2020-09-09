@@ -13,6 +13,7 @@ import fractal.common.FractalRenderer;
 import fractal.common.SynchronizedBufferedImage;
 import fractal.mandelbrot.coloring.orbittrap.CircleOrbitTrap;
 import fractal.mandelbrot.coloring.orbittrap.InfiniteLineOrbitTrap;
+import fractal.mandelbrot.coloring.orbittrap.LineSegmentOrbitTrap;
 import fractal.mandelbrot.coloring.orbittrap.OrbitTrap;
 import java.awt.Color;
 import java.awt.Component;
@@ -45,7 +46,7 @@ public class OrbitTrapColorCalculator implements ColorCalculator {
     private float spectrumComp = 0.05f;
     private OrbitTrap orbitTrap;
     private final FractalRenderer fractalRenderer;
-    private double [][] minDists;
+    private double [][] minDists;//TODO: Move to orbit trap implementations
     
     public OrbitTrapColorCalculator(FractalRenderer fractalRenderer) {
         this.fractalRenderer = fractalRenderer;
@@ -54,17 +55,19 @@ public class OrbitTrapColorCalculator implements ColorCalculator {
     
     @Override
     public Color calcColor(int x, int y, List<Complex> orbit, FractalEngine fractalEngine) {
+//        return orbitTrap.calcColor()
+
         double minDist = Double.MAX_VALUE;
-//        TODO: skip first iter for Newton?
-        for (int i = 1; i < orbit.size(); i++) {//skip first mandelbrot orbit point (always == perterb i.e. 0)
+        for (int i = 1; i < orbit.size(); i++) {//skip first mandelbrot orbit point (always == perterb i.e. 0) TODO: what about other fractals
             double d = orbitTrap.distanceFrom(orbit.get(i));
             if (d < minDist) {
                 minDist = d;
+
             }
         }
 
         minDists[x][y] = minDist;
-        return minDist == 0 ? Color.BLACK : colorPalette.getColor((float) Math.log(minDist) * spectrumComp);
+        return minDist == 0 ? Color.BLACK : colorPalette.getColor((float) -Math.log(minDist) * spectrumComp);
     }
     
     @Override
@@ -86,6 +89,7 @@ public class OrbitTrapColorCalculator implements ColorCalculator {
     public void init(FractalRenderer fractalRenderer) {
         int imageWidth = fractalRenderer.getImage().getBufferedImage().getWidth();
         int imageHeight = fractalRenderer.getImage().getBufferedImage().getHeight();
+//        orbitTrap.init(fractalRenderer);
         minDists = new double[imageWidth][imageHeight];
     }
     
@@ -103,7 +107,7 @@ public class OrbitTrapColorCalculator implements ColorCalculator {
     }
     
     private Color recalcColor(double minDist) {
-        return minDist == 0 ? Color.BLACK : colorPalette.getColor((float) Math.log(minDist)*spectrumComp);
+        return minDist == 0 ? Color.BLACK : colorPalette.getColor((float) -Math.log(minDist)*spectrumComp);
     }
 
     private void initSettingsPanel() {
@@ -137,6 +141,7 @@ public class OrbitTrapColorCalculator implements ColorCalculator {
         });
         trapSelector.addItem(new CircleOrbitTrap());
         trapSelector.addItem(new InfiniteLineOrbitTrap());
+        trapSelector.addItem(new LineSegmentOrbitTrap());
         settingsPanel.add(trapSelector);
         
         JButton specifyOrbitTrapParamsButton = new JButton("Specify trap");
@@ -144,7 +149,7 @@ public class OrbitTrapColorCalculator implements ColorCalculator {
             public void actionPerformed(ActionEvent e) {
                 specifyOrbitTrapParamsButton.setEnabled(false);
                 specifyOrbitTrapParamsButton.setText("Drag on image to specify");
-                orbitTrap.doUserDefined(fractalRenderer, orbitTrap, specifyOrbitTrapParamsButton);
+                orbitTrap.doUserDefined(fractalRenderer, specifyOrbitTrapParamsButton);
             }
         });
         settingsPanel.add(specifyOrbitTrapParamsButton);

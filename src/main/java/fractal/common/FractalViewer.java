@@ -4,7 +4,7 @@
  */
 package fractal.common;
 
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -362,27 +362,13 @@ public class FractalViewer extends javax.swing.JFrame {
     private Complex newP1, newP2;
     private void jXImagePanel1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jXImagePanel1MousePressed
         if (evt.getButton() == MouseEvent.BUTTON1) {
-            double scaleRatio = Math.min((double) jXImagePanel1.getWidth() / (double) jXImagePanel1.getImage().getWidth(null), (double) jXImagePanel1.getHeight() / (double) jXImagePanel1.getImage().getHeight(null));
-            int scaledImageWidth = (int) (jXImagePanel1.getImage().getWidth(null) * scaleRatio);
-            int scaledImageHeight = (int) (jXImagePanel1.getImage().getHeight(null) * scaleRatio);
-            int xSub = (jXImagePanel1.getWidth() - scaledImageWidth) / 2;
-            int ySub = (jXImagePanel1.getHeight() - scaledImageHeight) / 2;
-            int relativeX = (int) ((double) ((evt.getX() - xSub)) / scaleRatio);
-            int relativeY = (int) ((double) ((evt.getY() - ySub)) / scaleRatio);
-            newP1 = fractalRenderer.getMapper().mapToComplex(relativeX, relativeY);
+            newP1 = fractalRenderer.getMapper().mapToComplex(evt.getX(), evt.getY(), jXImagePanel1);
         }
     }//GEN-LAST:event_jXImagePanel1MousePressed
 
     private void jXImagePanel1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jXImagePanel1MouseReleased
         if (evt.getButton() == MouseEvent.BUTTON1) {
-            double scaleRatio = Math.min((double) jXImagePanel1.getWidth() / (double) jXImagePanel1.getImage().getWidth(null), (double) jXImagePanel1.getHeight() / (double) jXImagePanel1.getImage().getHeight(null));
-            int scaledImageWidth = (int) (jXImagePanel1.getImage().getWidth(null) * scaleRatio);
-            int scaledImageHeight = (int) (jXImagePanel1.getImage().getHeight(null) * scaleRatio);
-            int xSub = (jXImagePanel1.getWidth() - scaledImageWidth) / 2;
-            int ySub = (jXImagePanel1.getHeight() - scaledImageHeight) / 2;
-            int relativeX = (int) ((double) ((evt.getX() - xSub)) / scaleRatio);
-            int relativeY = (int) ((double) ((evt.getY() - ySub)) / scaleRatio);
-            newP2 = fractalRenderer.getMapper().mapToComplex(relativeX, relativeY);
+            newP2 = fractalRenderer.getMapper().mapToComplex(evt.getX(), evt.getY(), jXImagePanel1);
 
             if (newP2.r < newP1.r) {
                 double temp = newP2.r;
@@ -397,14 +383,7 @@ public class FractalViewer extends javax.swing.JFrame {
 
             fractalRenderer.render((Integer) resolutionXSpinner.getValue(), (Integer) resolutionYSpinner.getValue(), newP1, newP2);
         } else if (evt.getButton() == MouseEvent.BUTTON2) {
-            double scaleRatio = Math.min((double) jXImagePanel1.getWidth() / (double) jXImagePanel1.getImage().getWidth(null), (double) jXImagePanel1.getHeight() / (double) jXImagePanel1.getImage().getHeight(null));
-            int scaledImageWidth = (int) (jXImagePanel1.getImage().getWidth(null) * scaleRatio);
-            int scaledImageHeight = (int) (jXImagePanel1.getImage().getHeight(null) * scaleRatio);
-            int xSub = (jXImagePanel1.getWidth() - scaledImageWidth) / 2;
-            int ySub = (jXImagePanel1.getHeight() - scaledImageHeight) / 2;
-            int relativeX = (int) ((double) ((evt.getX() - xSub)) / scaleRatio);
-            int relativeY = (int) ((double) ((evt.getY() - ySub)) / scaleRatio);
-            Complex clickLocation = fractalRenderer.getMapper().mapToComplex(relativeX, relativeY);
+            Complex clickLocation = fractalRenderer.getMapper().mapToComplex(evt.getX(), evt.getY(), jXImagePanel1);
             fractalRenderer.performSpecialClickAction(clickLocation);
         } else if (evt.getButton() == MouseEvent.BUTTON3) {
             System.out.println("zoom out");
@@ -429,7 +408,7 @@ public class FractalViewer extends javax.swing.JFrame {
 
             @Override
             public boolean accept(File f) {
-                return f.getPath().endsWith(".png");
+                return f.getPath().endsWith(".png") || f.isDirectory();
             }
 
             @Override
@@ -439,6 +418,9 @@ public class FractalViewer extends javax.swing.JFrame {
         });
         if (ch.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
             try {
+                if (!ch.getSelectedFile().getName().endsWith(".png")) {
+                    ch.setSelectedFile(new File(ch.getSelectedFile().getPath()+".png"));
+                }
                 ImageIO.write(fractalRenderer.getImage().getBufferedImage(), "png", ch.getSelectedFile());
             } catch (IOException ex) {
                 Logger.getLogger(FractalViewer.class.getName()).log(Level.SEVERE, null, ex);
@@ -454,14 +436,7 @@ public class FractalViewer extends javax.swing.JFrame {
 
     private void jXImagePanel1MouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jXImagePanel1MouseMoved
         if (jXImagePanel1.getImage() != null) {
-            double scaleRatio = Math.min((double) jXImagePanel1.getWidth() / (double) jXImagePanel1.getImage().getWidth(null), (double) jXImagePanel1.getHeight() / (double) jXImagePanel1.getImage().getHeight(null));
-            int scaledImageWidth = (int) (jXImagePanel1.getImage().getWidth(null) * scaleRatio);
-            int scaledImageHeight = (int) (jXImagePanel1.getImage().getHeight(null) * scaleRatio);
-            int xSub = (jXImagePanel1.getWidth() - scaledImageWidth) / 2;
-            int ySub = (jXImagePanel1.getHeight() - scaledImageHeight) / 2;
-            int relativeX = (int) ((double) ((evt.getX() - xSub)) / scaleRatio);
-            int relativeY = (int) ((double) ((evt.getY() - ySub)) / scaleRatio);
-            Complex mousePosition = fractalRenderer.getMapper().mapToComplex(relativeX, relativeY);
+            Complex mousePosition = fractalRenderer.getMapper().mapToComplex(evt.getX(), evt.getY(), jXImagePanel1);
             jLabel4.setText(mousePosition.toStringZeroFill());
 
             fractalRenderer.mouseMoved(mousePosition);
@@ -539,6 +514,10 @@ public class FractalViewer extends javax.swing.JFrame {
     public void setImage(BufferedImage bufferedImage) {
         jXImagePanel1.setImage(bufferedImage);
         jLabel1.setText(bufferedImage.getWidth() + " X " + bufferedImage.getHeight());
+    }
+
+    public BufferedImage getImage() {
+        return (BufferedImage) jXImagePanel1.getImage();
     }
     
     public JXImagePanel getImagePanel(){
