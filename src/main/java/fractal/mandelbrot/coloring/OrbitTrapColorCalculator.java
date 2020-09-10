@@ -11,6 +11,7 @@ import fractal.common.FractalEngine;
 import fractal.common.FractalRenderer;
 import fractal.common.SynchronizedBufferedImage;
 import fractal.mandelbrot.coloring.orbittrap.CircleOrbitTrap;
+import fractal.mandelbrot.coloring.orbittrap.CrossOrbitTrap;
 import fractal.mandelbrot.coloring.orbittrap.InfiniteLineOrbitTrap;
 import fractal.mandelbrot.coloring.orbittrap.LineSegmentOrbitTrap;
 import fractal.mandelbrot.coloring.orbittrap.OrbitTrap;
@@ -33,6 +34,7 @@ public class OrbitTrapColorCalculator implements ColorCalculator {
 			new CircleOrbitTrap(),
 			new InfiniteLineOrbitTrap(),
 			new LineSegmentOrbitTrap(),
+            new CrossOrbitTrap()
 	};
 
     private JPanel settingsPanel;
