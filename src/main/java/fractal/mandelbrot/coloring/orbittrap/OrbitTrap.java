@@ -6,13 +6,16 @@
 package fractal.mandelbrot.coloring.orbittrap;
 
 import fractal.common.Complex;
+import fractal.common.FractalEngine;
 import fractal.common.FractalRenderer;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 /**
  *
@@ -21,13 +24,17 @@ import java.awt.image.BufferedImage;
 public abstract class OrbitTrap {
 
     private MouseListener[] tempListeners;
-    private FractalRenderer fractalRenderer;
+    protected FractalRenderer fractalRenderer;
 
     public abstract String getName();
+    public abstract void init(FractalRenderer fractalRenderer);
     public abstract void setDefiningPoints(Complex c1, Complex c2);
-    public abstract double distanceFrom(Complex c);
+    public abstract Component getSettingsComponent();
     public abstract BufferedImage drawOrbitTrap(BufferedImage baseImage, FractalRenderer fractalRenderer);
-    
+    public abstract Color calcColor(int x, int y, List<Complex> orbit, FractalEngine fractalEngine);
+
+    public abstract Color reCalcColor(int x, int y);
+
     public void doUserDefined(FractalRenderer fractalRenderer, JButton buttonToEnable) {
         this.fractalRenderer = fractalRenderer;
         tempListeners = fractalRenderer.getFractalViewer().getImagePanel().getMouseListeners();
