@@ -24,6 +24,7 @@ import java.util.List;
  */
 public class InfiniteLineOrbitTrap extends OrbitTrap {
 
+	private static final double EPSILON = 1E-15;
 	private JPanel settingsPanel;
 	private final JSlider compressionSlider = new JSlider(1, 100);
 	private final ColorPalette colorPalette = new ColorPalette();
@@ -33,6 +34,7 @@ public class InfiniteLineOrbitTrap extends OrbitTrap {
 	private double m, c; //y=mx+c
 	private Complex c1;
 	private Complex c2;
+	private boolean vertical = false;
 	// mx -y +c = 0
     // a==m, b=-1, c==c
 
@@ -72,8 +74,13 @@ public class InfiniteLineOrbitTrap extends OrbitTrap {
 		this.c1 = c1;
 		this.c2 = c2;
 
-        m = (c2.i - c1.i) / (c2.r - c1.r);
-        c = c1.i - m * c1.r;
+		if (c2.r - c1.r < EPSILON) {
+			vertical = true;
+		} else {
+			m = (c2.i - c1.i) / (c2.r - c1.r);
+			c = c1.i - m * c1.r;
+			vertical = false;
+		}
     }
 
 	@Override
@@ -135,6 +142,9 @@ public class InfiniteLineOrbitTrap extends OrbitTrap {
 	}
 
 	private double distanceFrom(Complex c) {
+		if (vertical) {
+			return Math.abs(c.r - c1.r);
+		}
 		return Math.abs(m*c.r - c.i + this.c) / Math.sqrt(m*m + 1);
 	}
 

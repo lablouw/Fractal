@@ -15,6 +15,7 @@ import java.util.List;
 
 public class LineSegmentOrbitTrap extends OrbitTrap {
 
+	private static final double EPSILON = 1E-15;
 	private JPanel settingsPanel;
 	private final JSlider compressionSlider = new JSlider(1, 100);
 	private final ColorPalette colorPalette = new ColorPalette();
@@ -25,6 +26,7 @@ public class LineSegmentOrbitTrap extends OrbitTrap {
 	private double m2;
 	private Complex c1;
 	private Complex c2;
+	private boolean vertical = false;
 	// mx -y +c = 0
 	// a==m, b=-1, c==c
 
@@ -64,8 +66,13 @@ public class LineSegmentOrbitTrap extends OrbitTrap {
 		this.c1 = c1;
 		this.c2 = c2;
 
-		m = (c2.i - c1.i) / (c2.r - c1.r);
-		c = c1.i - m * c1.r;
+		if (c2.r - c1.r < EPSILON) {
+			vertical = true;
+		} else {
+			m = (c2.i - c1.i) / (c2.r - c1.r);
+			c = c1.i - m * c1.r;
+			vertical = false;
+		}
 	}
 
 	@Override
@@ -117,6 +124,19 @@ public class LineSegmentOrbitTrap extends OrbitTrap {
 	}
 
 	private double distanceFrom(Complex c) {
+		if (vertical) {
+			if (c1.i > c2.i) {
+				if (c.i > c2.i && c.i < c1.i) {
+					return (Math.abs(c.r - c1.r));
+				}
+			} else {
+				if (c.i > c1.i && c2.i < c.i) {
+					return (Math.abs(c.r - c1.r));
+				}
+			}
+			return Math.min(c1.sub(c).modulus(), c2.sub(c).modulus());
+		}
+
 		//project point onto line
 		m2 = -1/m;
 		double r = (m*c1.r-m2*c.r+c.i-c1.i) / (m-m2);
