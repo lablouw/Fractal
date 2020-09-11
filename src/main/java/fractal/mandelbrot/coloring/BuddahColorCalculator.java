@@ -189,7 +189,7 @@ public class BuddahColorCalculator implements ColorCalculator {
     }
 
     @Override
-    public void init(FractalRenderer fractalRenderer) {
+    public void initForRender(FractalRenderer fractalRenderer) {
         maxHitsRed = 0;
         maxHitsGreen = 0;
         maxHitsBlue = 0;

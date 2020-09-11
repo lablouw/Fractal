@@ -10,7 +10,7 @@ import fractal.common.Complex;
 import fractal.common.FractalEngine;
 import fractal.common.FractalRenderer;
 import fractal.common.SynchronizedBufferedImage;
-import fractal.mandelbrot.coloring.orbittrap.CircleOrbitTrap;
+import fractal.mandelbrot.coloring.orbittrap.circle.CircleOrbitTrap;
 import fractal.mandelbrot.coloring.orbittrap.CrossOrbitTrap;
 import fractal.mandelbrot.coloring.orbittrap.InfiniteLineOrbitTrap;
 import fractal.mandelbrot.coloring.orbittrap.LineSegmentOrbitTrap;
@@ -30,12 +30,7 @@ import java.util.List;
  */
 public class OrbitTrapColorCalculator implements ColorCalculator {
 
-	private OrbitTrap[] orbitTraps = new OrbitTrap[]{
-			new CircleOrbitTrap(),
-			new InfiniteLineOrbitTrap(),
-			new LineSegmentOrbitTrap(),
-            new CrossOrbitTrap()
-	};
+    private OrbitTrap[] orbitTraps;
 
     private JPanel settingsPanel;
     private OrbitTrap activeOrbitTrap;
@@ -43,6 +38,14 @@ public class OrbitTrapColorCalculator implements ColorCalculator {
 
     public OrbitTrapColorCalculator(FractalRenderer fractalRenderer) {
         this.fractalRenderer = fractalRenderer;
+        
+        orbitTraps = new OrbitTrap[]{
+            new CircleOrbitTrap(fractalRenderer),
+            new InfiniteLineOrbitTrap(fractalRenderer),
+            new LineSegmentOrbitTrap(fractalRenderer),
+            new CrossOrbitTrap(fractalRenderer)
+        };
+        
         initSettingsPanel();
     }
     
@@ -67,8 +70,8 @@ public class OrbitTrapColorCalculator implements ColorCalculator {
     }
 
     @Override
-    public void init(FractalRenderer fractalRenderer) {
-		activeOrbitTrap.init(fractalRenderer);
+    public void initForRender(FractalRenderer fractalRenderer) {
+	activeOrbitTrap.initForRender(fractalRenderer);
     }
     
     @Override
@@ -86,13 +89,7 @@ public class OrbitTrapColorCalculator implements ColorCalculator {
         });
         trapSelector.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
-//                if (activeOrbitTrap != null && settingsPanel != null) {
-//                    settingsPanel.remove(activeOrbitTrap.getSettingsComponent());
-//                }
-				activeOrbitTrap = (OrbitTrap) e.getItem();
-//                if (settingsPanel != null) {
-//                    settingsPanel.add(activeOrbitTrap.getSettingsComponent());
-//                }
+		activeOrbitTrap = (OrbitTrap) e.getItem();
             }
         });
         for (OrbitTrap orbitTrap : orbitTraps) {
@@ -113,7 +110,7 @@ public class OrbitTrapColorCalculator implements ColorCalculator {
         JButton orbitTrapSettingsButton = new JButton("Orbit trap settings");
         orbitTrapSettingsButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Settings");
+                activeOrbitTrap.getSettingsComponent().setVisible(true);
             }
         });
         settingsPanel.add(orbitTrapSettingsButton);

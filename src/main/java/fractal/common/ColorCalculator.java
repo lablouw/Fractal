@@ -13,15 +13,15 @@ import java.util.List;
  */
 public interface ColorCalculator {
 
-	Color calcColor(int x, int y, List<Complex> orbit, FractalEngine fractalEngine);
+    Color calcColor(int x, int y, List<Complex> orbit, FractalEngine fractalEngine);
 
-	JComponent getSettingsComponent();
+    JComponent getSettingsComponent();
 
-	String getName();
+    String getName();
 
-	void init(FractalRenderer fractalRenderer);
+    void initForRender(FractalRenderer fractalRenderer);
 
-	void complete(SynchronizedBufferedImage synchronizedBufferedImage);
+    void complete(SynchronizedBufferedImage synchronizedBufferedImage);
 
-	Color calcColor(int x, int y, Complex lastOrbitPoint, int orbitLength, FractalEngine fractalEngine);
+    Color calcColor(int x, int y, Complex lastOrbitPoint, int orbitLength, FractalEngine fractalEngine);
 }

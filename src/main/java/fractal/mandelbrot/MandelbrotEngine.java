@@ -266,7 +266,6 @@ public class MandelbrotEngine implements FractalEngine {
 
     @Override
     public void init() {
-
     }
 
     @Override

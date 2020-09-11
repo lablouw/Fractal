@@ -27,7 +27,7 @@ public abstract class OrbitTrap {
     protected FractalRenderer fractalRenderer;
 
     public abstract String getName();
-    public abstract void init(FractalRenderer fractalRenderer);
+    public abstract void initForRender(FractalRenderer fractalRenderer);
     public abstract void setDefiningPoints(Complex c1, Complex c2);
     public abstract Component getSettingsComponent();
     public abstract BufferedImage drawOrbitTrap(BufferedImage baseImage, FractalRenderer fractalRenderer);

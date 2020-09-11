@@ -42,7 +42,8 @@ public class InfiniteLineOrbitTrap extends OrbitTrap {
     //Distance(ax + by + c = 0, (x0, y0)) = |ax0 + by0 +c| / sqrt(a^2 + b^2)
 
 
-	public InfiniteLineOrbitTrap() {
+	public InfiniteLineOrbitTrap(FractalRenderer fractalRenderer) {
+                this.fractalRenderer = fractalRenderer;
 		setDefiningPoints(new Complex(0, 0), new Complex(1, 0));
 		initSettingsPanel();
 	}
@@ -58,7 +59,7 @@ public class InfiniteLineOrbitTrap extends OrbitTrap {
 	}
 
 	@Override
-	public void init(FractalRenderer fractalRenderer) {
+	public void initForRender(FractalRenderer fractalRenderer) {
 		int imageWidth = fractalRenderer.getImage().getBufferedImage().getWidth();
 		int imageHeight = fractalRenderer.getImage().getBufferedImage().getHeight();
 		minDists = new double[imageWidth][imageHeight];

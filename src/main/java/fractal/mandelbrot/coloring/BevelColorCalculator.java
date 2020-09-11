@@ -209,7 +209,7 @@ public class BevelColorCalculator implements ColorCalculator {
     }
 
     @Override
-    public void init(FractalRenderer fractalRenderer) {
+    public void initForRender(FractalRenderer fractalRenderer) {
         this.fractalRenderer = fractalRenderer;
         imageNormals = new Complex[fractalRenderer.getImage().getBufferedImage().getWidth()][fractalRenderer.getImage().getBufferedImage().getHeight()];
     }

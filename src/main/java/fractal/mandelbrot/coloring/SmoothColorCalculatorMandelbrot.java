@@ -158,7 +158,7 @@ public class SmoothColorCalculatorMandelbrot implements ColorCalculator {
     }
 
     @Override
-    public void init(FractalRenderer fractalRenderer) {
+    public void initForRender(FractalRenderer fractalRenderer) {
         int imageWidth = fractalRenderer.getImage().getBufferedImage().getWidth();
         int imageHeight = fractalRenderer.getImage().getBufferedImage().getHeight();
         orbitEndPoints = new Complex[imageWidth][imageHeight];

@@ -49,7 +49,7 @@ public class BasinsOfAttractionColorCalulator implements ColorCalculator {
     }
 
     @Override
-    public void init(FractalRenderer fractalRenderer) {
+    public void initForRender(FractalRenderer fractalRenderer) {
     }
 
     @Override
