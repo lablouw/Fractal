@@ -75,9 +75,9 @@ public class JuliaEngine implements FractalEngine {
                 c.i = (Double) ciSpinner.getValue();
             }
         });
-        double gpuMem = ((double) ((OpenCLDevice) Device.best()).getGlobalMemSize()) / 1024d / 1024d / 1024d;
-        final JCheckBox useGpuCBFull = new JCheckBox("Use " + Device.best().getType() + " (" + gpuMem + "Gb) - Full orbit");
-        final JCheckBox useGpuCBFast = new JCheckBox("Use " + Device.best().getType() + " (" + gpuMem + "Gb) - Fast");
+//        double gpuMem = ((double) ((OpenCLDevice) Device.best()).getGlobalMemSize()) / 1024d / 1024d / 1024d;
+        final JCheckBox useGpuCBFull = new JCheckBox("Use " + Device.best().getType() + " (" + 1 + "Gb) - Full orbit");
+        final JCheckBox useGpuCBFast = new JCheckBox("Use " + Device.best().getType() + " (" + 1 + "Gb) - Fast");
         useGpuCBFull.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -147,7 +147,7 @@ public class JuliaEngine implements FractalEngine {
         int iter = 1;
         if (exponent.r == 2 && exponent.i == 0) {
             while (z.r * z.r + z.i * z.i < bailoutSquared && iter < maxIter) {
-                z = z.mult(z);
+                z = z.square();
                 z = z.add(c);
                 orbit.add(z);
                 iter++;

@@ -47,11 +47,6 @@ public class CrossOrbitTrap extends OrbitTrap {
 
 	@Override
 	public void setDefiningPoints(Complex d1, Complex d2) {
-		if (d1.r > d2.r) {
-			Complex t = d1;
-			d1 = d2;
-			d2 = t;
-		}
 		this.d1 = d1;
 		this.d2 = d2;
 
@@ -91,7 +86,7 @@ public class CrossOrbitTrap extends OrbitTrap {
 		im.getGraphics().drawLine(leftX, leftY, rightX, rightY);
 
 		leftI = m2 * leftR + c2;
-		rightI = m2 * rightR +c2;
+		rightI = m2 * rightR + c2;
 		leftY = fractalRenderer.getMapper().mapToImage(new Complex(0, leftI)).y;
 		rightY = fractalRenderer.getMapper().mapToImage(new Complex(0, rightI)).y;
 
@@ -154,8 +149,8 @@ public class CrossOrbitTrap extends OrbitTrap {
 		}
 
 		return Math.min(
-				Math.abs(m1*c.r - c.i + this.c1) / Math.sqrt(m1*m1 + 1),
-				Math.abs(m2*c.r - c.i + this.c2) / Math.sqrt(m2*m2 + 1)
+				Math.abs(m1*c.r - c.i + c1) / Math.sqrt(m1*m1 + 1),
+				Math.abs(m2*c.r - c.i + c2) / Math.sqrt(m2*m2 + 1)
 		);
 	}
 }

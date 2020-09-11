@@ -86,13 +86,13 @@ public class OrbitTrapColorCalculator implements ColorCalculator {
         });
         trapSelector.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
-                if (activeOrbitTrap != null && settingsPanel != null) {
-                    settingsPanel.remove(activeOrbitTrap.getSettingsComponent());
-                }
+//                if (activeOrbitTrap != null && settingsPanel != null) {
+//                    settingsPanel.remove(activeOrbitTrap.getSettingsComponent());
+//                }
 				activeOrbitTrap = (OrbitTrap) e.getItem();
-                if (settingsPanel != null) {
-                    settingsPanel.add(activeOrbitTrap.getSettingsComponent());
-                }
+//                if (settingsPanel != null) {
+//                    settingsPanel.add(activeOrbitTrap.getSettingsComponent());
+//                }
             }
         });
         for (OrbitTrap orbitTrap : orbitTraps) {
@@ -109,6 +109,14 @@ public class OrbitTrapColorCalculator implements ColorCalculator {
             }
         });
         settingsPanel.add(specifyOrbitTrapParamsButton);
+
+        JButton orbitTrapSettingsButton = new JButton("Orbit trap settings");
+        orbitTrapSettingsButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Settings");
+            }
+        });
+        settingsPanel.add(orbitTrapSettingsButton);
     }
 
 }

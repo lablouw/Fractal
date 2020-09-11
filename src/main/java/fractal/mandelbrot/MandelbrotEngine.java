@@ -131,7 +131,7 @@ public class MandelbrotEngine implements FractalEngine {
         int iter = 1;
         if (exponent.r == 2 && exponent.i == 0) {
             while (z.r * z.r + z.i * z.i < bailoutSquared && iter < maxIter) {
-                z = z.mult(z);
+                z = z.square();
                 z = z.add(c);
                 orbit.add(z);
                 iter++;
