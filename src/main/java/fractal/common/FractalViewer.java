@@ -228,14 +228,14 @@ public class FractalViewer extends javax.swing.JFrame {
 
         engineOptionsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Engine Options"));
 
-        javax.swing.GroupLayout engineOperionsPanelLayout = new javax.swing.GroupLayout(engineOptionsPanel);
-        engineOptionsPanel.setLayout(engineOperionsPanelLayout);
-        engineOperionsPanelLayout.setHorizontalGroup(
-            engineOperionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout engineOptionsPanelLayout = new javax.swing.GroupLayout(engineOptionsPanel);
+        engineOptionsPanel.setLayout(engineOptionsPanelLayout);
+        engineOptionsPanelLayout.setHorizontalGroup(
+            engineOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 258, Short.MAX_VALUE)
         );
-        engineOperionsPanelLayout.setVerticalGroup(
-            engineOperionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        engineOptionsPanelLayout.setVerticalGroup(
+            engineOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
@@ -303,7 +303,7 @@ public class FractalViewer extends javax.swing.JFrame {
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 296, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 335, Short.MAX_VALUE)
                         .addComponent(jLabel8)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel4)))
@@ -346,7 +346,7 @@ public class FractalViewer extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 549, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 598, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(redrawButton)
