@@ -190,6 +190,7 @@ public abstract class FractalRenderer<T extends FractalEngine> {
 
     public abstract void enginePerformedCalculation(int x, int y, List<Complex> orbit);
 
+    //Used for antialiasing which is earmarked for refactor
     public abstract void enginePerformedCalculation(int x, int y, List<Complex> orbit, Color color);
 
     public abstract void performSpecialClickAction(Complex clickLocation);

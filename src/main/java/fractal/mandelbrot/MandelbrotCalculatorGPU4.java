@@ -29,6 +29,7 @@ public class MandelbrotCalculatorGPU4 implements Runnable {
 
     public void init() {
         stopped = false;
+        timeWasted=0;
 
         imageWidth = mandelbrotRenderer.getImage().getBufferedImage().getWidth();
         imageHeight = mandelbrotRenderer.getImage().getBufferedImage().getHeight();
@@ -50,10 +51,14 @@ public class MandelbrotCalculatorGPU4 implements Runnable {
                 }
             }
         }
-
+        System.out.println("Time wasted "+timeWasted);
     }
 
+    long timeWasted = 0;
     private void doPostProcess() {
+        //TODO: #GPU_OPTIZATION: let getGPUOrbit return double[][] and fire this methods code off in it's own thread
+        //We may need to throttle the GPU runs if the CPU can't keep up and RAM starts to run low
+        long t = System.currentTimeMillis();
         for (int x = 0; x < mandelbrotEngine.getSubImageWidth(); x++) {
             if (x + xOffset < imageWidth) {
                 for (int y = 0; y < mandelbrotEngine.getSubImageHeight(); y++) {
@@ -67,6 +72,7 @@ public class MandelbrotCalculatorGPU4 implements Runnable {
                 }
             }
         }
+        timeWasted += System.currentTimeMillis() - t;
     }
     
     public void stop() {
