@@ -5,6 +5,7 @@
  */
 package fractal.mandelbrot.coloring.orbittrap.circle;
 
+import fractal.common.ColorPalette;
 import fractal.mandelbrot.coloring.orbittrap.OrbitTrapColorStrategy;
 import fractal.common.Complex;
 import fractal.common.FractalEngine;
@@ -19,6 +20,17 @@ import java.util.List;
  */
 public class CircleOrbitTrapColorLookupStrategy implements OrbitTrapColorStrategy<CircleOrbitTrap>{
 
+    private final FractalRenderer fractalRenderer;
+    private final CircleOrbitTrap orbitTrap;
+
+    private final ColorPalette colorPalette = new ColorPalette();
+
+    public CircleOrbitTrapColorLookupStrategy(FractalRenderer fractalRenderer, CircleOrbitTrap orbitTrap) {
+        this.fractalRenderer = fractalRenderer;
+        this.orbitTrap = orbitTrap;
+
+    }
+
     @Override
     public String getName() {
         return "Color gradient lookup";
@@ -31,7 +43,19 @@ public class CircleOrbitTrapColorLookupStrategy implements OrbitTrapColorStrateg
 
     @Override
     public Color calcColor(int x, int y, List<Complex> orbit, FractalEngine fractalEngine, CircleOrbitTrap orbitTrap) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        double minDist = Double.MAX_VALUE;
+        for (Complex c : orbit) {
+            double dist = orbitTrap.distanceFrom(c);
+            if (dist < minDist) {
+                minDist = dist;
+            }
+        }
+
+        if (minDist > orbitTrap.getRadius()) {
+            return Color.BLACK;
+        } else {
+            return colorPalette.getColor((float) (-minDist/orbitTrap.getRadius()/2));
+        }
     }
 
     @Override

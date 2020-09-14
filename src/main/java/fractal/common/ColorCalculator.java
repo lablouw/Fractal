@@ -19,6 +19,9 @@ public interface ColorCalculator {
 
     void initForRender(FractalRenderer fractalRenderer);
 
+    //TODO: free memory by freeing vars like minDists[][], orbitEndPoints[][], orbitLengths[][]
+    //void free();
+
     void complete(SynchronizedBufferedImage synchronizedBufferedImage);
     
     Color calcColor(int x, int y, List<Complex> orbit, FractalEngine fractalEngine);

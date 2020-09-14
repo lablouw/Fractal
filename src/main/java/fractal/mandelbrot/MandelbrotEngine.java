@@ -74,9 +74,9 @@ public class MandelbrotEngine implements FractalEngine {
                 perterbation.i = (Double) perterbI.getValue();
             }
         });
-        double gpuMem = ((double) ((OpenCLDevice) Device.best()).getGlobalMemSize()) / 1024d / 1024d / 1024d;
-        final JCheckBox useGpuCBFull = new JCheckBox("Use " + Device.best().getType() + " (" + gpuMem + "Gb) - Full orbit");
-        final JCheckBox useGpuCBFast = new JCheckBox("Use " + Device.best().getType() + " (" + gpuMem + "Gb) - Fast");
+//        double gpuMem = ((double) ((OpenCLDevice) Device.best()).getGlobalMemSize()) / 1024d / 1024d / 1024d;
+        final JCheckBox useGpuCBFull = new JCheckBox("Use " + Device.best().getType() + " (" + 1 + "Gb) - Full orbit");
+        final JCheckBox useGpuCBFast = new JCheckBox("Use " + Device.best().getType() + " (" + 1 + "Gb) - Fast");
         useGpuCBFull.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {

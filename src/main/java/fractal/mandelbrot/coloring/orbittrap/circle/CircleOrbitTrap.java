@@ -15,6 +15,7 @@ import fractal.mandelbrot.coloring.orbittrap.OrbitTrapColorStrategy;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,8 +24,8 @@ import java.util.List;
  */
 public class CircleOrbitTrap extends OrbitTrap {
     
-    private final OrbitTrapColorStrategy[] colorStrategies;
-    private final OrbitTrapColorStrategy activeColorStrategy;
+    private final List<OrbitTrapColorStrategy<CircleOrbitTrap>> colorStrategies;
+    private OrbitTrapColorStrategy<CircleOrbitTrap> activeColorStrategy;
 
     private final JDialog settingsDialog;
 
@@ -35,12 +36,11 @@ public class CircleOrbitTrap extends OrbitTrap {
     public CircleOrbitTrap(FractalRenderer fractalRenderer) {
         this.fractalRenderer = fractalRenderer;
         setDefiningPoints(new Complex(0,0), new Complex(0.25, 0));
-        
-        colorStrategies = new OrbitTrapColorStrategy[]{
-            new CircleOrbitTrapDistanceColorStrategy(fractalRenderer, this),
-            new CircleOrbitTrapColorLookupStrategy()
-        };
-        activeColorStrategy = colorStrategies[0];
+
+        colorStrategies = new ArrayList<>();
+        colorStrategies.add(new CircleOrbitTrapDistanceColorStrategy(fractalRenderer, this));
+        colorStrategies.add(new CircleOrbitTrapColorLookupStrategy(fractalRenderer, this));
+        activeColorStrategy = colorStrategies.get(0);
         
         settingsDialog = new CircleOrbitTrapSettingsDialog(this, fractalRenderer, colorStrategies);
     }
@@ -89,7 +89,18 @@ public class CircleOrbitTrap extends OrbitTrap {
     }
 
     public double distanceFrom(Complex c) {
-        return Math.abs(c.sub(center).modulus() - radius);
+        return c.sub(center).modulus() - radius;
     }
 
+    public double getRadius() {
+        return radius;
+    }
+
+    public OrbitTrapColorStrategy<CircleOrbitTrap> getActiveColorStrategy() {
+        return activeColorStrategy;
+    }
+
+    public void setActiveColorStrategy(OrbitTrapColorStrategy<CircleOrbitTrap> colorStrategy) {
+        this.activeColorStrategy = colorStrategy;
+    }
 }

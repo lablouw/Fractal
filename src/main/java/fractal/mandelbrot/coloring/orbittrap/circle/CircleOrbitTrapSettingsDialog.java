@@ -10,6 +10,7 @@ import fractal.mandelbrot.coloring.orbittrap.OrbitTrapColorStrategy;
 import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ItemEvent;
+import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
@@ -22,35 +23,6 @@ public class CircleOrbitTrapSettingsDialog extends javax.swing.JDialog {
 
     private final CircleOrbitTrap orbitTrap;
     private final FractalRenderer fractalRenderer;
-    private OrbitTrapColorStrategy activeStrategy;
-    
-    /**
-     * Creates new form CircleOrbitTrapSettingsFrame
-     */
-    public CircleOrbitTrapSettingsDialog(CircleOrbitTrap orbitTrap, FractalRenderer fractalRenderer, OrbitTrapColorStrategy[] colorStrategies) {
-        this.orbitTrap = orbitTrap;
-        this.fractalRenderer = fractalRenderer;
-        initComponents();
-        containerPanel.setLayout(new GridLayout(1, 1));
-        
-        strategySelector.setRenderer(new ListCellRenderer<OrbitTrapColorStrategy>() {
-            @Override
-            public Component getListCellRendererComponent(JList<? extends OrbitTrapColorStrategy> list, OrbitTrapColorStrategy value, int index, boolean isSelected, boolean cellHasFocus) {
-                return new JLabel(value.getName());
-            }
-        });
-        for (OrbitTrapColorStrategy strategy : colorStrategies) {
-            strategySelector.addItem(strategy);
-        }
-        activeStrategy = colorStrategies[0];
-        if (activeStrategy.getSettingsComponent() != null) {
-            containerPanel.add(activeStrategy.getSettingsComponent());
-        }
-        
-        setModal(false);
-        setTitle("Circle orbit trap coloring settings");
-        validate();
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -115,14 +87,41 @@ public class CircleOrbitTrapSettingsDialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Creates new form CircleOrbitTrapSettingsFrame
+     */
+    public CircleOrbitTrapSettingsDialog(CircleOrbitTrap orbitTrap, FractalRenderer fractalRenderer, List<OrbitTrapColorStrategy<CircleOrbitTrap>> colorStrategies) {
+        this.orbitTrap = orbitTrap;
+        this.fractalRenderer = fractalRenderer;
+        initComponents();
+        containerPanel.setLayout(new GridLayout(1, 1));
+
+        strategySelector.setRenderer(new ListCellRenderer<OrbitTrapColorStrategy>() {
+            @Override
+            public Component getListCellRendererComponent(JList<? extends OrbitTrapColorStrategy> list, OrbitTrapColorStrategy value, int index, boolean isSelected, boolean cellHasFocus) {
+                return new JLabel(value.getName());
+            }
+        });
+        for (OrbitTrapColorStrategy strategy : colorStrategies) {
+            strategySelector.addItem(strategy);
+        }
+        if (orbitTrap.getActiveColorStrategy().getSettingsComponent() != null) {
+            containerPanel.add(orbitTrap.getActiveColorStrategy().getSettingsComponent());
+        }
+
+        setModal(false);
+        setTitle("Circle orbit trap coloring settings");
+        validate();
+    }
+
     private void strategySelectorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_strategySelectorItemStateChanged
         if (evt.getStateChange() == ItemEvent.SELECTED) {
-            activeStrategy = (OrbitTrapColorStrategy) evt.getItem();
+            orbitTrap.setActiveColorStrategy((OrbitTrapColorStrategy) evt.getItem());
             containerPanel.removeAll();
-            if (activeStrategy.getSettingsComponent() != null) {
-                containerPanel.add(activeStrategy.getSettingsComponent());
-                activeStrategy.getSettingsComponent().revalidate();
-                activeStrategy.getSettingsComponent().repaint();
+            if (orbitTrap.getActiveColorStrategy().getSettingsComponent() != null) {
+                containerPanel.add(orbitTrap.getActiveColorStrategy().getSettingsComponent());
+                orbitTrap.getActiveColorStrategy().getSettingsComponent().revalidate();
+                orbitTrap.getActiveColorStrategy().getSettingsComponent().repaint();
             }
             revalidate();
             repaint();

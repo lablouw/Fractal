@@ -143,11 +143,6 @@ public class NewtonRenderer extends FractalRenderer<NewtonEngine> implements Ant
         return p;
     }
     
-//    @Override
-//    public void init() {
-//        synchronizedBufferedImage = new SynchronizedBufferedImage(imageWidth, imageHeight);
-//    }
-
     @Override
     protected void render() {
         busy = true;
