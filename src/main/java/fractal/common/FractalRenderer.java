@@ -62,10 +62,6 @@ public abstract class FractalRenderer<T extends FractalEngine> {
         return activeColorCalculator;
     }
 
-    public void setActiveColorCalculator(ColorCalculator colorCalculator) {
-        this.activeColorCalculator = colorCalculator;
-    }
-
     public T getFractalEngine() {
         return fractalEngine;
     }
@@ -149,8 +145,10 @@ public abstract class FractalRenderer<T extends FractalEngine> {
         colComboBox.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                activeColorCalculator = (ColorCalculator) e.getItem();
-                fractalViewer.updateColorCalculator(activeColorCalculator);
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    activeColorCalculator = (ColorCalculator) e.getItem();
+                    fractalViewer.updateColorCalculator(activeColorCalculator);
+                }
             }
         });
 

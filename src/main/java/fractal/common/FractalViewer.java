@@ -537,6 +537,7 @@ public class FractalViewer extends javax.swing.JFrame {
             colorOptionsPanel.removeAll();
             colorOptionsPanel.setVisible(false);
         }
+        revalidate();
     }
 
 }

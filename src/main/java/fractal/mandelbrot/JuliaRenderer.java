@@ -24,7 +24,7 @@ import fractal.mandelbrot.coloring.BandColorCalculator;
 import fractal.mandelbrot.coloring.BevelColorCalculator;
 import fractal.mandelbrot.coloring.BuddahColorCalculator;
 import fractal.mandelbrot.coloring.OrbitTrapColorCalculator;
-import fractal.mandelbrot.coloring.SmoothColorCalculatorMandelbrot;
+import fractal.mandelbrot.coloring.SmoothColorCalculator;
 import java.awt.GridLayout;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
@@ -59,7 +59,7 @@ public class JuliaRenderer extends FractalRenderer<JuliaEngine> implements Antia
     
     private JuliaRenderer() {
         this.fractalEngine = new JuliaEngine();
-        addColorCalculator(new SmoothColorCalculatorMandelbrot(this));
+        addColorCalculator(new SmoothColorCalculator(this));
         addColorCalculator(new BandColorCalculator());
         addColorCalculator(new BuddahColorCalculator(this));
         addColorCalculator(new AverageAngleColorCalculator());

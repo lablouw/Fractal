@@ -16,7 +16,7 @@ import fractal.mandelbrot.coloring.BandColorCalculator;
 import fractal.mandelbrot.coloring.BevelColorCalculator;
 import fractal.mandelbrot.coloring.BuddahColorCalculator;
 import fractal.mandelbrot.coloring.OrbitTrapColorCalculator;
-import fractal.mandelbrot.coloring.SmoothColorCalculatorMandelbrot;
+import fractal.mandelbrot.coloring.SmoothColorCalculator;
 import org.jdesktop.swingx.JXLabel;
 import org.jdesktop.swingx.JXPanel;
 
@@ -85,7 +85,7 @@ public class MandelbrotRenderer extends FractalRenderer<MandelbrotEngine> implem
     
     private MandelbrotRenderer() {
         this.fractalEngine = new MandelbrotEngine();
-        addColorCalculator(new SmoothColorCalculatorMandelbrot(this));
+        addColorCalculator(new SmoothColorCalculator(this));
         addColorCalculator(new BandColorCalculator());
         addColorCalculator(new BuddahColorCalculator(this));
         addColorCalculator(new AverageAngleColorCalculator());
