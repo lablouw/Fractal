@@ -6,6 +6,9 @@
 package fractal.mandelbrot;
 
 import fractal.common.Antialiasable;
+import fractal.common.Complex;
+
+import java.util.List;
 
 /**
  *
@@ -27,15 +30,17 @@ public class MandelbrotCalculatorGPU4 implements Runnable {
         this.mandelbrotRenderer = mandelbrotRenderer;
     }
 
-    public void init() {
+    public void initForRender() {
         stopped = false;
-        timeWasted=0;
+        postProcessTime = 0;
+        gpuTime = 0;
+        getOrbitTime = 0;
 
         imageWidth = mandelbrotRenderer.getImage().getBufferedImage().getWidth();
         imageHeight = mandelbrotRenderer.getImage().getBufferedImage().getHeight();
         mandelbrotEngine = mandelbrotRenderer.getFractalEngine();
 
-        mandelbrotEngine.initGPUKernel(imageWidth, imageHeight);
+        mandelbrotEngine.initGPUKernelForRender(imageWidth, imageHeight);
     }
 
     @Override
@@ -43,7 +48,9 @@ public class MandelbrotCalculatorGPU4 implements Runnable {
         if (mandelbrotRenderer.getAA() == Antialiasable.NONE) {
             for (xOffset = 0; xOffset < imageWidth; xOffset += mandelbrotEngine.getSubImageWidth()) {
                 for (yOffset = 0; yOffset < imageHeight; yOffset += mandelbrotEngine.getSubImageHeight()) {
+                    long t = System.currentTimeMillis();
                     mandelbrotEngine.doRunGPU(xOffset, yOffset, mandelbrotRenderer.getMapper());
+                    gpuTime += System.currentTimeMillis() - t;
                     if (stopped) {
                         return;
                     }
@@ -51,12 +58,16 @@ public class MandelbrotCalculatorGPU4 implements Runnable {
                 }
             }
         }
-        System.out.println("Time wasted "+timeWasted);
+        System.out.println("GPU TIME "+gpuTime);
+        System.out.println("POST PROCESSING TIME "+postProcessTime);
+        System.out.println("GET ORBIT TIME "+getOrbitTime);
     }
 
-    long timeWasted = 0;
+    long postProcessTime = 0;
+    long gpuTime = 0;
+    long getOrbitTime = 0;
     private void doPostProcess() {
-        //TODO: #GPU_OPTIZATION: let getGPUOrbit return double[][] and fire this methods code off in it's own thread
+        //TODO: #GPU_OPTIZATION: let getGPUOrbit return 2x double[] and fire this methods code off in it's own thread
         //We may need to throttle the GPU runs if the CPU can't keep up and RAM starts to run low
         long t = System.currentTimeMillis();
         for (int x = 0; x < mandelbrotEngine.getSubImageWidth(); x++) {
@@ -64,7 +75,10 @@ public class MandelbrotCalculatorGPU4 implements Runnable {
                 for (int y = 0; y < mandelbrotEngine.getSubImageHeight(); y++) {
                     if (y + yOffset < imageHeight) {
                         if (mandelbrotEngine.isUseGPUFull()) {
-                            mandelbrotRenderer.enginePerformedCalculation(x + xOffset, y + yOffset, mandelbrotEngine.getGPUOrbit(x, y));
+                            long t2 = System.currentTimeMillis();
+                            List<Complex> a = mandelbrotEngine.getGPUOrbit(x, y);//This is expensive
+                            getOrbitTime += System.currentTimeMillis() - t2;
+                            mandelbrotRenderer.enginePerformedCalculation(x + xOffset, y + yOffset, a);
                         } else if (mandelbrotEngine.isUseGPUFast()) {
                             mandelbrotRenderer.enginePerformedCalculation(x + xOffset, y + yOffset, mandelbrotEngine.getLastOrbitPoint(x, y), mandelbrotEngine.getOrbitLength(x, y));
                         }
@@ -72,7 +86,7 @@ public class MandelbrotCalculatorGPU4 implements Runnable {
                 }
             }
         }
-        timeWasted += System.currentTimeMillis() - t;
+        postProcessTime += System.currentTimeMillis() - t;
     }
     
     public void stop() {

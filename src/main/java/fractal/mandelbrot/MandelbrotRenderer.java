@@ -159,7 +159,7 @@ public class MandelbrotRenderer extends FractalRenderer<MandelbrotEngine> implem
             if (mandelbrotCalculatorGPU4 == null) {
                 mandelbrotCalculatorGPU4 = new MandelbrotCalculatorGPU4(this);
             }
-            mandelbrotCalculatorGPU4.init();
+            mandelbrotCalculatorGPU4.initForRender();
             ExecutorService es = Executors.newFixedThreadPool(1);
             Future future = es.submit(mandelbrotCalculatorGPU4);
             try {

@@ -23,7 +23,5 @@ public interface FractalEngine {
 
 	JComponent getSettingsComponent();
 
-	void init();
-
 	void notifyRenderComplete();
 }

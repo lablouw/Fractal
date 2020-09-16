@@ -81,10 +81,6 @@ public class WalkerEngine implements FractalEngine {
     }
 
     @Override
-    public void init() {
-    }
-
-    @Override
     public void notifyRenderComplete() {
     }
     

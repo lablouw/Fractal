@@ -150,7 +150,7 @@ public class MandelbrotEngine implements FractalEngine {
         return orbit;
     }
     
-    public void initGPUKernel(int imageWidth, int imageHeight) {
+    public void initGPUKernelForRender(int imageWidth, int imageHeight) {
         if (useGPUFull) {
             if (mandelbrotGPUKernelFull == null) {
                 mandelbrotGPUKernelFull = new MandelbrotGPUKernelFull();
@@ -262,10 +262,6 @@ public class MandelbrotEngine implements FractalEngine {
 
     public Complex getPerterbation() {
         return perterbation;
-    }
-
-    @Override
-    public void init() {
     }
 
     @Override

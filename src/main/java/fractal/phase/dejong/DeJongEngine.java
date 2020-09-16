@@ -253,10 +253,6 @@ public class DeJongEngine implements FractalEngine {
     }
 
     @Override
-    public void init() {
-    }
-
-    @Override
     public void notifyRenderComplete() {
     }
 

@@ -79,7 +79,6 @@ public abstract class FractalRenderer<T extends FractalEngine> {
         this.imageWidth = width;
         this.imageHeight = height;
         synchronizedBufferedImage = new SynchronizedBufferedImage(width, height);
-        fractalEngine.init();
         activeColorCalculator.initForRender(this);
         t0 = System.currentTimeMillis();
 

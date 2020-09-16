@@ -169,10 +169,6 @@ public class NewtonEngine implements FractalEngine {
     }
 
     @Override
-    public void init() {
-    }
-
-    @Override
     public void notifyRenderComplete() {
     }
     
