@@ -9,6 +9,7 @@ import fractal.common.Complex;
 import fractal.common.FractalRenderer;
 import fractal.common.FractalViewer;
 import fractal.main;
+import fractal.mandelbrot.RawGpuOrbitContainer;
 import fractal.phase.coloring.PhaseColorer;
 import fractal.phase.coloring.WhiteColorer;
 import java.awt.Color;
@@ -79,6 +80,10 @@ public class DeJongRenderer extends FractalRenderer<DeJongEngine> {
             updateGui();
             lastGuiUpdate = System.currentTimeMillis();
         }
+    }
+
+    @Override
+    public void enginePerformedCalculation(int x, int y, RawGpuOrbitContainer rawGpuOrbitContainer, int orbitStartIndex, int orbitLength) {
     }
 
     @Override

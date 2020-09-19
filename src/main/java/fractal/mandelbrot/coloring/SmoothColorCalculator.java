@@ -5,6 +5,8 @@
 package fractal.mandelbrot.coloring;
 
 import fractal.common.*;
+import fractal.mandelbrot.RawGpuOrbitContainer;
+
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
@@ -61,6 +63,13 @@ public class SmoothColorCalculator implements ColorCalculator {
         } else {
             return Color.BLACK;
         }
+    }
+
+    @Override
+    public Color calcColor(int x, int y, RawGpuOrbitContainer rawGpuOrbitContainer, int orbitStartIndex, int orbitLength, FractalEngine fractalEngine) {
+        int lastOrbitPointIndex = orbitStartIndex + orbitLength - 1;
+        Complex lastOrbitPoint = new Complex(rawGpuOrbitContainer.orbitsR[lastOrbitPointIndex], rawGpuOrbitContainer.orbitsI[lastOrbitPointIndex]);
+        return calcColor(x, y, lastOrbitPoint, orbitLength, fractalEngine);
     }
 
     @Override

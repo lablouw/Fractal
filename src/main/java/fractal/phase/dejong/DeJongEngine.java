@@ -106,7 +106,12 @@ public class DeJongEngine implements FractalEngine {
     public boolean isBailoutReached(List<Complex> orbit) {
         return false;
     }
-    
+
+    @Override
+    public boolean isBailoutReachedByLastOrbitPoint(Complex lastOrbitPoint) {
+        return false;
+    }
+
     @Override
     public JComponent getSettingsComponent() {
         settingsPanel = new JPanel(new GridLayout(0, 1));

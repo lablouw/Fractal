@@ -18,6 +18,8 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
+
+import fractal.mandelbrot.RawGpuOrbitContainer;
 import org.jdesktop.swingx.JXLabel;
 import org.jdesktop.swingx.JXPanel;
 import org.jdesktop.swingx.VerticalLayout;
@@ -187,9 +189,10 @@ public abstract class FractalRenderer<T extends FractalEngine> {
 
     public abstract void enginePerformedCalculation(int x, int y, List<Complex> orbit);
 
+    public abstract void enginePerformedCalculation(int x, int y, RawGpuOrbitContainer rawGpuOrbitContainer, int orbitStartIndex, int orbitLength);
+
     //Used for antialiasing which is earmarked for refactor
     public abstract void enginePerformedCalculation(int x, int y, List<Complex> orbit, Color color);
 
     public abstract void performSpecialClickAction(Complex clickLocation);
-
 }

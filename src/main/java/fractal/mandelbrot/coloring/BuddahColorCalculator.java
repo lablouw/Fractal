@@ -13,12 +13,15 @@ import fractal.common.SynchronizedBufferedImage;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import fractal.mandelbrot.RawGpuOrbitContainer;
 import org.jdesktop.swingx.JXLabel;
 import org.jdesktop.swingx.JXPanel;
 
@@ -51,34 +54,12 @@ public class BuddahColorCalculator implements ColorCalculator {
     @Override
     public Color calcColor(int x, int y, List<Complex> orbit, FractalEngine fractalEngine) {
         synchronized(lock) {
-            if (hitMapRed == null) {
-                hitMapRed = new long[fractalRenderer.getMapper().getWidth()][fractalRenderer.getMapper().getHeight()];
-            }
-            if (hitMapGreen == null) {
-                hitMapGreen = new long[fractalRenderer.getMapper().getWidth()][fractalRenderer.getMapper().getHeight()];
-            }
-            if (hitMapBlue == null) {
-                hitMapBlue = new long[fractalRenderer.getMapper().getWidth()][fractalRenderer.getMapper().getHeight()];
-            }
+            initHitMaps();
 
             try {
                 if (orbit.size() < fractalEngine.getMaxIter()) {
-                    for (int i=1; i<orbit.size(); i++) {//start at 1 becaulse we don't want to add z0 to hitmap
-                        Complex c = orbit.get(i);
-                        Point p = fractalRenderer.getMapper().mapToImage(c);
-                        if (p.x<0 || p.y<0 || p.x>=fractalRenderer.getMapper().getWidth() || p.y>=fractalRenderer.getMapper().getHeight()) continue;
-                        if (i <= maxIterRed){
-                            hitMapRed[p.x][p.y]++;
-                            if (hitMapRed[p.x][p.y] > maxHitsRed) maxHitsRed = hitMapRed[p.x][p.y];
-                        }
-                        if (i <= maxIterGreen){
-                            hitMapGreen[p.x][p.y]++;
-                            if (hitMapGreen[p.x][p.y] > maxHitsGreen) maxHitsGreen = hitMapGreen[p.x][p.y];
-                        }
-                        if (i <= maxIterBlue) {
-                            hitMapBlue[p.x][p.y]++;
-                            if (hitMapBlue[p.x][p.y] > maxHitsBlue) maxHitsBlue = hitMapBlue[p.x][p.y];
-                        }
+                    for (int i=1; i<orbit.size(); i++) {//start at 1 because we don't want to add z0 to hitmap
+                        addToHitMaps(orbit.get(i), i);
                     }
                 }
             }
@@ -88,10 +69,58 @@ public class BuddahColorCalculator implements ColorCalculator {
         }
         int col = 255 - (int)((double)orbit.size()/(double)fractalEngine.getMaxIter()*255);
         return new Color(col,col,col);
-//        if (orbit.size() == fractalEngine.getMaxIter()) return Color.BLACK;
-//        return Color.WHITE;
     }
-    
+
+    @Override
+    public Color calcColor(int x, int y, RawGpuOrbitContainer rawGpuOrbitContainer, int orbitStartIndex, int orbitLength, FractalEngine fractalEngine) {
+        synchronized(lock) {
+            initHitMaps();
+
+            try {
+                if (orbitLength < fractalEngine.getMaxIter()) {
+                    for (int i=1; i<orbitLength; i++) {//start at 1 because we don't want to add z0 to hitmap
+                        Complex c = new Complex(rawGpuOrbitContainer.orbitsR[orbitStartIndex + i], rawGpuOrbitContainer.orbitsI[orbitStartIndex + i]);
+                        addToHitMaps(c, i);
+                    }
+                }
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        int col = 255 - (int)((double)orbitLength/(double)fractalEngine.getMaxIter()*255);
+        return new Color(col,col,col);
+    }
+
+    private void initHitMaps() {
+        if (hitMapRed == null) {
+            hitMapRed = new long[fractalRenderer.getMapper().getWidth()][fractalRenderer.getMapper().getHeight()];
+        }
+        if (hitMapGreen == null) {
+            hitMapGreen = new long[fractalRenderer.getMapper().getWidth()][fractalRenderer.getMapper().getHeight()];
+        }
+        if (hitMapBlue == null) {
+            hitMapBlue = new long[fractalRenderer.getMapper().getWidth()][fractalRenderer.getMapper().getHeight()];
+        }
+    }
+
+    private void addToHitMaps(Complex c, int i) {
+        Point p = fractalRenderer.getMapper().mapToImage(c);
+        if (p.x<0 || p.y<0 || p.x>=fractalRenderer.getMapper().getWidth() || p.y>=fractalRenderer.getMapper().getHeight()) return;
+        if (i <= maxIterRed){
+            hitMapRed[p.x][p.y]++;
+            if (hitMapRed[p.x][p.y] > maxHitsRed) maxHitsRed = hitMapRed[p.x][p.y];
+        }
+        if (i <= maxIterGreen){
+            hitMapGreen[p.x][p.y]++;
+            if (hitMapGreen[p.x][p.y] > maxHitsGreen) maxHitsGreen = hitMapGreen[p.x][p.y];
+        }
+        if (i <= maxIterBlue) {
+            hitMapBlue[p.x][p.y]++;
+            if (hitMapBlue[p.x][p.y] > maxHitsBlue) maxHitsBlue = hitMapBlue[p.x][p.y];
+        }
+    }
+
     @Override
     public Color calcColor(int x, int y, Complex lastOrbitPoint, int orbitLength, FractalEngine fractalEngine) {
         throw new UnsupportedOperationException("Not supported. Full orbit needed"); //To change body of generated methods, choose Tools | Templates.

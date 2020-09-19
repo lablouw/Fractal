@@ -8,6 +8,7 @@ package fractal.walkers;
 import fractal.common.Complex;
 import fractal.common.FractalRenderer;
 import fractal.common.FractalViewer;
+import fractal.mandelbrot.RawGpuOrbitContainer;
 import fractal.phase.coloring.PhaseColorer;
 import java.awt.Color;
 import java.awt.Point;
@@ -79,6 +80,10 @@ public class WalkerRenderer extends FractalRenderer<WalkerEngine> {
 
     @Override
     public void enginePerformedCalculation(int x, int y, List<Complex> orbit, Color color) {
+    }
+
+    @Override
+    public void enginePerformedCalculation(int x, int y, RawGpuOrbitContainer rawGpuOrbitContainer, int orbitStartIndex, int orbitLength) {
     }
 
     @Override

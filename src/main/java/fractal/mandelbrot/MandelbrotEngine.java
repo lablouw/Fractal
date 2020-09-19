@@ -204,9 +204,9 @@ public class MandelbrotEngine implements FractalEngine {
             mandelbrotGPUKernelFast.execute(range);
         }
     }
-    
-    public List<Complex> getGPUOrbit(int x, int y) {
-        return mandelbrotGPUKernelFull.getOrbit(x, y);
+
+    public RawGpuOrbitContainer getRawGpuOrbitContainer() {
+        return mandelbrotGPUKernelFull.getRawGpuOrbitContainer();
     }
     
     public Complex getLastOrbitPoint(int x, int y) {
@@ -238,6 +238,11 @@ public class MandelbrotEngine implements FractalEngine {
     public boolean isBailoutReached(List<Complex> orbit) {
         Complex last = orbit.get(orbit.size() - 1);
         return last.r * last.r + last.i * last.i >= bailoutSquared;
+    }
+
+    @Override
+    public boolean isBailoutReachedByLastOrbitPoint(Complex lastOrbitPoint) {
+        return lastOrbitPoint.r * lastOrbitPoint.r + lastOrbitPoint.i * lastOrbitPoint.i >= bailoutSquared;
     }
 
     @Override

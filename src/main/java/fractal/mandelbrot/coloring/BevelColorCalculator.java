@@ -10,6 +10,8 @@ import fractal.common.Complex;
 import fractal.common.FractalEngine;
 import fractal.common.FractalRenderer;
 import fractal.common.SynchronizedBufferedImage;
+import fractal.mandelbrot.RawGpuOrbitContainer;
+
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
@@ -47,6 +49,7 @@ public class BevelColorCalculator implements ColorCalculator {
     @Override
     public Color calcColor(int x, int y, List<Complex> orbit, FractalEngine fractalEngine) {
 
+
         if (!fractalEngine.isBailoutReached(orbit)) {
             return Color.BLACK;
         }
@@ -62,6 +65,38 @@ public class BevelColorCalculator implements ColorCalculator {
         Complex normal = orbit.get(orbit.size() - 1).div(dz).normalize();
         imageNormals[x][y] = normal;
 
+        return calcLights(normal);
+
+    }
+
+    @Override
+    public Color calcColor(int x, int y, RawGpuOrbitContainer rawGpuOrbitContainer, int orbitStartIndex, int orbitLength, FractalEngine fractalEngine) {
+
+        int lastOrbitPointIndex = orbitStartIndex + orbitLength - 1;
+        Complex lastOrbitPoint = new Complex(rawGpuOrbitContainer.orbitsR[lastOrbitPointIndex], rawGpuOrbitContainer.orbitsI[lastOrbitPointIndex]);
+
+        if (!fractalEngine.isBailoutReachedByLastOrbitPoint(lastOrbitPoint)) {
+            return Color.BLACK;
+        }
+
+        Complex dc = Complex.ONE; // derivitive of c
+        Complex dz = new Complex(dc);
+        Complex two = new Complex(2, 0);
+
+        for (int i = 1; i < orbitLength; i++) {
+            Complex orbitPoint = new Complex(rawGpuOrbitContainer.orbitsR[orbitStartIndex + i - 1], rawGpuOrbitContainer.orbitsI[orbitStartIndex + i - 1]);
+            dz = two.mult(dz).mult(orbitPoint).add(dc);
+        }
+
+        Complex normal = lastOrbitPoint.div(dz).normalize();
+        imageNormals[x][y] = normal;
+
+
+        return calcLights(normal);
+
+    }
+
+    private Color calcLights(Complex normal) {
         double dotRed = normal.r * lightAngleRed.r + normal.i * lightAngleRed.i + heightRed;
         dotRed = dotRed / (1 + heightRed);
         if (dotRed < 0) {
@@ -84,10 +119,6 @@ public class BevelColorCalculator implements ColorCalculator {
         int rgbBlue = (int) Math.floor(dotBlue * 255);
 
         return new Color(rgbRed, rgbGreen, rgbBlue);
-
-//        return new Color(Color.HSBtoRGB((float)(dot), (float)(1-dot), (float)dot));
-//        return new Color(Color.HSBtoRGB((float)(t), (float)t, (float)t));
-//        return new Color(Color.HSBtoRGB((float)(aveTheta/Math.PI), 1, 1));
     }
 
     @Override

@@ -4,6 +4,8 @@
  */
 package fractal.common;
 
+import fractal.mandelbrot.RawGpuOrbitContainer;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -20,11 +22,10 @@ public interface ColorCalculator {
     void initForRender(FractalRenderer fractalRenderer);
 
     void complete(SynchronizedBufferedImage synchronizedBufferedImage);
-    
+
     Color calcColor(int x, int y, List<Complex> orbit, FractalEngine fractalEngine);
-    
-    //#GPU_OPTIZATION:
-    //Color calcColor(int x, int y, double[] orbitR, double[] orbitI, FractalEngine fractalEngine);
+
+    Color calcColor(int x, int y, RawGpuOrbitContainer rawGpuOrbitContainer, int orbitStartIndex, int orbitLength, FractalEngine fractalEngine);
 
     Color calcColor(int x, int y, Complex lastOrbitPoint, int orbitLength, FractalEngine fractalEngine);
 }

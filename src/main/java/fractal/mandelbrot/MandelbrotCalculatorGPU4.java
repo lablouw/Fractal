@@ -6,15 +6,23 @@
 package fractal.mandelbrot;
 
 import fractal.common.Antialiasable;
-import fractal.common.Complex;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author CP316928
  */
 public class MandelbrotCalculatorGPU4 implements Runnable {
+
+    private final int numCores = Runtime.getRuntime().availableProcessors();
 
     private final MandelbrotRenderer mandelbrotRenderer;
     private MandelbrotEngine mandelbrotEngine;
@@ -26,15 +34,14 @@ public class MandelbrotCalculatorGPU4 implements Runnable {
 
     private boolean stopped = false;
 
+    private RawGpuOrbitContainer rawGpuOrbitContainer;
+
     public MandelbrotCalculatorGPU4(MandelbrotRenderer mandelbrotRenderer) {
         this.mandelbrotRenderer = mandelbrotRenderer;
     }
 
     public void initForRender() {
         stopped = false;
-        postProcessTime = 0;
-        gpuTime = 0;
-        getOrbitTime = 0;
 
         imageWidth = mandelbrotRenderer.getImage().getBufferedImage().getWidth();
         imageHeight = mandelbrotRenderer.getImage().getBufferedImage().getHeight();
@@ -48,9 +55,7 @@ public class MandelbrotCalculatorGPU4 implements Runnable {
         if (mandelbrotRenderer.getAA() == Antialiasable.NONE) {
             for (xOffset = 0; xOffset < imageWidth; xOffset += mandelbrotEngine.getSubImageWidth()) {
                 for (yOffset = 0; yOffset < imageHeight; yOffset += mandelbrotEngine.getSubImageHeight()) {
-                    long t = System.currentTimeMillis();
                     mandelbrotEngine.doRunGPU(xOffset, yOffset, mandelbrotRenderer.getMapper());
-                    gpuTime += System.currentTimeMillis() - t;
                     if (stopped) {
                         return;
                     }
@@ -58,39 +63,121 @@ public class MandelbrotCalculatorGPU4 implements Runnable {
                 }
             }
         }
-        System.out.println("GPU TIME "+gpuTime);
-        System.out.println("POST PROCESSING TIME "+postProcessTime);
-        System.out.println("GET ORBIT TIME "+getOrbitTime);
     }
 
-    long postProcessTime = 0;
-    long gpuTime = 0;
-    long getOrbitTime = 0;
     private void doPostProcess() {
-        //TODO: #GPU_OPTIZATION: let getGPUOrbit return 2x double[] and fire this methods code off in it's own thread
-        //We may need to throttle the GPU runs if the CPU can't keep up and RAM starts to run low
-        long t = System.currentTimeMillis();
-        for (int x = 0; x < mandelbrotEngine.getSubImageWidth(); x++) {
-            if (x + xOffset < imageWidth) {
-                for (int y = 0; y < mandelbrotEngine.getSubImageHeight(); y++) {
-                    if (y + yOffset < imageHeight) {
-                        if (mandelbrotEngine.isUseGPUFull()) {
-                            long t2 = System.currentTimeMillis();
-                            List<Complex> a = mandelbrotEngine.getGPUOrbit(x, y);//This is expensive
-                            getOrbitTime += System.currentTimeMillis() - t2;
-                            mandelbrotRenderer.enginePerformedCalculation(x + xOffset, y + yOffset, a);
-                        } else if (mandelbrotEngine.isUseGPUFast()) {
-                            mandelbrotRenderer.enginePerformedCalculation(x + xOffset, y + yOffset, mandelbrotEngine.getLastOrbitPoint(x, y), mandelbrotEngine.getOrbitLength(x, y));
-                        }
-                    }
+        if (mandelbrotEngine.isUseGPUFull()) {
+            ExecutorService es = Executors.newFixedThreadPool(numCores);
+            rawGpuOrbitContainer = mandelbrotEngine.getRawGpuOrbitContainer();
+            List<Future> futures = new ArrayList<>();
+            for (int coreIndex = 0; coreIndex < numCores; coreIndex++) {
+                RawGpuFullOrbitProcessor rawGpuFullOrbitProcessor = new RawGpuFullOrbitProcessor(coreIndex);
+                futures.add(es.submit(rawGpuFullOrbitProcessor));
+            }
+            for (Future f : futures) {
+                try {
+                    f.get();
+                } catch (InterruptedException | ExecutionException ex) {
+                    Logger.getLogger(MandelbrotRenderer.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            es.shutdown();
+
+        } else if (mandelbrotEngine.isUseGPUFast()) {
+            //This seems to have too much overhead and is a bit slower
+//            ExecutorService es = Executors.newFixedThreadPool(numCores);
+//            List<Future> futures = new ArrayList<>();
+//            for (int coreIndex = 0; coreIndex < numCores; coreIndex++) {
+//                RawGpuFastOrbitProcessor rawGpuFastOrbitProcessor = new RawGpuFastOrbitProcessor(coreIndex);
+//                futures.add(es.submit(rawGpuFastOrbitProcessor));
+//            }
+//            for (Future f : futures) {
+//                try {
+//                    f.get();
+//                } catch (InterruptedException | ExecutionException ex) {
+//                    Logger.getLogger(MandelbrotRenderer.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            }
+//            es.shutdown();
+            int subImageWidth = mandelbrotEngine.getSubImageWidth();
+            int subImageHeight = mandelbrotEngine.getSubImageHeight();
+
+            for (int x = 0; x < subImageWidth; x++) {
+                if (x + xOffset >= imageWidth) break;
+                for (int y = 0; y < subImageHeight; y++) {
+                    if (y + yOffset >= imageHeight) break;
+                    mandelbrotRenderer.enginePerformedCalculation(x + xOffset, y + yOffset, mandelbrotEngine.getLastOrbitPoint(x, y), mandelbrotEngine.getOrbitLength(x, y));
                 }
             }
         }
-        postProcessTime += System.currentTimeMillis() - t;
     }
-    
+
     public void stop() {
         stopped = true;
     }
+
+
+    private class RawGpuFullOrbitProcessor implements Runnable {
+
+        private final int coreIndex;
+
+        RawGpuFullOrbitProcessor(int coreIndex) {
+            this.coreIndex = coreIndex;
+        }
+
+        @Override
+        public void run() {
+            try {
+                int subImageWidth = mandelbrotEngine.getSubImageWidth();
+                int subImageHeight = mandelbrotEngine.getSubImageHeight();
+                int maxIter = mandelbrotEngine.getMaxIter();
+
+                for (int x = coreIndex; x < subImageWidth; x += numCores) {
+                    if (x + xOffset >= imageWidth) break;
+                    for (int y = 0; y < subImageHeight; y++) {
+                        if (y + yOffset >= imageHeight) break;
+
+                        int orbitStartIndex = x * maxIter + y * maxIter * subImageWidth;
+                        int orbitLength = rawGpuOrbitContainer.orbitLengths[x][y];
+
+                        mandelbrotRenderer.enginePerformedCalculation(x + xOffset, y + yOffset, rawGpuOrbitContainer, orbitStartIndex, orbitLength);
+                    }
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                throw ex;
+            }
+        }
+    }
+
+    //This seems to have too much overhead and is a bit slower
+//    private class RawGpuFastOrbitProcessor implements Runnable {
+//
+//        private final int coreIndex;
+//
+//        public RawGpuFastOrbitProcessor(int coreIndex) {
+//            this.coreIndex = coreIndex;
+//        }
+//
+//        @Override
+//        public void run() {
+//            try {
+//                int subImageWidth = mandelbrotEngine.getSubImageWidth();
+//                int subImageHeight = mandelbrotEngine.getSubImageHeight();
+//
+//                for (int x = coreIndex; x < subImageWidth; x += numCores) {
+//                    if (x + xOffset >= imageWidth) break;
+//                    for (int y = 0; y < subImageHeight; y++) {
+//                        if (y + yOffset >= imageHeight) break;
+//                        mandelbrotRenderer.enginePerformedCalculation(x + xOffset, y + yOffset, mandelbrotEngine.getLastOrbitPoint(x, y), mandelbrotEngine.getOrbitLength(x, y));
+//                    }
+//                }
+//
+//            } catch (Exception ex) {
+//                ex.printStackTrace();
+//                throw ex;
+//            }
+//        }
+//    }
 
 }

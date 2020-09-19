@@ -107,7 +107,12 @@ public class NewtonEngine implements FractalEngine {
         double diff = orbit.get(orbit.size()-1).sub(orbit.get(orbit.size()-2)).modulus();
         return diff < bailout;
     }
-    
+
+    @Override
+    public boolean isBailoutReachedByLastOrbitPoint(Complex lastOrbitPoint) {
+        throw new UnsupportedOperationException("Not applicable for Newton fractal");
+    }
+
     public double getBailout() {
         return bailout;
     }

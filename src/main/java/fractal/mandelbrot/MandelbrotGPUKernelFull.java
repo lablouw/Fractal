@@ -29,8 +29,7 @@ public class MandelbrotGPUKernelFull extends Kernel {
     private double[] cr;
     private double[] ci;
 
-    private double[] orbitsR;
-    private double[] orbitsI;
+    private RawGpuOrbitContainer rawGpuOrbitContainer;
 
     public void init(int subImageWidth, int subImageHeight, int maxIter, double bailoutSquared, Complex perterbation) {
         this.subImageWidth = subImageWidth;
@@ -45,8 +44,10 @@ public class MandelbrotGPUKernelFull extends Kernel {
         cr = new double[subImageWidth * subImageHeight];
         ci = new double[subImageWidth * subImageHeight];
 
-        orbitsR = new double[subImageWidth * subImageHeight * maxIter];
-        orbitsI = new double[subImageWidth * subImageHeight * maxIter];
+        rawGpuOrbitContainer = new RawGpuOrbitContainer();
+        rawGpuOrbitContainer.orbitsR = new double[subImageWidth * subImageHeight * maxIter];
+        rawGpuOrbitContainer.orbitsI = new double[subImageWidth * subImageHeight * maxIter];
+        rawGpuOrbitContainer.orbitLengths = new int[subImageWidth][subImageHeight];
     }
 
     public void initArrays(int xOffset, int yOffset, Mapper mapper) {
@@ -65,32 +66,24 @@ public class MandelbrotGPUKernelFull extends Kernel {
         int x = getGlobalId(0);
         int y = getGlobalId(1);
         int orbitStartIndex = x * maxIter + y * maxIter * getGlobalSize(0);
-        orbitsR[orbitStartIndex] = z0r;
-        orbitsI[orbitStartIndex] = z0i;
+        rawGpuOrbitContainer.orbitsR[orbitStartIndex] = z0r;
+        rawGpuOrbitContainer.orbitsI[orbitStartIndex] = z0i;
         int iter = 0;
-        while (iter < maxIter - 1 && orbitsR[orbitStartIndex + iter] * orbitsR[orbitStartIndex + iter] + orbitsI[orbitStartIndex + iter] * orbitsI[orbitStartIndex + iter] < bailoutSquared) {
-            orbitsR[orbitStartIndex + iter + 1] = orbitsR[orbitStartIndex + iter] * orbitsR[orbitStartIndex + iter] - orbitsI[orbitStartIndex + iter] * orbitsI[orbitStartIndex + iter] + cr[x + y * getGlobalSize(0)];
-            orbitsI[orbitStartIndex + iter + 1] = 2 * orbitsR[orbitStartIndex + iter] * orbitsI[orbitStartIndex + iter] + ci[x + y * getGlobalSize(0)];
+        while (iter < maxIter - 1 && rawGpuOrbitContainer.orbitsR[orbitStartIndex + iter] * rawGpuOrbitContainer.orbitsR[orbitStartIndex + iter] + rawGpuOrbitContainer.orbitsI[orbitStartIndex + iter] * rawGpuOrbitContainer.orbitsI[orbitStartIndex + iter] < bailoutSquared) {
+            rawGpuOrbitContainer.orbitsR[orbitStartIndex + iter + 1] = rawGpuOrbitContainer.orbitsR[orbitStartIndex + iter] * rawGpuOrbitContainer.orbitsR[orbitStartIndex + iter] - rawGpuOrbitContainer.orbitsI[orbitStartIndex + iter] * rawGpuOrbitContainer.orbitsI[orbitStartIndex + iter] + cr[x + y * getGlobalSize(0)];
+            rawGpuOrbitContainer.orbitsI[orbitStartIndex + iter + 1] = 2 * rawGpuOrbitContainer.orbitsR[orbitStartIndex + iter] * rawGpuOrbitContainer.orbitsI[orbitStartIndex + iter] + ci[x + y * getGlobalSize(0)];
             iter++;
         }
         if (iter < maxIter - 1) {
-            orbitsR[orbitStartIndex + iter + 1] = Double.MAX_VALUE;
-            orbitsI[orbitStartIndex + iter + 1] = Double.MAX_VALUE;
+            rawGpuOrbitContainer.orbitsR[orbitStartIndex + iter + 1] = Double.MAX_VALUE;
+            rawGpuOrbitContainer.orbitsI[orbitStartIndex + iter + 1] = Double.MAX_VALUE;
         }
+        rawGpuOrbitContainer.orbitLengths[x][y] = iter+1;
     }
     //Only this runs on the GPU
 
-    public List<Complex> getOrbit(int x, int y) {
-        List<Complex> orbit = new ArrayList<>();
-        int orbitStartIndex = x * maxIter + y * maxIter * subImageWidth;
-        int iter = 0;
-        //TODO: Investigate returning & processing 2 double arrays rather than list.add(new())
-        while (iter < maxIter && orbitsR[orbitStartIndex + iter] != Double.MAX_VALUE) {
-            orbit.add(new Complex(orbitsR[orbitStartIndex + iter], orbitsI[orbitStartIndex + iter]));
-            iter++;
-        }
-
-        return orbit;
+    public RawGpuOrbitContainer getRawGpuOrbitContainer() {
+        return rawGpuOrbitContainer;
     }
 
     public int getSubImageWidth() {

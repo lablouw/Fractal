@@ -21,6 +21,8 @@ public interface FractalEngine {
 
 	boolean isBailoutReached(List<Complex> orbit);
 
+	boolean isBailoutReachedByLastOrbitPoint(Complex lastOrbitPoint);
+
 	JComponent getSettingsComponent();
 
 	void notifyRenderComplete();

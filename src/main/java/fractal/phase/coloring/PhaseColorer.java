@@ -11,6 +11,8 @@ import fractal.common.Complex;
 import fractal.common.FractalEngine;
 import fractal.common.FractalRenderer;
 import fractal.common.SynchronizedBufferedImage;
+import fractal.mandelbrot.RawGpuOrbitContainer;
+
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
@@ -40,6 +42,11 @@ public class PhaseColorer implements ColorCalculator {
     @Override
     public Color calcColor(int x, int y, List<Complex> orbit, FractalEngine fractalEngine) {
         return colorPalette.getColor((float) orbit.get(0).r);//TODO: temporary for Henon only
+    }
+
+    @Override
+    public Color calcColor(int x, int y, RawGpuOrbitContainer rawGpuOrbitContainer, int orbitStartIndex, int orbitLength, FractalEngine fractalEngine) {
+        return null;
     }
 
     @Override

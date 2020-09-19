@@ -10,6 +10,8 @@ import fractal.common.Complex;
 import fractal.common.FractalEngine;
 import fractal.common.FractalRenderer;
 import fractal.common.SynchronizedBufferedImage;
+import fractal.mandelbrot.RawGpuOrbitContainer;
+
 import java.awt.Color;
 import java.util.List;
 import javax.swing.JComponent;
@@ -28,7 +30,12 @@ public class BasinsOfAttractionColorCalulator implements ColorCalculator {
         float v = 1;
         return new Color(Color.HSBtoRGB(h,s,v));
     }
-    
+
+    @Override
+    public Color calcColor(int x, int y, RawGpuOrbitContainer rawGpuOrbitContainer, int orbitStartIndex, int orbitLength, FractalEngine fractalEngine) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
     @Override
     public Color calcColor(int x, int y, Complex lastOrbitPoint, int orbitLength, FractalEngine fractalEngine) {
         Complex root = lastOrbitPoint;

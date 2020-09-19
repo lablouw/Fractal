@@ -166,7 +166,7 @@ public class JuliaEngine implements FractalEngine {
         return orbit;
     }
     
-    public void initGPUKernel(int imageWidth, int imageHeight, Mapper mapper) {
+    public void initGPUKernelForRender(int imageWidth, int imageHeight, Mapper mapper) {
         if (useGPUFull) {
             if (juliaGPUKernelFull == null) {
                 juliaGPUKernelFull = new JuliaGPUKernelFull();
@@ -221,9 +221,9 @@ public class JuliaEngine implements FractalEngine {
             juliaGPUKernelFast.execute(range);
         }
     }
-    
-    public List<Complex> getGPUOrbit(int x, int y) {
-        return juliaGPUKernelFull.getOrbit(x, y);
+
+    public RawGpuOrbitContainer getRawGpuOrbitContainer() {
+        return juliaGPUKernelFull.getRawGpuOrbitContainer();
     }
     
     public Complex getLastOrbitPoint(int x, int y) {
@@ -255,6 +255,11 @@ public class JuliaEngine implements FractalEngine {
     public boolean isBailoutReached(List<Complex> orbit) {
         Complex last = orbit.get(orbit.size() - 1);
         return last.r * last.r + last.i * last.i >= bailoutSquared;
+    }
+
+    @Override
+    public boolean isBailoutReachedByLastOrbitPoint(Complex lastOrbitPoint) {
+        return lastOrbitPoint.r * lastOrbitPoint.r + lastOrbitPoint.i * lastOrbitPoint.i >= bailoutSquared;
     }
 
     @Override

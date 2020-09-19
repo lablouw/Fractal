@@ -76,6 +76,11 @@ public class WalkerEngine implements FractalEngine {
     }
 
     @Override
+    public boolean isBailoutReachedByLastOrbitPoint(Complex lastOrbitPoint) {
+        return false;
+    }
+
+    @Override
     public JComponent getSettingsComponent() {
         return null;
     }

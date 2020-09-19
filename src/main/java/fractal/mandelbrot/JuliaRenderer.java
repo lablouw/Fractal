@@ -93,7 +93,7 @@ public class JuliaRenderer extends FractalRenderer<JuliaEngine> implements Antia
             if (juliaCalculatorGPU == null) {
                 juliaCalculatorGPU = new JuliaCalculatorGPU(this);
             }
-            juliaCalculatorGPU.init();
+            juliaCalculatorGPU.initForRender();
             ExecutorService es = Executors.newFixedThreadPool(1);
             Future future = es.submit(juliaCalculatorGPU);
             try {
@@ -123,6 +123,16 @@ public class JuliaRenderer extends FractalRenderer<JuliaEngine> implements Antia
     @Override
     public void enginePerformedCalculation(int x, int y, List<Complex> orbit) {
         synchronizedBufferedImage.setColor(x, y, activeColorCalculator.calcColor(x, y, orbit, fractalEngine));
+
+        if (System.currentTimeMillis() - lastGuiUpdate > main.getGuiUpdateInterval()) {
+            updateGui();
+            lastGuiUpdate = System.currentTimeMillis();
+        }
+    }
+
+    @Override
+    public void enginePerformedCalculation(int x, int y, RawGpuOrbitContainer rawGpuOrbitContainer, int orbitStartIndex, int orbitLength) {
+        synchronizedBufferedImage.setColor(x, y, activeColorCalculator.calcColor(x, y, rawGpuOrbitContainer, orbitStartIndex, orbitLength, fractalEngine));
 
         if (System.currentTimeMillis() - lastGuiUpdate > main.getGuiUpdateInterval()) {
             updateGui();

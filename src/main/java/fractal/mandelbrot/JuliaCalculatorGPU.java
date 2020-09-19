@@ -7,11 +7,22 @@ package fractal.mandelbrot;
 
 import fractal.common.Antialiasable;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author CP316928
  */
 public class JuliaCalculatorGPU implements Runnable {
+
+    private final int numCores = Runtime.getRuntime().availableProcessors();
 
     private final JuliaRenderer juliaRenderer;
     private JuliaEngine juliaEngine;
@@ -23,18 +34,20 @@ public class JuliaCalculatorGPU implements Runnable {
 
     private boolean stopped = false;
 
+    private RawGpuOrbitContainer rawGpuOrbitContainer;
+
     public JuliaCalculatorGPU(JuliaRenderer mandelbrotRenderer) {
         this.juliaRenderer = mandelbrotRenderer;
     }
 
-    public void init() {
+    public void initForRender() {
         stopped = false;
 
         imageWidth = juliaRenderer.getImage().getBufferedImage().getWidth();
         imageHeight = juliaRenderer.getImage().getBufferedImage().getHeight();
         juliaEngine = juliaRenderer.getFractalEngine();
 
-        juliaEngine.initGPUKernel(imageWidth, imageHeight, juliaRenderer.getMapper());
+        juliaEngine.initGPUKernelForRender(imageWidth, imageHeight, juliaRenderer.getMapper());
     }
 
     @Override
@@ -46,9 +59,7 @@ public class JuliaCalculatorGPU implements Runnable {
                     if (stopped) {
                         return;
                     }
-
                     doPostProcess();
-
                 }
             }
         }
@@ -56,22 +67,72 @@ public class JuliaCalculatorGPU implements Runnable {
     }
 
     private void doPostProcess() {
-        for (int x = 0; x < juliaEngine.getSubImageWidth(); x++) {
-            if (x + xOffset < imageWidth) {
-                for (int y = 0; y < juliaEngine.getSubImageHeight(); y++) {
-                    if (y + yOffset < imageHeight) {
-                        if (juliaEngine.isUseGPUFull()) {
-                            juliaRenderer.enginePerformedCalculation(x + xOffset, y + yOffset, juliaEngine.getGPUOrbit(x, y));
-                        } else if (juliaEngine.isUseGPUFast()) {
-                            juliaRenderer.enginePerformedCalculation(x + xOffset, y + yOffset, juliaEngine.getLastOrbitPoint(x, y), juliaEngine.getOrbitLength(x, y));
-                        }
-                    }
+        if (juliaEngine.isUseGPUFull()) {
+            ExecutorService es = Executors.newFixedThreadPool(numCores);
+            rawGpuOrbitContainer = juliaEngine.getRawGpuOrbitContainer();
+            List<Future> futures = new ArrayList<>();
+            for (int coreIndex = 0; coreIndex < numCores; coreIndex++) {
+                RawGpuFullOrbitProcessor rawGpuFullOrbitProcessor = new RawGpuFullOrbitProcessor(coreIndex);
+                futures.add(es.submit(rawGpuFullOrbitProcessor));
+            }
+            for (Future f : futures) {
+                try {
+                    f.get();
+                } catch (InterruptedException | ExecutionException ex) {
+                    Logger.getLogger(MandelbrotRenderer.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            es.shutdown();
+
+        } else if (juliaEngine.isUseGPUFast()) {
+            int subImageWidth = juliaEngine.getSubImageWidth();
+            int subImageHeight = juliaEngine.getSubImageHeight();
+
+            for (int x = 0; x < subImageWidth; x++) {
+                if (x + xOffset >= imageWidth) break;
+                for (int y = 0; y < subImageHeight; y++) {
+                    if (y + yOffset >= imageHeight) break;
+                    juliaRenderer.enginePerformedCalculation(x + xOffset, y + yOffset, juliaEngine.getLastOrbitPoint(x, y), juliaEngine.getOrbitLength(x, y));
                 }
             }
         }
+
     }
 
     public void stop() {
         stopped = true;
+    }
+
+    private class RawGpuFullOrbitProcessor implements Runnable {
+
+        private final int coreIndex;
+
+        RawGpuFullOrbitProcessor(int coreIndex) {
+            this.coreIndex = coreIndex;
+        }
+
+        @Override
+        public void run() {
+            try {
+                int subImageWidth = juliaEngine.getSubImageWidth();
+                int subImageHeight = juliaEngine.getSubImageHeight();
+                int maxIter = juliaEngine.getMaxIter();
+
+                for (int x = coreIndex; x < subImageWidth; x += numCores) {
+                    if (x + xOffset >= imageWidth) break;
+                    for (int y = 0; y < subImageHeight; y++) {
+                        if (y + yOffset >= imageHeight) break;
+
+                        int orbitStartIndex = x * maxIter + y * maxIter * subImageWidth;
+                        int orbitLength = rawGpuOrbitContainer.orbitLengths[x][y];
+
+                        juliaRenderer.enginePerformedCalculation(x + xOffset, y + yOffset, rawGpuOrbitContainer, orbitStartIndex, orbitLength);
+                    }
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                throw ex;
+            }
+        }
     }
 }

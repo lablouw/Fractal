@@ -12,6 +12,7 @@ import fractal.common.FractalViewer;
 import fractal.common.SynchronizedBufferedImage;
 import fractal.common.ImageUtils;
 import fractal.main;
+import fractal.mandelbrot.RawGpuOrbitContainer;
 import fractal.mandelbrot.coloring.OrbitTrapColorCalculator;
 import fractal.newton.coloring.BasinsOfAttractionColorCalulator;
 import fractal.newton.coloring.NewtonIterationsColorCalculator;
@@ -217,6 +218,10 @@ public class NewtonRenderer extends FractalRenderer<NewtonEngine> implements Ant
             updateGui();
             lastGuiUpdate = System.currentTimeMillis();
         }
+    }
+
+    @Override
+    public void enginePerformedCalculation(int x, int y, RawGpuOrbitContainer rawGpuOrbitContainer, int orbitStartIndex, int orbitLength) {
     }
 
     @Override

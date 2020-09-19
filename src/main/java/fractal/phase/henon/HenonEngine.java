@@ -96,6 +96,11 @@ public class HenonEngine implements FractalEngine {
     }
 
     @Override
+    public boolean isBailoutReachedByLastOrbitPoint(Complex lastOrbitPoint) {
+        return false;
+    }
+
+    @Override
     public JComponent getSettingsComponent() {
         settingsPanel = new JPanel();
         settingsPanel.setLayout(new GridLayout(0, 1));

@@ -9,6 +9,7 @@ import fractal.common.Complex;
 import fractal.common.FractalEngine;
 import fractal.common.FractalRenderer;
 import fractal.common.SynchronizedBufferedImage;
+import fractal.mandelbrot.RawGpuOrbitContainer;
 import fractal.newton.NewtonRenderer;
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -41,7 +42,12 @@ public class NewtonIterationsColorCalculator implements ColorCalculator {
     public Color calcColor(int x, int y, List<Complex> orbit, FractalEngine fractalEngine) {
         return new Color(Color.HSBtoRGB((((float) orbit.size()) / ((float) fractalEngine.getMaxIter()) - spectrum) * spectrumComp, 1, 1));
     }
-    
+
+    @Override
+    public Color calcColor(int x, int y, RawGpuOrbitContainer rawGpuOrbitContainer, int orbitStartIndex, int orbitLength, FractalEngine fractalEngine) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
     @Override
     public Color calcColor(int x, int y, Complex lastOrbitPoint, int orbitLength, FractalEngine fractalEngine) {
         return new Color(Color.HSBtoRGB((((float) orbitLength) / ((float) fractalEngine.getMaxIter()) - spectrum) * spectrumComp, 1, 1));

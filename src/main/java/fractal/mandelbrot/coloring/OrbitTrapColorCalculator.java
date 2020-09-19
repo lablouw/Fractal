@@ -10,6 +10,7 @@ import fractal.common.Complex;
 import fractal.common.FractalEngine;
 import fractal.common.FractalRenderer;
 import fractal.common.SynchronizedBufferedImage;
+import fractal.mandelbrot.RawGpuOrbitContainer;
 import fractal.mandelbrot.coloring.orbittrap.circle.CircleOrbitTrap;
 import fractal.mandelbrot.coloring.orbittrap.cross.CrossOrbitTrap;
 import fractal.mandelbrot.coloring.orbittrap.infiniteline.InfiniteLineOrbitTrap;
@@ -53,7 +54,12 @@ public class OrbitTrapColorCalculator implements ColorCalculator {
     public Color calcColor(int x, int y, List<Complex> orbit, FractalEngine fractalEngine) {
         return activeOrbitTrap.calcColor(x, y, orbit, fractalEngine);
     }
-    
+
+    @Override
+    public Color calcColor(int x, int y, RawGpuOrbitContainer rawGpuOrbitContainer, int orbitStartIndex, int orbitLength, FractalEngine fractalEngine) {
+        throw new UnsupportedOperationException("Not yet implemented");//TODO: duplicate above method
+    }
+
     @Override
     public Color calcColor(int x, int y, Complex lastOrbitPoint, int orbitLength, FractalEngine fractalEngine) {
         throw new UnsupportedOperationException("Not supported. Full orbit needed");

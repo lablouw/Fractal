@@ -9,6 +9,7 @@ import fractal.common.Complex;
 import fractal.common.FractalRenderer;
 import fractal.common.FractalViewer;
 import fractal.main;
+import fractal.mandelbrot.RawGpuOrbitContainer;
 import fractal.phase.coloring.PhaseColorer;
 import java.awt.Color;
 import java.awt.Point;
@@ -81,6 +82,10 @@ public class HenonRenderer extends FractalRenderer<HenonEngine> {
             updateGui();
             lastGuiUpdate = System.currentTimeMillis();
         }
+    }
+
+    @Override
+    public void enginePerformedCalculation(int x, int y, RawGpuOrbitContainer rawGpuOrbitContainer, int orbitStartIndex, int orbitLength) {
     }
 
     @Override
