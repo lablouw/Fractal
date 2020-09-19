@@ -170,7 +170,7 @@ public class MandelbrotEngine implements FractalEngine {
             }
             System.out.println("subImage size: " + subImageWidth + "x" + subImageHeight);
 
-            mandelbrotGPUKernelFull.init(subImageWidth, subImageHeight, maxIter, bailoutSquared, perterbation);
+            mandelbrotGPUKernelFull.initForRender(subImageWidth, subImageHeight, maxIter, bailoutSquared, perterbation);
         } else if (useGPUFast) {
             if (mandelbrotGPUKernelFast == null) {
                 mandelbrotGPUKernelFast = new MandelbrotGPUKernelFast();
@@ -190,7 +190,7 @@ public class MandelbrotEngine implements FractalEngine {
             }
             System.out.println("subImage size: " + subImageWidth + "x" + subImageHeight);
 
-            mandelbrotGPUKernelFast.init(subImageWidth, subImageHeight, maxIter, bailoutSquared, perterbation);
+            mandelbrotGPUKernelFast.initForRender(subImageWidth, subImageHeight, maxIter, bailoutSquared, perterbation);
         }
     }
     public void doRunGPU(int xOffset, int yOffset, Mapper mapper) {

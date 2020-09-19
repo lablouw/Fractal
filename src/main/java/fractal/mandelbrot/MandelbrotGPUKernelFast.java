@@ -31,7 +31,7 @@ public class MandelbrotGPUKernelFast extends Kernel {
     private double[] finalI;
     private int[] orbitLengths;
 
-    public void init(int subImageWidth, int subImageHeight, int maxIter, double bailoutSquared, Complex perterbation) {
+    public void initForRender(int subImageWidth, int subImageHeight, int maxIter, double bailoutSquared, Complex perterbation) {
         this.subImageWidth = subImageWidth;
         this.subImageHeight = subImageHeight;
 

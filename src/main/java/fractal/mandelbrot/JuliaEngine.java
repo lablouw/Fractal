@@ -186,7 +186,7 @@ public class JuliaEngine implements FractalEngine {
             }
             System.out.println("subImage size: " + subImageWidth + "x" + subImageHeight);
 
-            juliaGPUKernelFull.init(subImageWidth, subImageHeight, maxIter, bailoutSquared, c);
+            juliaGPUKernelFull.initForRender(subImageWidth, subImageHeight, maxIter, bailoutSquared, c);
         } else if (useGPUFast) {
             if (juliaGPUKernelFast == null) {
                 juliaGPUKernelFast = new JuliaGPUKernelFast();
@@ -206,7 +206,7 @@ public class JuliaEngine implements FractalEngine {
             }
             System.out.println("subImage size: " + subImageWidth + "x" + subImageHeight);
 
-            juliaGPUKernelFast.init(subImageWidth, subImageHeight, maxIter, bailoutSquared, c);
+            juliaGPUKernelFast.initForRender(subImageWidth, subImageHeight, maxIter, bailoutSquared, c);
         }
     }
     

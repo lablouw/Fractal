@@ -8,8 +8,6 @@ package fractal.mandelbrot;
 import com.aparapi.Kernel;
 import fractal.common.Complex;
 import fractal.common.Mappers.Mapper;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -28,10 +26,10 @@ public class MandelbrotGPUKernelFull extends Kernel {
 
     private double[] cr;
     private double[] ci;
-
+    
     private RawGpuOrbitContainer rawGpuOrbitContainer;
 
-    public void init(int subImageWidth, int subImageHeight, int maxIter, double bailoutSquared, Complex perterbation) {
+    public void initForRender(int subImageWidth, int subImageHeight, int maxIter, double bailoutSquared, Complex perterbation) {
         this.subImageWidth = subImageWidth;
         this.subImageHeight = subImageHeight;
 

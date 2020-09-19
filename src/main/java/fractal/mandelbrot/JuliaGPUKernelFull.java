@@ -31,7 +31,7 @@ public class JuliaGPUKernelFull extends Kernel {
 
     private RawGpuOrbitContainer rawGpuOrbitContainer;
 
-    public void init(int subImageWidth, int subImageHeight, int maxIter, double bailoutSquared, Complex c) {
+    public void initForRender(int subImageWidth, int subImageHeight, int maxIter, double bailoutSquared, Complex c) {
         this.subImageWidth = subImageWidth;
         this.subImageHeight = subImageHeight;
 

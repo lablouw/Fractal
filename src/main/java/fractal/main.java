@@ -4,6 +4,9 @@
  */
 package fractal;
 
+import com.aparapi.device.Device;
+import com.aparapi.internal.kernel.KernelManager;
+import com.aparapi.internal.kernel.KernelPreferences;
 import fractal.common.FractalRenderer;
 import fractal.mandelbrot.JuliaRenderer;
 import fractal.mandelbrot.MandelbrotRenderer;
@@ -201,6 +204,12 @@ public class main extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+      KernelPreferences preferences = KernelManager.instance().getDefaultPreferences();
+      System.out.println("-- Devices in preferred order --");
+      for (Device device : preferences.getPreferredDevices(null)) {
+          System.out.println("----------");
+          System.out.println(device);
+      }
         /*
          * Set the Nimbus look and feel
          */

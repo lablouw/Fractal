@@ -30,7 +30,7 @@ public class JuliaGPUKernelFast extends Kernel {
     private double[] finalI;
     private int[] orbitLengths;
     
-    public void init(int subImageWidth, int subImageHeight, int maxIter, double bailoutSquared, Complex c) {
+    public void initForRender(int subImageWidth, int subImageHeight, int maxIter, double bailoutSquared, Complex c) {
         this.subImageWidth = subImageWidth;
         this.subImageHeight = subImageHeight;
 
