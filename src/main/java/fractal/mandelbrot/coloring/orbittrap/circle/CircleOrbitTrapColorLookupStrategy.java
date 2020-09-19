@@ -10,6 +10,7 @@ import fractal.mandelbrot.coloring.orbittrap.OrbitTrapColorStrategy;
 import fractal.common.Complex;
 import fractal.common.FractalEngine;
 import fractal.common.FractalRenderer;
+import fractal.mandelbrot.RawGpuOrbitContainer;
 import java.awt.Color;
 import java.awt.Component;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.List;
  *
  * @author Lloyd
  */
-public class CircleOrbitTrapColorLookupStrategy implements OrbitTrapColorStrategy<CircleOrbitTrap>{
+public class CircleOrbitTrapColorLookupStrategy implements OrbitTrapColorStrategy<CircleOrbitTrap> {
 
     private final FractalRenderer fractalRenderer;
     private final CircleOrbitTrap orbitTrap;
@@ -38,7 +39,7 @@ public class CircleOrbitTrapColorLookupStrategy implements OrbitTrapColorStrateg
 
     @Override
     public void initForRender() {
-        
+
     }
 
     @Override
@@ -54,7 +55,24 @@ public class CircleOrbitTrapColorLookupStrategy implements OrbitTrapColorStrateg
         if (minDist > orbitTrap.getRadius()) {
             return Color.BLACK;
         } else {
-            return colorPalette.getColor((float) (-minDist/orbitTrap.getRadius()/2));
+            return colorPalette.getColor((float) (-minDist / orbitTrap.getRadius() / 2));
+        }
+    }
+
+    @Override
+    public Color calcColor(int x, int y, RawGpuOrbitContainer rawGpuOrbitContainer, int orbitStartIndex, int orbitLength, FractalEngine fractalEngine, CircleOrbitTrap orbitTrap) {
+        double minDist = Double.MAX_VALUE;
+        for (int i = 0; i < orbitLength; i++) {
+            double dist = orbitTrap.distanceFrom(new Complex(rawGpuOrbitContainer.orbitsR[orbitStartIndex + i], rawGpuOrbitContainer.orbitsI[orbitStartIndex + i]));
+            if (dist < minDist) {
+                minDist = dist;
+            }
+        }
+
+        if (minDist > orbitTrap.getRadius()) {
+            return Color.BLACK;
+        } else {
+            return colorPalette.getColor((float) (-minDist / orbitTrap.getRadius() / 2));
         }
     }
 

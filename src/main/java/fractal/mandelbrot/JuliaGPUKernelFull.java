@@ -8,8 +8,6 @@ package fractal.mandelbrot;
 import com.aparapi.Kernel;
 import fractal.common.Complex;
 import fractal.common.Mappers.Mapper;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *

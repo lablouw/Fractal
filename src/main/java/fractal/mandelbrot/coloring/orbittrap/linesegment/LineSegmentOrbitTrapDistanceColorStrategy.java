@@ -4,6 +4,8 @@ import fractal.common.ColorPalette;
 import fractal.common.Complex;
 import fractal.common.FractalEngine;
 import fractal.common.FractalRenderer;
+import fractal.mandelbrot.RawGpuOrbitContainer;
+import fractal.mandelbrot.coloring.orbittrap.OrbitTrap;
 import fractal.mandelbrot.coloring.orbittrap.OrbitTrapColorStrategy;
 
 import javax.swing.*;
@@ -46,8 +48,8 @@ public class LineSegmentOrbitTrapDistanceColorStrategy implements OrbitTrapColor
 	@Override
 	public Color calcColor(int x, int y, List<Complex> orbit, FractalEngine fractalEngine, LineSegmentOrbitTrap orbitTrap) {
 		double minDist = Double.MAX_VALUE;
-		for (int i = 1; i < orbit.size(); i++) {//skip first mandelbrot orbit point (always == perterb i.e. 0) TODO: what about other fractals
-			double d = orbitTrap.distanceFrom(orbit.get(i));
+		for (Complex c : orbit) {//skip first mandelbrot orbit point (always == perterb i.e. 0) TODO: what about other fractals
+			double d = orbitTrap.distanceFrom(c);
 			if (d < minDist) {
 				minDist = d;
 			}
@@ -56,6 +58,20 @@ public class LineSegmentOrbitTrapDistanceColorStrategy implements OrbitTrapColor
 		minDists[x][y] = minDist;
 		return minDist == 0 ? Color.BLACK : colorPalette.getColor((float) -Math.log(minDist) * spectrumComp);
 	}
+    
+    @Override
+    public Color calcColor(int x, int y, RawGpuOrbitContainer rawGpuOrbitContainer, int orbitStartIndex, int orbitLength, FractalEngine fractalEngine, LineSegmentOrbitTrap orbitTrap) {
+        double minDist = Double.MAX_VALUE;
+		for (int i = 1; i < orbitLength; i++) {//skip first mandelbrot orbit point (always == perterb i.e. 0) TODO: what about other fractals
+			double d = orbitTrap.distanceFrom(new Complex(rawGpuOrbitContainer.orbitsR[orbitStartIndex + i], rawGpuOrbitContainer.orbitsI[orbitStartIndex + i]));
+			if (d < minDist) {
+				minDist = d;
+			}
+		}
+
+		minDists[x][y] = minDist;
+		return minDist == 0 ? Color.BLACK : colorPalette.getColor((float) -Math.log(minDist) * spectrumComp);
+    }
 
 	@Override
 	public Color recalcColor(int x, int y) {

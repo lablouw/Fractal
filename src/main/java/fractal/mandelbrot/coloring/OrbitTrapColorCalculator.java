@@ -57,7 +57,7 @@ public class OrbitTrapColorCalculator implements ColorCalculator {
 
     @Override
     public Color calcColor(int x, int y, RawGpuOrbitContainer rawGpuOrbitContainer, int orbitStartIndex, int orbitLength, FractalEngine fractalEngine) {
-        throw new UnsupportedOperationException("Not yet implemented");//TODO: duplicate above method
+        return activeOrbitTrap.calcColor(x, y, rawGpuOrbitContainer, orbitStartIndex, orbitLength, fractalEngine);
     }
 
     @Override

@@ -8,6 +8,7 @@ package fractal.mandelbrot.coloring.orbittrap;
 import fractal.common.Complex;
 import fractal.common.FractalEngine;
 import fractal.common.FractalRenderer;
+import fractal.mandelbrot.RawGpuOrbitContainer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,7 +33,7 @@ public abstract class OrbitTrap {
     public abstract Component getSettingsComponent();
     public abstract BufferedImage drawOrbitTrap(BufferedImage baseImage, FractalRenderer fractalRenderer);
     public abstract Color calcColor(int x, int y, List<Complex> orbit, FractalEngine fractalEngine);
-
+    public abstract Color calcColor(int x, int y, RawGpuOrbitContainer rawGpuOrbitContainer, int orbitStartIndex, int orbitLength, FractalEngine fractalEngine);
     public abstract Color reCalcColor(int x, int y);
 
     public void doUserDefined(FractalRenderer fractalRenderer, JButton buttonToEnable) {
@@ -47,6 +48,7 @@ public abstract class OrbitTrap {
         fractalRenderer.getFractalViewer().getImagePanel().addMouseMotionListener(orbitTrapDefiningMouseListener);
 
     }
+
 
     private class OrbitTrapDefiningMouseListener extends MouseMotionAdapter implements MouseListener {
         private Complex p1;
