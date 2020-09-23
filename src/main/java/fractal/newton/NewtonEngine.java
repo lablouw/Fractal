@@ -56,7 +56,7 @@ public class NewtonEngine implements FractalEngine {
         Complex z0 = new Complex(c);
         Complex z1 = null;
         double diff;
-        List<Complex> orbit = new ArrayList<>();
+        List<Complex> orbit = new ArrayList<>(maxIter);
         
         try {
             do {
@@ -172,9 +172,4 @@ public class NewtonEngine implements FractalEngine {
         
         return p;
     }
-
-    @Override
-    public void notifyRenderComplete() {
-    }
-    
 }

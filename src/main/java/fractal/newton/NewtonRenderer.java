@@ -280,7 +280,7 @@ public class NewtonRenderer extends FractalRenderer<NewtonEngine> implements Ant
             {
                 for (int x=coreIndex; x<imageWidth; x+=numCores)
                 {
-                    List<List<Complex>> orbits = new ArrayList<>();
+                    List<List<Complex>> orbits = new ArrayList<>(fractalEngine.getMaxIter());
                     List<Point> points = new ArrayList<>(imageWidth);
                     for (int y=0; y<imageHeight; y++)
                     {
@@ -295,8 +295,8 @@ public class NewtonRenderer extends FractalRenderer<NewtonEngine> implements Ant
             }
             else
             {
-                double xStep = Math.abs(getMapper().getXStep());
-                double yStep = Math.abs(getMapper().getYStep());
+                double xStep = Math.abs(getMapper().getRStep());
+                double yStep = Math.abs(getMapper().getIStep());
                 double aaXStep = xStep/(double)aa;
                 double aaYStep = yStep/(double)aa;
                 int xSteps, ySteps;

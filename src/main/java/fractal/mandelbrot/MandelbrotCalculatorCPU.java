@@ -38,7 +38,7 @@ public class MandelbrotCalculatorCPU implements Runnable {
     public void run() {
         if (aa == Antialiasable.NONE) {
             for (int x = coreIndex; x < imageWidth; x += numCores) {
-                List<List<Complex>> orbits = new ArrayList<>();
+                List<List<Complex>> orbits = new ArrayList<>(imageHeight);
                 List<Point> points = new ArrayList<>(imageWidth);
                 for (int y = 0; y < imageHeight; y++) {
                     Complex c = mandelbrotRenderer.getMapper().mapToComplex(x, y);
@@ -52,8 +52,8 @@ public class MandelbrotCalculatorCPU implements Runnable {
                 mandelbrotRenderer.enginePerformedCalculation(points, orbits);
             }
         } else {
-            double xStep = Math.abs(mandelbrotRenderer.getMapper().getXStep());
-            double yStep = Math.abs(mandelbrotRenderer.getMapper().getYStep());
+            double xStep = Math.abs(mandelbrotRenderer.getMapper().getRStep());
+            double yStep = Math.abs(mandelbrotRenderer.getMapper().getIStep());
             double aaXStep = xStep / (double) aa;
             double aaYStep = yStep / (double) aa;
             int xSteps, ySteps;

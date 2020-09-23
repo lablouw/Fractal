@@ -207,18 +207,18 @@ public class MandelbrotRenderer extends FractalRenderer<MandelbrotEngine> implem
         }
     }
 
-    @Override
-    public void enginePerformedCalculation(int x, int y, List<Complex> orbit, Color color) {
-        synchronizedBufferedImage.setColor(x, y, color);
+    void enginePerformedCalculation(int x, int y, Complex lastOrbitPoint, int orbitLength) {
+        synchronizedBufferedImage.setColor(x, y, activeColorCalculator.calcColor(x, y, lastOrbitPoint, orbitLength, fractalEngine));
 
         if (System.currentTimeMillis() - lastGuiUpdate > main.getGuiUpdateInterval()) {
             updateGui();
             lastGuiUpdate = System.currentTimeMillis();
         }
     }
-    
-    void enginePerformedCalculation(int x, int y, Complex lastOrbitPoint, int orbitLength) {
-        synchronizedBufferedImage.setColor(x, y, activeColorCalculator.calcColor(x, y, lastOrbitPoint, orbitLength, fractalEngine));
+
+    @Override
+    public void enginePerformedCalculation(int x, int y, List<Complex> orbit, Color color) {
+        synchronizedBufferedImage.setColor(x, y, color);
 
         if (System.currentTimeMillis() - lastGuiUpdate > main.getGuiUpdateInterval()) {
             updateGui();

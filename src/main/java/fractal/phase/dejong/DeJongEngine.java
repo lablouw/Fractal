@@ -257,14 +257,10 @@ public class DeJongEngine implements FractalEngine {
         return settingsPanel;
     }
 
-    @Override
-    public void notifyRenderComplete() {
-    }
-
     private class TravelerRunner implements Runnable {
 
         private boolean stopped = false;
-        List<Traveler> travelers = new ArrayList<>();
+        List<Traveler> travelers = new ArrayList<>(numTravelers);
 
         private TravelerRunner() {
             for (int i = 0; i < numTravelers / numCores; i++) {

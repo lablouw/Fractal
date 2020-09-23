@@ -38,7 +38,7 @@ public class JuliaCalculatorCPU implements Runnable {
     public void run() {
         if (aa == Antialiasable.NONE) {
             for (int x = coreIndex; x < imageWidth; x += numCores) {
-                List<List<Complex>> orbits = new ArrayList<>();
+                List<List<Complex>> orbits = new ArrayList<>(imageHeight);
                 List<Point> points = new ArrayList<>(imageWidth);
                 for (int y = 0; y < imageHeight; y++) {
                     Complex z0 = juliaRenderer.getMapper().mapToComplex(x, y);
@@ -52,8 +52,8 @@ public class JuliaCalculatorCPU implements Runnable {
                 juliaRenderer.enginePerformedCalculation(points, orbits);
             }
         } else {
-            double xStep = Math.abs(juliaRenderer.getMapper().getXStep());
-            double yStep = Math.abs(juliaRenderer.getMapper().getYStep());
+            double xStep = Math.abs(juliaRenderer.getMapper().getRStep());
+            double yStep = Math.abs(juliaRenderer.getMapper().getIStep());
             double aaXStep = xStep / (double) aa;
             double aaYStep = yStep / (double) aa;
             int xSteps, ySteps;

@@ -126,7 +126,7 @@ public class MandelbrotEngine implements FractalEngine {
     @Override
     public List<Complex> calcOrbit(Complex c) {
         Complex z = new Complex(perterbation);
-        List<Complex> orbit = new ArrayList<>();
+        List<Complex> orbit = new ArrayList<>(maxIter);
         orbit.add(z);
         int iter = 1;
         if (exponent.r == 2 && exponent.i == 0) {
@@ -193,13 +193,13 @@ public class MandelbrotEngine implements FractalEngine {
             mandelbrotGPUKernelFast.initForRender(subImageWidth, subImageHeight, maxIter, bailoutSquared, perterbation);
         }
     }
-    public void doRunGPU(int xOffset, int yOffset, Mapper mapper) {
+    public void doRunGPU(int xOffset, int yOffset, Mapper mapper, double aaROffset, double aaIOffset) {
         if (useGPUFull) {
-            mandelbrotGPUKernelFull.initArrays(xOffset, yOffset, mapper);
+            mandelbrotGPUKernelFull.initArrays(xOffset, yOffset, mapper, aaROffset, aaIOffset);
             Range range = Range.create2D(mandelbrotGPUKernelFull.getSubImageWidth(), mandelbrotGPUKernelFull.getSubImageHeight());
             mandelbrotGPUKernelFull.execute(range);
         } else if (useGPUFast) {
-            mandelbrotGPUKernelFast.initArrays(xOffset, yOffset, mapper);
+            mandelbrotGPUKernelFast.initArrays(xOffset, yOffset, mapper, aaROffset, aaIOffset);
             Range range = Range.create2D(mandelbrotGPUKernelFast.getSubImageWidth(), mandelbrotGPUKernelFast.getSubImageHeight());
             mandelbrotGPUKernelFast.execute(range);
         }
@@ -267,10 +267,6 @@ public class MandelbrotEngine implements FractalEngine {
 
     public Complex getPerterbation() {
         return perterbation;
-    }
-
-    @Override
-    public void notifyRenderComplete() {
     }
 
     boolean isUseGPUFull() {

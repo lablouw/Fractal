@@ -10,11 +10,8 @@ package fractal.common;
  */
 public interface Antialiasable
 {
-    public static final int NONE = 1;
-    public static final int AA2 = 2;
-    public static final int AA3 = 3;
-    public static final int AA4 = 4;
-    
-    public int getAA();
-    public void setAA(int aa);
+    int NONE = 1;
+
+    int getAA();
+    void setAA(int aa);
 }

@@ -107,7 +107,6 @@ public abstract class FractalRenderer<T extends FractalEngine> {
 
     private void notifyRenderComplete() {
         activeColorCalculator.complete(synchronizedBufferedImage);
-        fractalEngine.notifyRenderComplete();
     }
     
     public void clearImage() {

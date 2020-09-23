@@ -85,14 +85,10 @@ public class WalkerEngine implements FractalEngine {
         return null;
     }
 
-    @Override
-    public void notifyRenderComplete() {
-    }
-    
     private class WalkerRunner implements Runnable {
 
         private boolean stopped = false;
-        List<TwoTargetSeekingTraveler> twoTargetSeekingTravelers = new ArrayList<>();
+        List<TwoTargetSeekingTraveler> twoTargetSeekingTravelers = new ArrayList<>(numWalkers);
 
         private WalkerRunner() {
             for (int i = 0; i < numWalkers; i++) {

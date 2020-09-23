@@ -18,8 +18,8 @@ public abstract class Mapper
 {
     final Complex topLeft;
     final Complex bottomRight;
-    final double xStep;
-    final double yStep;
+    final double rStep;
+    final double iStep;
     final int width;
     final int height;
 
@@ -28,8 +28,8 @@ public abstract class Mapper
         this.bottomRight = p2;
         this.width = width;
         this.height = height;
-        this.xStep = (p2.r-p1.r)/(double)width;
-        this.yStep = (p2.i-p1.i)/(double)height;
+        this.rStep = (p2.r-p1.r)/(double)width;
+        this.iStep = (p2.i-p1.i)/(double)height;
     }
 
     public abstract Point mapToImage(Complex c);
@@ -63,12 +63,12 @@ public abstract class Mapper
         return width;
     }
 
-    public double getXStep() {
-        return xStep;
+    public double getRStep() {
+        return rStep;
     }
 
-    public double getYStep() {
-        return yStep;
+    public double getIStep() {
+        return iStep;
     }
     
 }

@@ -20,12 +20,12 @@ public class LinearMapper extends Mapper {
 
     @Override
     public Complex mapToComplex(int x, int y) {
-        return new Complex(topLeft.r + xStep * x, topLeft.i + yStep * y);
+        return new Complex(topLeft.r + rStep * x, topLeft.i + iStep * y);
     }
 
     @Override
     public Point mapToImage(Complex c) {
-        return new Point((int) Math.round((c.r - topLeft.r) / xStep), (int) Math.round((c.i - topLeft.i) / yStep));
+        return new Point((int) Math.round((c.r - topLeft.r) / rStep), (int) Math.round((c.i - topLeft.i) / iStep));
     }
 
 }

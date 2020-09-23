@@ -142,7 +142,7 @@ public class JuliaEngine implements FractalEngine {
 
     @Override
     public List<Complex> calcOrbit(Complex z) {
-        List<Complex> orbit = new ArrayList<>();
+        List<Complex> orbit = new ArrayList<>(maxIter);
         orbit.add(z);
         int iter = 1;
         if (exponent.r == 2 && exponent.i == 0) {
@@ -288,10 +288,6 @@ public class JuliaEngine implements FractalEngine {
         ciSpinner.setValue(c.i);
     }
 
-    @Override
-    public void notifyRenderComplete() {
-    }
-    
     boolean isUseGPUFull() {
         return useGPUFull;
     }

@@ -48,12 +48,12 @@ public class MandelbrotGPUKernelFull extends Kernel {
         rawGpuOrbitContainer.orbitLengths = new int[subImageWidth][subImageHeight];
     }
 
-    public void initArrays(int xOffset, int yOffset, Mapper mapper) {
+    public void initArrays(int xOffset, int yOffset, Mapper mapper, double aaROffset, double aaIOffset) {
         for (int x = 0; x < subImageWidth; x++) {
             for (int y = 0; y < subImageHeight; y++) {
                 Complex c = mapper.mapToComplex(x + xOffset, y + yOffset);
-                cr[x + y * subImageWidth] = c.r;
-                ci[x + y * subImageWidth] = c.i;
+                cr[x + y * subImageWidth] = c.r + aaROffset;
+                ci[x + y * subImageWidth] = c.i + aaROffset;
             }
         }
     }
