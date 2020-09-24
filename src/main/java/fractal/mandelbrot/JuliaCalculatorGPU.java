@@ -7,6 +7,7 @@ package fractal.mandelbrot;
 
 import fractal.common.Antialiasable;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -33,6 +34,7 @@ public class JuliaCalculatorGPU implements Runnable {
     private int yOffset = 0;
 
     private boolean stopped = false;
+    private List<Color>[][] preAAColors;
 
     private RawGpuOrbitContainer rawGpuOrbitContainer;
 
@@ -47,7 +49,7 @@ public class JuliaCalculatorGPU implements Runnable {
         imageHeight = juliaRenderer.getImage().getBufferedImage().getHeight();
         juliaEngine = juliaRenderer.getFractalEngine();
 
-        juliaEngine.initGPUKernelForRender(imageWidth, imageHeight, juliaRenderer.getMapper());
+        juliaEngine.initGPUKernelForRender(imageWidth, imageHeight);
     }
 
     @Override
@@ -55,24 +57,54 @@ public class JuliaCalculatorGPU implements Runnable {
         if (juliaRenderer.getAA() == Antialiasable.NONE) {
             for (xOffset = 0; xOffset < imageWidth; xOffset += juliaEngine.getSubImageWidth()) {
                 for (yOffset = 0; yOffset < imageHeight; yOffset += juliaEngine.getSubImageHeight()) {
-                    juliaEngine.doRunGPU(xOffset, yOffset, juliaRenderer.getMapper());
+                    juliaEngine.doRunGPU(xOffset, yOffset, juliaRenderer.getMapper(), 0, 0);
                     if (stopped) {
                         return;
                     }
-                    doPostProcess();
+                    doPostProcess(xOffset, yOffset, false);
+                }
+            }
+        } else {
+            int aa = juliaRenderer.getAA();
+            double rStep = Math.abs(juliaRenderer.getMapper().getRStep());
+            double iStep = Math.abs(juliaRenderer.getMapper().getIStep());
+            double aaRStep = rStep / (double) aa;
+            double aaIStep = iStep / (double) aa;
+
+            double[] aaROffsets = new double[aa];
+            double[] aaIOffsets = new double[aa];
+            for (int i = 0; i < aa; i++) {
+                aaROffsets[i] = i*aaRStep - rStep/2;
+                aaIOffsets[i] = i*aaIStep - iStep/2;
+            }
+
+            for (xOffset = 0; xOffset < imageWidth; xOffset += juliaEngine.getSubImageWidth()) {
+                for (yOffset = 0; yOffset < imageHeight; yOffset += juliaEngine.getSubImageHeight()) {
+                    preAAColors = new List[juliaEngine.getSubImageWidth()][juliaEngine.getSubImageHeight()];
+                    for (double aaROffset : aaROffsets) {
+                        for (double aaIOffset : aaIOffsets) {
+
+                            juliaEngine.doRunGPU(xOffset, yOffset, juliaRenderer.getMapper(), aaROffset, aaIOffset);
+                            if (stopped) {
+                                return;
+                            }
+                            doPostProcess(xOffset, yOffset, true);
+
+                        }
+                    }
                 }
             }
         }
 
     }
 
-    private void doPostProcess() {
+    private void doPostProcess(int xOffset, int yOffset, boolean antialias) {
         if (juliaEngine.isUseGPUFull()) {
             ExecutorService es = Executors.newFixedThreadPool(numCores);
             rawGpuOrbitContainer = juliaEngine.getRawGpuOrbitContainer();
             List<Future> futures = new ArrayList<>();
             for (int coreIndex = 0; coreIndex < numCores; coreIndex++) {
-                RawGpuFullOrbitProcessor rawGpuFullOrbitProcessor = new RawGpuFullOrbitProcessor(coreIndex);
+                RawGpuFullOrbitProcessor rawGpuFullOrbitProcessor = new RawGpuFullOrbitProcessor(coreIndex, antialias);
                 futures.add(es.submit(rawGpuFullOrbitProcessor));
             }
             for (Future f : futures) {
@@ -92,11 +124,38 @@ public class JuliaCalculatorGPU implements Runnable {
                 if (x + xOffset >= imageWidth) break;
                 for (int y = 0; y < subImageHeight; y++) {
                     if (y + yOffset >= imageHeight) break;
-                    juliaRenderer.enginePerformedCalculation(x + xOffset, y + yOffset, juliaEngine.getLastOrbitPoint(x, y), juliaEngine.getOrbitLength(x, y));
+                    if (!antialias) {//No AA
+                        juliaRenderer.enginePerformedCalculation(x + xOffset, y + yOffset, juliaEngine.getLastOrbitPoint(x, y),
+                                juliaEngine.getOrbitLength(x, y));
+                    } else {
+                        Color c = juliaRenderer.getActiveColorCalculator().calcColor(x + xOffset, y + yOffset, juliaEngine.getLastOrbitPoint(x, y), juliaEngine.getOrbitLength(x, y), juliaEngine);
+                        if (preAAColors[x][y] == null) {
+                            preAAColors[x][y] = new ArrayList<>(juliaRenderer.getAA()*juliaRenderer.getAA());
+                        }
+                        preAAColors[x][y].add(c);
+                    }
                 }
             }
         }
 
+        if (antialias) {//we have AA
+            for (int x = xOffset; x < Math.min(xOffset + juliaEngine.getSubImageWidth(), imageWidth); x++) {
+                for (int y = yOffset; y < Math.min(yOffset + juliaEngine.getSubImageHeight(),imageHeight); y++) {
+                    Color c = averageColor(preAAColors[x - xOffset][y - yOffset]);
+                    juliaRenderer.enginePerformedCalculation(x, y, null, c);
+                }
+            }
+        }
+    }
+
+    private Color averageColor(List<Color> colors) {
+        int r=0,g=0,b =0;
+        for (Color c : colors) {
+            r += c.getRed();
+            g += c.getGreen();
+            b += c.getBlue();
+        }
+        return new Color(r/colors.size(), g/colors.size(), b/colors.size());
     }
 
     public void stop() {
@@ -106,9 +165,11 @@ public class JuliaCalculatorGPU implements Runnable {
     private class RawGpuFullOrbitProcessor implements Runnable {
 
         private final int coreIndex;
+        private final boolean antialias;
 
-        RawGpuFullOrbitProcessor(int coreIndex) {
+        RawGpuFullOrbitProcessor(int coreIndex, boolean antialias) {
             this.coreIndex = coreIndex;
+            this.antialias = antialias;
         }
 
         @Override
@@ -126,7 +187,15 @@ public class JuliaCalculatorGPU implements Runnable {
                         int orbitStartIndex = x * maxIter + y * maxIter * subImageWidth;
                         int orbitLength = rawGpuOrbitContainer.orbitLengths[x][y];
 
-                        juliaRenderer.enginePerformedCalculation(x + xOffset, y + yOffset, rawGpuOrbitContainer, orbitStartIndex, orbitLength);
+                        if (!antialias) {//No AA
+                            juliaRenderer.enginePerformedCalculation(x + xOffset, y + yOffset, rawGpuOrbitContainer, orbitStartIndex, orbitLength);
+                        } else {//Save color for later averaging
+                            Color c = juliaRenderer.getActiveColorCalculator().calcColor(x + xOffset, y + yOffset, rawGpuOrbitContainer, orbitStartIndex, orbitLength, juliaEngine);
+                            if (preAAColors[x][y] == null) {
+                                preAAColors[x][y] = new ArrayList<>(juliaRenderer.getAA()*juliaRenderer.getAA());
+                            }
+                            preAAColors[x][y].add(c);
+                        }
                     }
                 }
             } catch (Exception ex) {

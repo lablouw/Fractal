@@ -49,12 +49,12 @@ public class JuliaGPUKernelFast extends Kernel {
         orbitLengths = new int[subImageWidth * subImageHeight];
     }
     
-   public void initArrays(int xOffset, int yOffset, Mapper mapper) {
+   public void initArrays(int xOffset, int yOffset, Mapper mapper, double aaROffset, double aaIOffset) {
         for (int x = 0; x < subImageWidth; x++) {
             for (int y = 0; y < subImageHeight; y++) {
                 Complex z0 = mapper.mapToComplex(x + xOffset, y + yOffset);
-                z0r[x + y * subImageWidth] = z0.r;
-                z0i[x + y * subImageWidth] = z0.i;
+                z0r[x + y * subImageWidth] = z0.r + aaROffset;
+                z0i[x + y * subImageWidth] = z0.i + aaIOffset;
             }
         }
     }
@@ -79,7 +79,6 @@ public class JuliaGPUKernelFast extends Kernel {
         orbitLengths[x + y * getGlobalSize(0)] = iter;
     }
     //Only this runs on the GPU
-    
     public Complex getLastOrbitPoint(int x, int y) {
         return new Complex(finalR[x + y * subImageWidth], finalI[x + y * subImageWidth]);
     }

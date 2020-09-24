@@ -168,8 +168,6 @@ public class MandelbrotRenderer extends FractalRenderer<MandelbrotEngine> implem
                 Logger.getLogger(MandelbrotRenderer.class.getName()).log(Level.SEVERE, null, ex);
             }
             es.shutdown();
-//            System.gc();
-            
         }
         lastRenderTime = System.currentTimeMillis() - t0;
         busy = false;

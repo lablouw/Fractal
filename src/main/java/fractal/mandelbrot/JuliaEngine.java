@@ -166,7 +166,7 @@ public class JuliaEngine implements FractalEngine {
         return orbit;
     }
     
-    public void initGPUKernelForRender(int imageWidth, int imageHeight, Mapper mapper) {
+    public void initGPUKernelForRender(int imageWidth, int imageHeight) {
         if (useGPUFull) {
             if (juliaGPUKernelFull == null) {
                 juliaGPUKernelFull = new JuliaGPUKernelFull();
@@ -210,13 +210,13 @@ public class JuliaEngine implements FractalEngine {
         }
     }
     
-    public void doRunGPU(int xOffset, int yOffset, Mapper mapper) {
+    public void doRunGPU(int xOffset, int yOffset, Mapper mapper, double aaROffset, double aaIOffset) {
         if (useGPUFull) {
-            juliaGPUKernelFull.initArrays(xOffset, yOffset, mapper);
+            juliaGPUKernelFull.initArrays(xOffset, yOffset, mapper, aaROffset, aaIOffset);
             Range range = Range.create2D(juliaGPUKernelFull.getSubImageWidth(), juliaGPUKernelFull.getSubImageHeight());
             juliaGPUKernelFull.execute(range);
         } else if (useGPUFast) {
-            juliaGPUKernelFast.initArrays(xOffset, yOffset, mapper);
+            juliaGPUKernelFast.initArrays(xOffset, yOffset, mapper, aaROffset, aaIOffset);
             Range range = Range.create2D(juliaGPUKernelFast.getSubImageWidth(), juliaGPUKernelFast.getSubImageHeight());
             juliaGPUKernelFast.execute(range);
         }

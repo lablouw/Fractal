@@ -34,6 +34,7 @@ public class MandelbrotCalculatorGPU4 implements Runnable {
     private int yOffset = 0;
 
     private boolean stopped = false;
+    List<Color>[][] preAAColors;
 
     private RawGpuOrbitContainer rawGpuOrbitContainer;
 
@@ -60,7 +61,7 @@ public class MandelbrotCalculatorGPU4 implements Runnable {
                     if (stopped) {
                         return;
                     }
-                    doPostProcess(xOffset, yOffset, null, null);
+                    doPostProcess(xOffset, yOffset, false);
                 }
             }
         } else {
@@ -79,7 +80,6 @@ public class MandelbrotCalculatorGPU4 implements Runnable {
 
             for (xOffset = 0; xOffset < imageWidth; xOffset += mandelbrotEngine.getSubImageWidth()) {
                 for (yOffset = 0; yOffset < imageHeight; yOffset += mandelbrotEngine.getSubImageHeight()) {
-                    System.out.println("Rendering sub x="+xOffset+" y="+yOffset);
                     preAAColors = new List[mandelbrotEngine.getSubImageWidth()][mandelbrotEngine.getSubImageHeight()];
                     for (double aaROffset : aaROffsets) {
                         for (double aaIOffset : aaIOffsets) {
@@ -88,7 +88,7 @@ public class MandelbrotCalculatorGPU4 implements Runnable {
                             if (stopped) {
                                 return;
                             }
-                            doPostProcess(xOffset, yOffset, aaROffset, aaIOffset);
+                            doPostProcess(xOffset, yOffset, true);
 
                         }
                     }
@@ -97,13 +97,13 @@ public class MandelbrotCalculatorGPU4 implements Runnable {
         }
     }
 
-    private void doPostProcess(int xOffset, int yOffset, Double aaROffset, Double aaIOffset) {
+    private void doPostProcess(int xOffset, int yOffset, boolean antialias) {
         if (mandelbrotEngine.isUseGPUFull()) {
             ExecutorService es = Executors.newFixedThreadPool(numCores);
             rawGpuOrbitContainer = mandelbrotEngine.getRawGpuOrbitContainer();
             List<Future> futures = new ArrayList<>();
             for (int coreIndex = 0; coreIndex < numCores; coreIndex++) {
-                RawGpuFullOrbitProcessor rawGpuFullOrbitProcessor = new RawGpuFullOrbitProcessor(coreIndex, aaROffset, aaIOffset);
+                RawGpuFullOrbitProcessor rawGpuFullOrbitProcessor = new RawGpuFullOrbitProcessor(coreIndex, antialias);
                 futures.add(es.submit(rawGpuFullOrbitProcessor));
             }
             for (Future f : futures) {
@@ -138,7 +138,7 @@ public class MandelbrotCalculatorGPU4 implements Runnable {
                 if (x + xOffset >= imageWidth) break;
                 for (int y = 0; y < subImageHeight; y++) {
                     if (y + yOffset >= imageHeight) break;
-                    if (aaROffset == null) {//No AA
+                    if (!antialias) {//No AA
                         mandelbrotRenderer.enginePerformedCalculation(x + xOffset, y + yOffset, mandelbrotEngine.getLastOrbitPoint(x, y),
                                 mandelbrotEngine.getOrbitLength(x, y));
                     } else {
@@ -150,15 +150,11 @@ public class MandelbrotCalculatorGPU4 implements Runnable {
                     }
                 }
             }
-
         }
-        if (aaROffset != null) {//we have AA
+
+        if (antialias) {//we have AA
             for (int x = xOffset; x < Math.min(xOffset + mandelbrotEngine.getSubImageWidth(), imageWidth); x++) {
                 for (int y = yOffset; y < Math.min(yOffset + mandelbrotEngine.getSubImageHeight(),imageHeight); y++) {
-//                    if (preAAColors[x - xOffset][y - yOffset] == null) {//??
-//                        System.out.println((x - xOffset)+"  "+(y - yOffset));
-//                        continue;
-//                    }
                     Color c = averageColor(preAAColors[x - xOffset][y - yOffset]);
                     mandelbrotRenderer.enginePerformedCalculation(x, y, null, c);
                 }
@@ -180,18 +176,14 @@ public class MandelbrotCalculatorGPU4 implements Runnable {
         stopped = true;
     }
 
-
-    List<Color>[][] preAAColors;
     private class RawGpuFullOrbitProcessor implements Runnable {
 
         private final int coreIndex;
-        private final Double aaROffset;
-        private final Double aaIOffset;
+        private final boolean antialias;
 
-        RawGpuFullOrbitProcessor(int coreIndex, Double aaROffset, Double aaIOffset) {
+        RawGpuFullOrbitProcessor(int coreIndex, boolean antialias) {
             this.coreIndex = coreIndex;
-            this.aaROffset = aaROffset;
-            this.aaIOffset = aaIOffset;
+            this.antialias = antialias;
         }
 
         @Override
@@ -209,7 +201,7 @@ public class MandelbrotCalculatorGPU4 implements Runnable {
                         int orbitStartIndex = x * maxIter + y * maxIter * subImageWidth;
                         int orbitLength = rawGpuOrbitContainer.orbitLengths[x][y];
 
-                        if (aaROffset == null) {//No AA
+                        if (!antialias) {//No AA
                             mandelbrotRenderer.enginePerformedCalculation(x + xOffset, y + yOffset, rawGpuOrbitContainer, orbitStartIndex, orbitLength);
                         } else {//Save color for later averaging
                             Color c = mandelbrotRenderer.getActiveColorCalculator().calcColor(x + xOffset, y + yOffset, rawGpuOrbitContainer, orbitStartIndex, orbitLength, mandelbrotEngine);

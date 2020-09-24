@@ -53,7 +53,7 @@ public class MandelbrotGPUKernelFull extends Kernel {
             for (int y = 0; y < subImageHeight; y++) {
                 Complex c = mapper.mapToComplex(x + xOffset, y + yOffset);
                 cr[x + y * subImageWidth] = c.r + aaROffset;
-                ci[x + y * subImageWidth] = c.i + aaROffset;
+                ci[x + y * subImageWidth] = c.i + aaIOffset;
             }
         }
     }

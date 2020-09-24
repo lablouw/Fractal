@@ -86,6 +86,7 @@ public class JuliaRenderer extends FractalRenderer<JuliaEngine> implements Antia
                 try {
                     f.get();
                 } catch (Exception ex) {
+                    Logger.getLogger(JuliaRenderer.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
             es.shutdown();
@@ -102,7 +103,6 @@ public class JuliaRenderer extends FractalRenderer<JuliaEngine> implements Antia
                 Logger.getLogger(MandelbrotRenderer.class.getName()).log(Level.SEVERE, null, ex);
             }
             es.shutdown();
-            System.gc();
         }
         lastRenderTime = System.currentTimeMillis() - t0;
         busy = false;
