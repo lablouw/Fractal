@@ -36,9 +36,10 @@ public class ColorPalette extends javax.swing.JDialog {
     JXImagePanel gradientPanel = new JXImagePanel();
     JXImagePanel representitivePanel = new JXImagePanel();
     
-    private float spectrumComp = 1;
+    private float spectrumCycles = 1;
     private float spectrumPhase = 1;
     private float gamma = 1;
+    private final Redrawable redrawable;
     
 
     public JPanel getRepresentitivePanel() {
@@ -48,10 +49,11 @@ public class ColorPalette extends javax.swing.JDialog {
     /**
      * Creates new form ColorPaletteD
      */
-    public ColorPalette(java.awt.Frame parent, boolean modal) {
+    public ColorPalette(java.awt.Frame parent, boolean modal, Redrawable redrawable) {
         super(parent, modal);
         initComponents();
         setAlwaysOnTop(true);
+        this.redrawable = redrawable;
         
         colorListModel.addElement(Color.RED);
         colorListModel.addElement(Color.GREEN);
@@ -102,8 +104,16 @@ public class ColorPalette extends javax.swing.JDialog {
     }
     
     public Color interpolateToColor(float a) {
+        a = a * spectrumCycles;
+        
         a = (a + spectrumPhase) % 1;
-        a = (float) Math.pow(a, gamma);
+        
+        if (gamma > 1) {
+            a = (float) Math.pow(a, gamma);
+        } else if (gamma < 1) {
+            a = (float) (1 - Math.pow(1 - a, 1 / gamma));
+        }
+
         return ColorInterpolator.interpolate(a, currentColors);
     }
     
@@ -135,6 +145,7 @@ public class ColorPalette extends javax.swing.JDialog {
         phaseSlider = new javax.swing.JSlider();
         gammaSlider = new javax.swing.JSlider();
         jSpinner1 = new javax.swing.JSpinner();
+        redrawCheckBox = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -186,7 +197,7 @@ public class ColorPalette extends javax.swing.JDialog {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Spectrum Parameters"));
 
-        jLabel1.setText("Spectrum Compression");
+        jLabel1.setText("Spectrum Cycles");
 
         jLabel2.setText("Phase");
 
@@ -199,17 +210,35 @@ public class ColorPalette extends javax.swing.JDialog {
                 phaseSliderMouseDragged(evt);
             }
         });
+        phaseSlider.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                phaseSliderMouseReleased(evt);
+            }
+        });
 
         gammaSlider.setMaximum(90);
         gammaSlider.setMinimum(-90);
+        gammaSlider.setPaintLabels(true);
         gammaSlider.setValue(0);
         gammaSlider.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
                 gammaSliderMouseDragged(evt);
             }
         });
+        gammaSlider.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                gammaSliderMouseReleased(evt);
+            }
+        });
 
-        jSpinner1.setModel(new javax.swing.SpinnerNumberModel(1, 1, null, 1));
+        jSpinner1.setModel(new javax.swing.SpinnerNumberModel(1.0d, 1.0d, null, 1.0d));
+        jSpinner1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSpinner1StateChanged(evt);
+            }
+        });
+
+        redrawCheckBox.setText("Redraw if possible");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -218,14 +247,19 @@ public class ColorPalette extends javax.swing.JDialog {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSpinner1)
-                    .addComponent(phaseSlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(gammaSlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSpinner1)
+                            .addComponent(phaseSlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(gammaSlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(redrawCheckBox)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -243,7 +277,9 @@ public class ColorPalette extends javax.swing.JDialog {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
                     .addComponent(gammaSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(155, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 125, Short.MAX_VALUE)
+                .addComponent(redrawCheckBox)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -323,9 +359,26 @@ public class ColorPalette extends javax.swing.JDialog {
         } else if (gammaSlider.getValue() < 0) {
             gamma = 10f/(float)(-gammaSlider.getValue()+10f);
         }
-//        System.out.println(gammaSlider.getValue() + " -> " + gamma);
         colorRepresentitiveJPanel();
     }//GEN-LAST:event_gammaSliderMouseDragged
+
+    private void phaseSliderMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_phaseSliderMouseReleased
+        if (redrawable != null && redrawCheckBox.isSelected()) {
+            redrawable.redraw();
+        }
+    }//GEN-LAST:event_phaseSliderMouseReleased
+
+    private void gammaSliderMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gammaSliderMouseReleased
+       if (redrawable != null && redrawCheckBox.isSelected()) {
+            redrawable.redraw();
+       }
+    }//GEN-LAST:event_gammaSliderMouseReleased
+
+    private void jSpinner1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner1StateChanged
+        if (redrawable != null && redrawCheckBox.isSelected()) {
+            redrawable.redraw();
+        }
+    }//GEN-LAST:event_jSpinner1StateChanged
 
     private void colorRepresentitiveJPanel() {
         if (previewPanel.getWidth() == 0 || previewPanel.getHeight() == 0) {
@@ -336,6 +389,8 @@ public class ColorPalette extends javax.swing.JDialog {
         for (int x = 0; x < previewPanel.getWidth(); x++) {
             for (int y = 0; y < previewPanel.getHeight(); y++) {
                 float i = (float)x / (float)previewPanel.getWidth();
+                
+                i = (i + spectrumPhase) % 1;
                 
                 //Because x^g is not symmetric around y=-x+1, it behaves differently for x~0 and g<1 than it does for x~1 and g>1.
                 //g>1 works fine but for g<1 we get much more compression around x~0. Therefore, for g<1 we need to flip x^g around y=-x+1.
@@ -385,5 +440,6 @@ public class ColorPalette extends javax.swing.JDialog {
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JSlider phaseSlider;
     private javax.swing.JPanel previewPanel;
+    private javax.swing.JCheckBox redrawCheckBox;
     // End of variables declaration//GEN-END:variables
 }

@@ -1,6 +1,5 @@
 package fractal.mandelbrot.coloring.orbittrap.cross;
 
-import fractal.common.ColorPalette;
 import fractal.common.Complex;
 import fractal.common.FractalEngine;
 import fractal.common.FractalRenderer;
@@ -11,8 +10,6 @@ import fractal.mandelbrot.coloring.orbittrap.OrbitTrapColorStrategy;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +21,7 @@ public class CrossOrbitTrap extends OrbitTrap {
 
 	private static final double EPSILON = 1E-15;
 	private final JDialog settingsDialog;
-	private final JSlider compressionSlider = new JSlider(1, 100);
-	private final ColorPalette colorPalette = new ColorPalette(null, false);
-	private float spectrumComp = 0.05f;
 
-	private double [][] minDists;
 	private double m1, c1; //y=mx+c
 	private double m2, c2; //y=mx+c
 	private Complex d1;

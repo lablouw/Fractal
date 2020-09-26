@@ -4,16 +4,15 @@ import fractal.common.ColorPalette;
 import fractal.common.Complex;
 import fractal.common.FractalEngine;
 import fractal.common.FractalRenderer;
+import fractal.common.Redrawable;
 import fractal.mandelbrot.RawGpuOrbitContainer;
 import fractal.mandelbrot.coloring.orbittrap.OrbitTrapColorStrategy;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.List;
 
-public class InfiniteLineOrbitTrapDistanceColorStrategy implements OrbitTrapColorStrategy<InfiniteLineOrbitTrap> {
+public class InfiniteLineOrbitTrapDistanceColorStrategy implements OrbitTrapColorStrategy<InfiniteLineOrbitTrap>, Redrawable {
 
 	private JPanel settingsPanel;
 	private final ColorPalette colorPalette;
@@ -26,7 +25,7 @@ public class InfiniteLineOrbitTrapDistanceColorStrategy implements OrbitTrapColo
 	public InfiniteLineOrbitTrapDistanceColorStrategy(FractalRenderer fractalRenderer, InfiniteLineOrbitTrap orbitTrap) {
 		this.fractalRenderer = fractalRenderer;
 		this.orbitTrap = orbitTrap;
-        colorPalette = new ColorPalette(null, false);
+        colorPalette = new ColorPalette(null, false, this);
 		initSettingsPanel();
 	}
 
@@ -83,23 +82,10 @@ public class InfiniteLineOrbitTrapDistanceColorStrategy implements OrbitTrapColo
 	private void initSettingsPanel() {
 		settingsPanel = new JPanel(new GridLayout(0, 1));
 		settingsPanel.add(colorPalette.getRepresentitivePanel());
-
-//		settingsPanel.add(new JLabel("Spectrum compression"));
-//		compressionSlider.setValue(1);
-//		compressionSlider.addMouseListener(new MouseListener() {
-//			public void mouseClicked(MouseEvent e) {}
-//			public void mousePressed(MouseEvent e) {}
-//			public void mouseEntered(MouseEvent e) {}
-//			public void mouseExited(MouseEvent e) {}
-//			public void mouseReleased(MouseEvent e) {
-//				spectrumComp = (float) ((float) (double) compressionSlider.getValue() / 500d);
-//				redraw();
-//			}
-//		});
-//		settingsPanel.add(compressionSlider);
 	}
 
-	private void redraw() {
+    @Override
+	public void redraw() {
 		for (int x = 0; x < fractalRenderer.getImage().getBufferedImage().getWidth(); x++) {
 			for (int y = 0; y < fractalRenderer.getImage().getBufferedImage().getHeight(); y++) {
 				fractalRenderer.getImage().setColor(x, y, orbitTrap.reCalcColor(x, y));

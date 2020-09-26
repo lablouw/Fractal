@@ -40,10 +40,10 @@ public class CircleOrbitTrap extends OrbitTrap {
 
         colorStrategies = new ArrayList<>();
         colorStrategies.add(new CircleOrbitTrapDistanceColorStrategy(fractalRenderer, this));
-        colorStrategies.add(new CircleOrbitTrapColorLookupStrategy(fractalRenderer, this));
+        colorStrategies.add(new CircleOrbitTrapColorLookupStrategy());
         activeColorStrategy = colorStrategies.get(0);
         
-        settingsDialog = new CircleOrbitTrapSettingsDialog(this, fractalRenderer, colorStrategies);
+        settingsDialog = new CircleOrbitTrapSettingsDialog(this, colorStrategies);
     }
 
     @Override

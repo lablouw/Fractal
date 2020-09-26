@@ -10,6 +10,7 @@ import fractal.common.ColorPalette;
 import fractal.common.Complex;
 import fractal.common.FractalEngine;
 import fractal.common.FractalRenderer;
+import fractal.common.Redrawable;
 import fractal.mandelbrot.RawGpuOrbitContainer;
 import java.awt.Color;
 import java.awt.Component;
@@ -21,10 +22,10 @@ import javax.swing.JPanel;
  *
  * @author Lloyd
  */
-public class CircleOrbitTrapDistanceColorStrategy implements OrbitTrapColorStrategy<CircleOrbitTrap>{
+public class CircleOrbitTrapDistanceColorStrategy implements OrbitTrapColorStrategy<CircleOrbitTrap>, Redrawable {
 
     private JPanel settingsPanel;
-    private final ColorPalette colorPalette = new ColorPalette(null, false);
+    private final ColorPalette colorPalette = new ColorPalette(null, false, this);
     
     private double [][] minDists;
     private final FractalRenderer fractalRenderer;
@@ -89,23 +90,10 @@ public class CircleOrbitTrapDistanceColorStrategy implements OrbitTrapColorStrat
     private void initSettingsPanel() {
         settingsPanel = new JPanel(new GridLayout(0, 1));
         settingsPanel.add(colorPalette.getRepresentitivePanel());
-
-//        settingsPanel.add(new JLabel("Spectrum compression"));
-//        compressionSlider.setValue(1);
-//        compressionSlider.addMouseListener(new MouseListener() {
-//            public void mouseClicked(MouseEvent e) {}
-//            public void mousePressed(MouseEvent e) {}
-//            public void mouseEntered(MouseEvent e) {}
-//            public void mouseExited(MouseEvent e) {}
-//            public void mouseReleased(MouseEvent e) {
-//                spectrumComp = (float) ((float) (double) compressionSlider.getValue() / 500d);
-//                redraw();
-//            }
-//        });
-//        settingsPanel.add(compressionSlider);
     }
     
-    private void redraw() {
+    @Override
+    public void redraw() {
         for (int x = 0; x < fractalRenderer.getImage().getBufferedImage().getWidth(); x++) {
             for (int y = 0; y < fractalRenderer.getImage().getBufferedImage().getHeight(); y++) {
                 fractalRenderer.getImage().setColor(x, y, orbitTrap.reCalcColor(x, y));

@@ -4,6 +4,7 @@ import fractal.common.ColorPalette;
 import fractal.common.Complex;
 import fractal.common.FractalEngine;
 import fractal.common.FractalRenderer;
+import fractal.common.Redrawable;
 import fractal.mandelbrot.RawGpuOrbitContainer;
 import fractal.mandelbrot.coloring.orbittrap.OrbitTrapColorStrategy;
 
@@ -11,11 +12,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-public class CrossOrbitTrapDistanceColorStrategy implements OrbitTrapColorStrategy<CrossOrbitTrap> {
+public class CrossOrbitTrapDistanceColorStrategy implements OrbitTrapColorStrategy<CrossOrbitTrap>, Redrawable {
 
 	private JPanel settingsPanel;
-	private final ColorPalette colorPalette = new ColorPalette(null, false);
-	private float spectrumComp = 0.05f;
+	private final ColorPalette colorPalette = new ColorPalette(null, false, this);
 
 	private final FractalRenderer fractalRenderer;
 	private final CrossOrbitTrap orbitTrap;
@@ -51,7 +51,7 @@ public class CrossOrbitTrapDistanceColorStrategy implements OrbitTrapColorStrate
 		}
 
 		minDists[x][y] = minDist;
-		return minDist == 0 ? Color.BLACK : colorPalette.interpolateToColor((float) -Math.log(minDist) * spectrumComp);
+		return minDist == 0 ? Color.BLACK : colorPalette.interpolateToColor((float) -Math.log(minDist) * LOGARITHM_SUPPRESSION);
 	}
     
     @Override
@@ -65,12 +65,12 @@ public class CrossOrbitTrapDistanceColorStrategy implements OrbitTrapColorStrate
 		}
 
 		minDists[x][y] = minDist;
-		return minDist == 0 ? Color.BLACK : colorPalette.interpolateToColor((float) -Math.log(minDist) * spectrumComp);
+		return minDist == 0 ? Color.BLACK : colorPalette.interpolateToColor((float) -Math.log(minDist) * LOGARITHM_SUPPRESSION);
     }
 
 	@Override
 	public Color recalcColor(int x, int y) {
-		return minDists[x][y] == 0 ? Color.BLACK : colorPalette.interpolateToColor((float) -Math.log(minDists[x][y])*spectrumComp);
+		return minDists[x][y] == 0 ? Color.BLACK : colorPalette.interpolateToColor((float) -Math.log(minDists[x][y]) * LOGARITHM_SUPPRESSION);
 	}
 
 	@Override
@@ -81,23 +81,10 @@ public class CrossOrbitTrapDistanceColorStrategy implements OrbitTrapColorStrate
 	private void initSettingsPanel() {
 		settingsPanel = new JPanel(new GridLayout(0, 1));
 		settingsPanel.add(colorPalette.getRepresentitivePanel());
-
-//		settingsPanel.add(new JLabel("Spectrum compression"));
-//		compressionSlider.setValue(1);
-//		compressionSlider.addMouseListener(new MouseListener() {
-//			public void mouseClicked(MouseEvent e) {}
-//			public void mousePressed(MouseEvent e) {}
-//			public void mouseEntered(MouseEvent e) {}
-//			public void mouseExited(MouseEvent e) {}
-//			public void mouseReleased(MouseEvent e) {
-//				spectrumComp = (float) ((float) (double) compressionSlider.getValue() / 500d);
-//				redraw();
-//			}
-//		});
-//		settingsPanel.add(compressionSlider);
 	}
 
-	private void redraw() {
+    @Override
+	public void redraw() {
 		for (int x = 0; x < fractalRenderer.getImage().getBufferedImage().getWidth(); x++) {
 			for (int y = 0; y < fractalRenderer.getImage().getBufferedImage().getHeight(); y++) {
 				fractalRenderer.getImage().setColor(x, y, orbitTrap.reCalcColor(x, y));

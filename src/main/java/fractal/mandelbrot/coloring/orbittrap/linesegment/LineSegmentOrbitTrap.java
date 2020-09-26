@@ -1,6 +1,5 @@
 package fractal.mandelbrot.coloring.orbittrap.linesegment;
 
-import fractal.common.ColorPalette;
 import fractal.common.Complex;
 import fractal.common.FractalEngine;
 import fractal.common.FractalRenderer;
@@ -21,14 +20,9 @@ public class LineSegmentOrbitTrap extends OrbitTrap {
 	private final OrbitTrapColorStrategy<LineSegmentOrbitTrap> activeColorStrategy;
 
 	private static final double EPSILON = 1E-15;
-	private JPanel settingsPanel;
-	private final JSlider compressionSlider = new JSlider(1, 100);
-	private final ColorPalette colorPalette = new ColorPalette(null, false);
-	private float spectrumComp = 0.05f;
 
 	private final JDialog settingsDialog;
 
-	private double [][] minDists;
 	private double m, c; //y=mx+c
 	private double m2;
 	private Complex c1;

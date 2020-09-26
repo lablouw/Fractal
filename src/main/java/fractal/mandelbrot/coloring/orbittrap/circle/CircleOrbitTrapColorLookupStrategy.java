@@ -9,11 +9,12 @@ import fractal.common.ColorPalette;
 import fractal.mandelbrot.coloring.orbittrap.OrbitTrapColorStrategy;
 import fractal.common.Complex;
 import fractal.common.FractalEngine;
-import fractal.common.FractalRenderer;
 import fractal.mandelbrot.RawGpuOrbitContainer;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.GridLayout;
 import java.util.List;
+import javax.swing.JPanel;
 
 /**
  *
@@ -21,15 +22,12 @@ import java.util.List;
  */
 public class CircleOrbitTrapColorLookupStrategy implements OrbitTrapColorStrategy<CircleOrbitTrap> {
 
-    private final FractalRenderer fractalRenderer;
-    private final CircleOrbitTrap orbitTrap;
+    private JPanel settingsPanel;
+    private final ColorPalette colorPalette = new ColorPalette(null, false, null);
+    
 
-    private final ColorPalette colorPalette = new ColorPalette(null, false);
-
-    public CircleOrbitTrapColorLookupStrategy(FractalRenderer fractalRenderer, CircleOrbitTrap orbitTrap) {
-        this.fractalRenderer = fractalRenderer;
-        this.orbitTrap = orbitTrap;
-
+    public CircleOrbitTrapColorLookupStrategy() {
+        initSettingsPanel();
     }
 
     @Override
@@ -39,7 +37,6 @@ public class CircleOrbitTrapColorLookupStrategy implements OrbitTrapColorStrateg
 
     @Override
     public void initForRender() {
-
     }
 
     @Override
@@ -83,7 +80,12 @@ public class CircleOrbitTrapColorLookupStrategy implements OrbitTrapColorStrateg
 
     @Override
     public Component getSettingsComponent() {
-        return null;
+        return settingsPanel;
+    }
+    
+    private void initSettingsPanel() {
+        settingsPanel = new JPanel(new GridLayout(0, 1));
+        settingsPanel.add(colorPalette.getRepresentitivePanel());
     }
 
 }

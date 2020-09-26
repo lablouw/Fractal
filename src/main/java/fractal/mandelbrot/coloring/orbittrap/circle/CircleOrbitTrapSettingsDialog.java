@@ -22,7 +22,6 @@ import javax.swing.ListCellRenderer;
 public class CircleOrbitTrapSettingsDialog extends javax.swing.JDialog {
 
     private final CircleOrbitTrap orbitTrap;
-    private final FractalRenderer fractalRenderer;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -90,10 +89,9 @@ public class CircleOrbitTrapSettingsDialog extends javax.swing.JDialog {
     /**
      * Creates new form CircleOrbitTrapSettingsFrame
      */
-    public CircleOrbitTrapSettingsDialog(CircleOrbitTrap orbitTrap, FractalRenderer fractalRenderer, List<OrbitTrapColorStrategy<CircleOrbitTrap>> colorStrategies) {
-        this.orbitTrap = orbitTrap;
-        this.fractalRenderer = fractalRenderer;
+    public CircleOrbitTrapSettingsDialog(CircleOrbitTrap orbitTrap, List<OrbitTrapColorStrategy<CircleOrbitTrap>> colorStrategies) {
         initComponents();
+        this.orbitTrap = orbitTrap;
         containerPanel.setLayout(new GridLayout(1, 1));
 
         strategySelector.setRenderer(new ListCellRenderer<OrbitTrapColorStrategy>() {
