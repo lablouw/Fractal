@@ -24,7 +24,7 @@ public class CircleOrbitTrapColorLookupStrategy implements OrbitTrapColorStrateg
     private final FractalRenderer fractalRenderer;
     private final CircleOrbitTrap orbitTrap;
 
-    private final ColorPalette colorPalette = new ColorPalette();
+    private final ColorPalette colorPalette = new ColorPalette(null, false);
 
     public CircleOrbitTrapColorLookupStrategy(FractalRenderer fractalRenderer, CircleOrbitTrap orbitTrap) {
         this.fractalRenderer = fractalRenderer;
@@ -55,7 +55,7 @@ public class CircleOrbitTrapColorLookupStrategy implements OrbitTrapColorStrateg
         if (minDist > orbitTrap.getRadius()) {
             return Color.BLACK;
         } else {
-            return colorPalette.getColor((float) (-minDist / orbitTrap.getRadius() / 2));
+            return colorPalette.interpolateToColor((float) (-minDist / orbitTrap.getRadius() / 2));
         }
     }
 
@@ -72,7 +72,7 @@ public class CircleOrbitTrapColorLookupStrategy implements OrbitTrapColorStrateg
         if (minDist > orbitTrap.getRadius()) {
             return Color.BLACK;
         } else {
-            return colorPalette.getColor((float) (-minDist / orbitTrap.getRadius() / 2));
+            return colorPalette.interpolateToColor((float) (-minDist / orbitTrap.getRadius() / 2));
         }
     }
 

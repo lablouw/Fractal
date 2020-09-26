@@ -25,7 +25,7 @@ public class CrossOrbitTrap extends OrbitTrap {
 	private static final double EPSILON = 1E-15;
 	private final JDialog settingsDialog;
 	private final JSlider compressionSlider = new JSlider(1, 100);
-	private final ColorPalette colorPalette = new ColorPalette();
+	private final ColorPalette colorPalette = new ColorPalette(null, false);
 	private float spectrumComp = 0.05f;
 
 	private double [][] minDists;

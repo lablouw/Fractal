@@ -32,14 +32,15 @@ public class SmoothColorCalculator implements ColorCalculator {
     private Complex[][] orbitEndPoints;
     private int[][] orbitLengths;
     
-    private final JSlider compressionSlider = new JSlider(1, 2000);
-    private final JSlider phaseSlider = new JSlider(0, 255);
-    private final JSlider gammaSlider = new JSlider(-100, 100);
-    private final JLabel gammaLabel = new JLabel("Spectrum Gamma = 1");
-    private final ColorPalette colorPalette = new ColorPalette();
+//    private final JSlider compressionSlider = new JSlider(1, 2000);
+//    private final JSlider phaseSlider = new JSlider(0, 255);
+//    private final JSlider gammaSlider = new JSlider(-100, 100);
+//    private final JLabel gammaLabel = new JLabel("Spectrum Gamma = 1");
+    private final ColorPalette colorPalette;
 
     public SmoothColorCalculator(final FractalRenderer renderer) {
         this.fractalRenderer = renderer;
+        colorPalette = new ColorPalette(null, false);
         initSettingsPanel();
     }
 
@@ -58,8 +59,9 @@ public class SmoothColorCalculator implements ColorCalculator {
         orbitLengths[x][y] = orbit.size();
         if (fractalEngine.isBailoutReached(orbit)) {
             float nSmooth = (float) (orbit.size() + 1 - Math.log(Math.log(orbit.get(orbit.size() - 1).modulus())) / Math.log(2));
-            float a = ((nSmooth / (float) fractalRenderer.getFractalEngine().getMaxIter()) * spectrumComp + spectrumPhase) % 1;
-            return colorPalette.getColor(a);
+//            float a = ((nSmooth / (float) fractalRenderer.getFractalEngine().getMaxIter()) * spectrumComp + spectrumPhase) % 1;
+            float a = nSmooth / (float) fractalRenderer.getFractalEngine().getMaxIter();
+            return colorPalette.interpolateToColor(a);
         } else {
             return Color.BLACK;
         }
@@ -78,8 +80,9 @@ public class SmoothColorCalculator implements ColorCalculator {
         orbitLengths[x][y] = orbitLength;
         if (fractalEngine.isBailoutReached(Collections.singletonList(lastOrbitPoint))) {
             float nSmooth = (float) (orbitLength + 1 - Math.log(Math.log(lastOrbitPoint.modulus())) / Math.log(2));
-            float a = ((nSmooth / (float) fractalRenderer.getFractalEngine().getMaxIter()) * spectrumComp + spectrumPhase) % 1;
-            return colorPalette.getColor(a);
+//            float a = ((nSmooth / (float) fractalRenderer.getFractalEngine().getMaxIter()) * spectrumComp + spectrumPhase) % 1;
+            float a = nSmooth / (float) fractalRenderer.getFractalEngine().getMaxIter();
+            return colorPalette.interpolateToColor(a);
         } else {
             return Color.BLACK;
         }
@@ -88,8 +91,9 @@ public class SmoothColorCalculator implements ColorCalculator {
     private Color recalcColor(Complex lastOrbitPoint, int orbitLength, FractalEngine fractalEngine) {
         if (fractalEngine.isBailoutReached(Collections.singletonList(lastOrbitPoint))) {
             float nSmooth = (float) (orbitLength + 1 - Math.log(Math.log(lastOrbitPoint.modulus())) / Math.log(2));
-            float a = ((nSmooth / (float) fractalRenderer.getFractalEngine().getMaxIter()) * spectrumComp + spectrumPhase) % 1;
-            return colorPalette.getColor(a);
+//            float a = ((nSmooth / (float) fractalRenderer.getFractalEngine().getMaxIter()) * spectrumComp + spectrumPhase) % 1;
+            float a = nSmooth / (float) fractalRenderer.getFractalEngine().getMaxIter();
+            return colorPalette.interpolateToColor(a);
         } else {
             return Color.BLACK;
         }
@@ -103,62 +107,62 @@ public class SmoothColorCalculator implements ColorCalculator {
     private void initSettingsPanel() {
         settingsPanel = new JPanel(new GridLayout(0, 1));
 
-        settingsPanel.add(colorPalette);
+        settingsPanel.add(colorPalette.getRepresentitivePanel());
 
-        settingsPanel.add(new JLabel("Spectrum phase"));
-        phaseSlider.setValue(0);
-        phaseSlider.addMouseListener(new MouseListener() {
-            @Override public void mouseClicked(MouseEvent e) {}
-            @Override public void mousePressed(MouseEvent e) {}
-            @Override public void mouseEntered(MouseEvent e) {}
-            @Override public void mouseExited(MouseEvent e) {}
-            
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                spectrumPhase = (float) phaseSlider.getValue() / 255f;
-                redraw();
-            }
-        });
-
-        settingsPanel.add(phaseSlider);
-
-        settingsPanel.add(new JLabel("Spectrum compression"));
-        compressionSlider.setValue(1);
-        compressionSlider.addMouseListener(new MouseListener() {
-            @Override public void mouseClicked(MouseEvent e) {}
-            @Override public void mousePressed(MouseEvent e) {}
-            @Override public void mouseEntered(MouseEvent e) {}
-            @Override public void mouseExited(MouseEvent e) {}
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                spectrumComp = (float) ((float) (double) compressionSlider.getValue() / 500d);
-                redraw();
-            }
-        });
-        settingsPanel.add(compressionSlider);
-        
-        settingsPanel.add(gammaLabel);
-        gammaSlider.setValue(1);
-        gammaSlider.addMouseListener(new MouseListener() {
-            @Override public void mouseClicked(MouseEvent e) {}
-            @Override public void mousePressed(MouseEvent e) {}
-            @Override public void mouseEntered(MouseEvent e) {}
-            @Override public void mouseExited(MouseEvent e) {}
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                if (gammaSlider.getValue() >= 1) {
-                    gamma = gammaSlider.getValue()/10f;
-                } else if (gammaSlider.getValue() < 1) {
-                    gamma = 1f/((-gammaSlider.getValue()+2)/10f);
-                }
-                gammaLabel.setText("Spectrum Gamma = "+gamma);
-                
-                redraw();
-            }
-        });
-        settingsPanel.add(gammaSlider);
+//        settingsPanel.add(new JLabel("Spectrum phase"));
+//        phaseSlider.setValue(0);
+//        phaseSlider.addMouseListener(new MouseListener() {
+//            @Override public void mouseClicked(MouseEvent e) {}
+//            @Override public void mousePressed(MouseEvent e) {}
+//            @Override public void mouseEntered(MouseEvent e) {}
+//            @Override public void mouseExited(MouseEvent e) {}
+//            
+//            @Override
+//            public void mouseReleased(MouseEvent e) {
+//                spectrumPhase = (float) phaseSlider.getValue() / 255f;
+//                redraw();
+//            }
+//        });
+//
+//        settingsPanel.add(phaseSlider);
+//
+//        settingsPanel.add(new JLabel("Spectrum compression"));
+//        compressionSlider.setValue(1);
+//        compressionSlider.addMouseListener(new MouseListener() {
+//            @Override public void mouseClicked(MouseEvent e) {}
+//            @Override public void mousePressed(MouseEvent e) {}
+//            @Override public void mouseEntered(MouseEvent e) {}
+//            @Override public void mouseExited(MouseEvent e) {}
+//
+//            @Override
+//            public void mouseReleased(MouseEvent e) {
+//                spectrumComp = (float) ((float) (double) compressionSlider.getValue() / 500d);
+//                redraw();
+//            }
+//        });
+//        settingsPanel.add(compressionSlider);
+//        
+//        settingsPanel.add(gammaLabel);
+//        gammaSlider.setValue(1);
+//        gammaSlider.addMouseListener(new MouseListener() {
+//            @Override public void mouseClicked(MouseEvent e) {}
+//            @Override public void mousePressed(MouseEvent e) {}
+//            @Override public void mouseEntered(MouseEvent e) {}
+//            @Override public void mouseExited(MouseEvent e) {}
+//
+//            @Override
+//            public void mouseReleased(MouseEvent e) {
+//                if (gammaSlider.getValue() >= 1) {
+//                    gamma = gammaSlider.getValue()/10f;
+//                } else if (gammaSlider.getValue() < 1) {
+//                    gamma = 1f/((-gammaSlider.getValue()+2)/10f);
+//                }
+//                gammaLabel.setText("Spectrum Gamma = "+gamma);
+//                
+//                redraw();
+//            }
+//        });
+//        settingsPanel.add(gammaSlider);
     }
 
     @Override
@@ -176,7 +180,7 @@ public class SmoothColorCalculator implements ColorCalculator {
 
     @Override
     public void complete(SynchronizedBufferedImage synchronizedBufferedImage) {
-        compressionSlider.setMaximum(fractalRenderer.getFractalEngine().getMaxIter());
+//        compressionSlider.setMaximum(fractalRenderer.getFractalEngine().getMaxIter());
     }
 
 }

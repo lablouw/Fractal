@@ -6,130 +6,384 @@
 package fractal.common;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import javax.swing.DefaultListModel;
 import javax.swing.JColorChooser;
-import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.ListCellRenderer;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import org.jdesktop.swingx.JXImagePanel;
 
 /**
  *
- * @author CP316928
+ * @author Lloyd
  */
-public class ColorPalette extends javax.swing.JPanel {
+public class ColorPalette extends javax.swing.JDialog {
 
-    ShowColorChooserListener showColorChooserListener = new ShowColorChooserListener();
+    JColorChooser colorChooser = new JColorChooser();
+    List<Color> currentColors = new ArrayList<>();
+    DefaultListModel<Color> colorListModel = new DefaultListModel<>();
+    JXImagePanel gradientPanel = new JXImagePanel();
+    JXImagePanel representitivePanel = new JXImagePanel();
     
-    JColorChooser cc1 = new JColorChooser();
-    JColorChooser cc2 = new JColorChooser();
-    JColorChooser cc3 = new JColorChooser();
-    JColorChooser cc4 = new JColorChooser();
+    private float spectrumComp = 1;
+    private float spectrumPhase = 1;
+    private float gamma = 1;
     
-    JPanel p1 = new JPanel();
-    JPanel p2 = new JPanel();
-    JPanel p3 = new JPanel();
-    JPanel p4 = new JPanel();
 
+    public JPanel getRepresentitivePanel() {
+        return representitivePanel;
+    }
+    
     /**
-     * Creates new form ColorPallet
+     * Creates new form ColorPaletteD
      */
-    public ColorPalette() {
+    public ColorPalette(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
         initComponents();
-        setLayout(new GridLayout(1, 4));
+        setAlwaysOnTop(true);
         
-        p1.setBackground(Color.red);
-        p2.setBackground(Color.green);
-        p3.setBackground(Color.blue);
-        p4.setBackground(Color.black);
-
-        p1.addMouseListener(showColorChooserListener);
-        p2.addMouseListener(showColorChooserListener);
-        p3.addMouseListener(showColorChooserListener);
-        p4.addMouseListener(showColorChooserListener);
-
-        add(p1);
-        add(p2);
-        add(p3);
-        add(p4);
+        colorListModel.addElement(Color.RED);
+        colorListModel.addElement(Color.GREEN);
+        colorListModel.addElement(Color.BLUE);
+        colorListModel.addElement(Color.BLACK);
+        currentColors.add(Color.RED);
+        currentColors.add(Color.GREEN);
+        currentColors.add(Color.BLUE);
+        currentColors.add(Color.BLACK);
         
+        colorList.setModel(colorListModel);
+        colorList.setCellRenderer(new ListCellRenderer<Color>() {
+            @Override
+            public Component getListCellRendererComponent(JList<? extends Color> list, Color value, int index, boolean isSelected, boolean cellHasFocus) {
+                JLabel l = new JLabel("sf");
+                l.setBackground(value);
+                l.setForeground(value);
+                l.setOpaque(true);
+                if (isSelected) {
+                    if (value.getRed()>=128 && value.getGreen()>=128 && value.getBlue()>=128) {
+                        l.setForeground(value.brighter().brighter());
+                    } else {
+                        l.setForeground(value.darker().darker());
+                    }
+                    
+                    l.setText("Selected");
+                }
+                return l;
+            }
+        });
+        
+        jPanel1.setLayout(new GridLayout(1, 1));
+        jPanel1.add(colorChooser);
+        colorChooser.getSelectionModel().addChangeListener(new ColorChooserMouseListener());
+        
+        previewPanel.setLayout(new GridLayout(1, 1));
+        previewPanel.add(gradientPanel);
+        
+        representitivePanel.setStyle(JXImagePanel.Style.SCALED);
+        representitivePanel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                representitivePanelMouseClicked(evt);
+            }
+
+        });
+        
+        colorRepresentitiveJPanel();
     }
-
-    public Color getColor(float a) {
-        List<Color> colors = new ArrayList<>();
-        colors.add(p1.getBackground());
-        colors.add(p2.getBackground());
-        colors.add(p3.getBackground());
-        colors.add(p4.getBackground());
-        
-        return ColorInterpolator.interpolate(a, colors);
+    
+    public Color interpolateToColor(float a) {
+        a = (a + spectrumPhase) % 1;
+        a = (float) Math.pow(a, gamma);
+        return ColorInterpolator.interpolate(a, currentColors);
+    }
+    
+    private void representitivePanelMouseClicked(MouseEvent evt) {
+        if (!isVisible()) {
+            colorRepresentitiveJPanel();
+            setVisible(true);
+        }
     }
 
     /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
+     * This method is called from within the constructor to initialize the form. WARNING: Do NOT modify this code. The content of this method is always regenerated by the Form
+     * Editor.
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
+        previewPanel = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        colorList = new javax.swing.JList<>();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        phaseSlider = new javax.swing.JSlider();
+        gammaSlider = new javax.swing.JSlider();
+        jSpinner1 = new javax.swing.JSpinner();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout previewPanelLayout = new javax.swing.GroupLayout(previewPanel);
+        previewPanel.setLayout(previewPanelLayout);
+        previewPanelLayout.setHorizontalGroup(
+            previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        previewPanelLayout.setVerticalGroup(
+            previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 43, Short.MAX_VALUE)
+        );
+
+        colorList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane2.setViewportView(colorList);
+
+        jButton1.setText("Add");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Remove");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Color Selector"));
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 670, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 232, Short.MAX_VALUE)
+        );
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Spectrum Parameters"));
+
+        jLabel1.setText("Spectrum Compression");
+
+        jLabel2.setText("Phase");
+
+        jLabel3.setText("Gamma");
+
+        phaseSlider.setMaximum(255);
+        phaseSlider.setValue(0);
+        phaseSlider.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                phaseSliderMouseDragged(evt);
+            }
+        });
+
+        gammaSlider.setMaximum(90);
+        gammaSlider.setMinimum(-90);
+        gammaSlider.setValue(0);
+        gammaSlider.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                gammaSliderMouseDragged(evt);
+            }
+        });
+
+        jSpinner1.setModel(new javax.swing.SpinnerNumberModel(1, 1, null, 1));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSpinner1)
+                    .addComponent(phaseSlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(gammaSlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addComponent(phaseSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addComponent(gammaSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(155, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 220, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(previewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 40, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(previewPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton1)
+                            .addComponent(jButton2)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
         );
+
+        pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private class ShowColorChooserListener implements MouseListener {
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        int i = colorList.getSelectedIndex();
+        colorListModel.remove(i);
+        currentColors.remove(i);
+        colorList.setSelectedIndex(Math.min(i, colorListModel.getSize()));
+        colorRepresentitiveJPanel();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        Random r = new Random();
+        Color c = new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256));
+        colorListModel.addElement(c);
+        currentColors.add(c);
+        colorRepresentitiveJPanel();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        colorRepresentitiveJPanel();
+    }//GEN-LAST:event_formWindowClosed
+
+    private void phaseSliderMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_phaseSliderMouseDragged
+        spectrumPhase = (float)phaseSlider.getValue()/(float)phaseSlider.getMaximum();
+        colorRepresentitiveJPanel();
+    }//GEN-LAST:event_phaseSliderMouseDragged
+
+    private void gammaSliderMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gammaSliderMouseDragged
+        if (gammaSlider.getValue() == 0) {
+            gamma = 1;
+        } else if (gammaSlider.getValue() > 0) {
+            gamma = (gammaSlider.getValue()+10f) / 10f;
+        } else if (gammaSlider.getValue() < 0) {
+            gamma = 10f/(float)(-gammaSlider.getValue()+10f);
+        }
+//        System.out.println(gammaSlider.getValue() + " -> " + gamma);
+        colorRepresentitiveJPanel();
+    }//GEN-LAST:event_gammaSliderMouseDragged
+
+    private void colorRepresentitiveJPanel() {
+        if (previewPanel.getWidth() == 0 || previewPanel.getHeight() == 0) {
+            return;
+        }
+        
+        BufferedImage img = new BufferedImage(previewPanel.getWidth(), previewPanel.getHeight(), BufferedImage.TYPE_INT_RGB);
+        for (int x = 0; x < previewPanel.getWidth(); x++) {
+            for (int y = 0; y < previewPanel.getHeight(); y++) {
+                float i = (float)x / (float)previewPanel.getWidth();
+                
+                //Because x^g is not symmetric around y=-x+1, it behaves differently for x~0 and g<1 than it does for x~1 and g>1.
+                //g>1 works fine but for g<1 we get much more compression around x~0. Therefore, for g<1 we need to flip x^g around y=-x+1.
+                if (gamma > 1) {
+                    i = (float) Math.pow(i, gamma);
+                } else if (gamma < 1) {
+                    i = (float) (1 - Math.pow(1 - i, 1/gamma));
+                }
+                
+                
+                img.setRGB(x, y, interpolateToColor(i).getRGB());
+            }
+        }
+        
+        gradientPanel.setImage(img);
+        representitivePanel.setPreferredSize(new Dimension(240, 25));
+        representitivePanel.setImage(img);
+    }
+
+    private class ColorChooserMouseListener implements ChangeListener {
 
         @Override
-        public void mouseClicked(MouseEvent e) {
-//            ColorSelectorDialog d = new ColorSelectorDialog(null, true);
-            JDialog d = new JDialog();
-            d.setModal(true);
-            d.setLayout(new GridLayout(2, 2));
-            d.add(cc1);
-            d.add(cc2);
-            d.add(cc3);
-            d.add(cc4);
-            
-            d.setVisible(true);
-            
-            p1.setBackground(cc1.getColor());
-            p2.setBackground(cc2.getColor());
-            p3.setBackground(cc3.getColor());
-            p4.setBackground(cc4.getColor());
+        public void stateChanged(ChangeEvent e) {
+            int i = colorList.getSelectedIndex();
+            Color c = colorChooser.getColor();
+            colorListModel.set(colorList.getSelectedIndex(), c);
+            currentColors.set(colorList.getSelectedIndex(), c);
+            colorList.setModel(colorListModel);
+            colorRepresentitiveJPanel();
+            colorList.setSelectedIndex(i);
         }
 
-        @Override
-        public void mousePressed(MouseEvent e) {
-        }
-
-        @Override
-        public void mouseReleased(MouseEvent e) {
-        }
-
-        @Override
-        public void mouseEntered(MouseEvent e) {
-        }
-
-        @Override
-        public void mouseExited(MouseEvent e) {
-        }
 
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JList<Color> colorList;
+    private javax.swing.JSlider gammaSlider;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JSpinner jSpinner1;
+    private javax.swing.JSlider phaseSlider;
+    private javax.swing.JPanel previewPanel;
     // End of variables declaration//GEN-END:variables
 }

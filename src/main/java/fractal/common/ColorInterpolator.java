@@ -1,6 +1,7 @@
 package fractal.common;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,40 +39,42 @@ public final class ColorInterpolator {
         }
         step = step % 1;
         
-        colors.add(colors.get(0));
-
-        switch (colors.size()) {
+        List<Color> colorsCircular = new ArrayList<Color>(colors.size() + 1);
+        colorsCircular.addAll(colors);
+        colorsCircular.add(colors.get(0));
+        
+        switch (colorsCircular.size()) {
             case 0:
                 throw new IllegalArgumentException("At least one color required.");
 
             case 1:
-                return colors.get(0);
+                return colorsCircular.get(0);
 
             case 2:
-                return interpolateTwoColors(step, colors.get(0), colors.get(1));
+                return interpolateTwoColors(step, colorsCircular.get(0), colorsCircular.get(1));
 
             default:
                 // Find local colors to interpolate between:
 
                 // Index of first color, because cast from float to int rounds down
-                int firstColorIndex = (int) (step * (colors.size() - 1));
+                int firstColorIndex = (int) (step * (colorsCircular.size() - 1));
 
                 // Special case: last color (step >= 1.0f)
-                if (firstColorIndex == colors.size() - 1) {
-                    return colors.get(colors.size() - 1);
+                if (firstColorIndex == colorsCircular.size() - 1) {
+                    return colorsCircular.get(colorsCircular.size() - 1);
                 }
 
                 // Calculate localStep between local colors:
                 // stepAtFirstColorIndex will be a bit smaller than step
                 float stepAtFirstColorIndex = (float) firstColorIndex
-                        / (colors.size() - 1);
+                        / (colorsCircular.size() - 1);
 
                 // multiply to increase values to range between 0.0f and 1.0f
                 float localStep = (step - stepAtFirstColorIndex)
-                        * (colors.size() - 1);
+                        * (colorsCircular.size() - 1);
 
-                return interpolateTwoColors(localStep, colors.get(firstColorIndex),
-                        colors.get(firstColorIndex + 1));
+                return interpolateTwoColors(localStep, colorsCircular.get(firstColorIndex),
+                        colorsCircular.get((firstColorIndex + 1) % colorsCircular.size()));
         }
 
     }

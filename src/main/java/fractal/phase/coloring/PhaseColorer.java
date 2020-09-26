@@ -29,11 +29,11 @@ import javax.swing.JSlider;
  */
 public class PhaseColorer implements ColorCalculator {
     
-    private ColorPalette colorPalette = new ColorPalette();
+    private ColorPalette colorPalette = new ColorPalette(null, false);
     private JPanel settingsPanel;
     
-    private final JSlider compressionSlider = new JSlider(1, 2000);
-    private float spectrumComp = 1;
+//    private final JSlider compressionSlider = new JSlider(1, 2000);
+//    private float spectrumComp = 1;
 
     public PhaseColorer() {
         initSettingsPanel();
@@ -41,7 +41,7 @@ public class PhaseColorer implements ColorCalculator {
 
     @Override
     public Color calcColor(int x, int y, List<Complex> orbit, FractalEngine fractalEngine) {
-        return colorPalette.getColor((float) orbit.get(0).r);//TODO: temporary for Henon only
+        return colorPalette.interpolateToColor((float) orbit.get(0).r);//TODO: temporary for Henon only
     }
 
     @Override
@@ -69,29 +69,30 @@ public class PhaseColorer implements ColorCalculator {
 
     @Override
     public Color calcColor(int x, int y, Complex lastOrbitPoint, int orbitLength, FractalEngine fractalEngine) {
-        float a = ((float)orbitLength/(float)fractalEngine.getMaxIter() * spectrumComp) % 1;
-        return colorPalette.getColor(a);
+//        float a = ((float)orbitLength/(float)fractalEngine.getMaxIter() * spectrumComp) % 1;//
+        float a = (float)orbitLength/(float)fractalEngine.getMaxIter();
+        return colorPalette.interpolateToColor(a);
     }
 
     private void initSettingsPanel() {
         settingsPanel = new JPanel();
         settingsPanel.setLayout(new GridLayout(0, 1));
         
-        settingsPanel.add(colorPalette);
+        settingsPanel.add(colorPalette.getRepresentitivePanel());
         
-        settingsPanel.add(new JLabel("Spectrum compression"));
-        compressionSlider.setValue(1);
-        compressionSlider.addMouseListener(new MouseListener() {
-            @Override public void mouseClicked(MouseEvent e) {}
-            @Override public void mousePressed(MouseEvent e) {}
-            @Override public void mouseEntered(MouseEvent e) {}
-            @Override public void mouseExited(MouseEvent e) {}
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                spectrumComp = (float) ((float) (double) compressionSlider.getValue() / 500d);
-            }
-        });
-        settingsPanel.add(compressionSlider);
+//        settingsPanel.add(new JLabel("Spectrum compression"));
+//        compressionSlider.setValue(1);
+//        compressionSlider.addMouseListener(new MouseListener() {
+//            @Override public void mouseClicked(MouseEvent e) {}
+//            @Override public void mousePressed(MouseEvent e) {}
+//            @Override public void mouseEntered(MouseEvent e) {}
+//            @Override public void mouseExited(MouseEvent e) {}
+//            @Override
+//            public void mouseReleased(MouseEvent e) {
+//                spectrumComp = (float) ((float) (double) compressionSlider.getValue() / 500d);
+//            }
+//        });
+//        settingsPanel.add(compressionSlider);
 
     }
     

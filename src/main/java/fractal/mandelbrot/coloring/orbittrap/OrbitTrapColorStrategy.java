@@ -18,12 +18,13 @@ import java.util.List;
  */
 public interface OrbitTrapColorStrategy<T extends OrbitTrap> {
     
+    public static final float LOGARITHM_SUPPRESSION = 0.05f;
+    
     String getName();
     
     void initForRender();
     
     Color calcColor(int x, int y, List<Complex> orbit, FractalEngine fractalEngine, T orbitTrap);
-    
     
     public Color calcColor(int x, int y, RawGpuOrbitContainer rawGpuOrbitContainer, int orbitStartIndex, int orbitLength, FractalEngine fractalEngine, T orbitTrap);
     Color recalcColor(int x, int y);
