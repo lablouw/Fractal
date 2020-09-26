@@ -47,7 +47,7 @@ public class ColorPalette extends javax.swing.JDialog {
     }
     
     /**
-     * Creates new form ColorPaletteD
+     * Creates new form ColorPalette
      */
     public ColorPalette(java.awt.Frame parent, boolean modal, Redrawable redrawable) {
         super(parent, modal);
@@ -85,6 +85,16 @@ public class ColorPalette extends javax.swing.JDialog {
             }
         });
         
+        jSpinner1.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                spectrumCycles = (float)jSpinner1.getValue();
+                if (redrawable != null && redrawCheckBox.isSelected()) {
+                    redrawable.redraw();
+                }
+            }
+        });
+        
         jPanel1.setLayout(new GridLayout(1, 1));
         jPanel1.add(colorChooser);
         colorChooser.getSelectionModel().addChangeListener(new ColorChooserMouseListener());
@@ -103,16 +113,19 @@ public class ColorPalette extends javax.swing.JDialog {
         colorRepresentitiveJPanel();
     }
     
-    public Color interpolateToColor(float a) {
-        a = a * spectrumCycles;
-        
+    public Color interpolateToColor(float a) {// 0 <= a <= 1
+        //apply phase
         a = (a + spectrumPhase) % 1;
         
+        //apply gamma
         if (gamma > 1) {
             a = (float) Math.pow(a, gamma);
         } else if (gamma < 1) {
             a = (float) (1 - Math.pow(1 - a, 1 / gamma));
         }
+        
+        //apply cycles
+        a = a * spectrumCycles;
 
         return ColorInterpolator.interpolate(a, currentColors);
     }
@@ -231,12 +244,7 @@ public class ColorPalette extends javax.swing.JDialog {
             }
         });
 
-        jSpinner1.setModel(new javax.swing.SpinnerNumberModel(1.0d, 1.0d, null, 1.0d));
-        jSpinner1.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                jSpinner1StateChanged(evt);
-            }
-        });
+        jSpinner1.setModel(new javax.swing.SpinnerNumberModel(1.0f, 1.0f, null, 1.0f));
 
         redrawCheckBox.setText("Redraw if possible");
 
@@ -373,12 +381,6 @@ public class ColorPalette extends javax.swing.JDialog {
             redrawable.redraw();
        }
     }//GEN-LAST:event_gammaSliderMouseReleased
-
-    private void jSpinner1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner1StateChanged
-        if (redrawable != null && redrawCheckBox.isSelected()) {
-            redrawable.redraw();
-        }
-    }//GEN-LAST:event_jSpinner1StateChanged
 
     private void colorRepresentitiveJPanel() {
         if (previewPanel.getWidth() == 0 || previewPanel.getHeight() == 0) {

@@ -5,6 +5,8 @@
 package fractal.common;
 
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -13,6 +15,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.ListCellRenderer;
 import javax.swing.filechooser.FileFilter;
 import org.jdesktop.swingx.JXImagePanel;
 
@@ -23,6 +28,8 @@ import org.jdesktop.swingx.JXImagePanel;
 public class FractalViewer extends javax.swing.JFrame {
 
     private final FractalRenderer fractalRenderer;
+    
+    private Resolution activeResolution = Resolution.HD;
 
     /**
      * Creates new form FractalViewer
@@ -31,6 +38,7 @@ public class FractalViewer extends javax.swing.JFrame {
      */
     public FractalViewer(FractalRenderer fractalRenderer) {
         initComponents();
+        setResolutions();
         this.fractalRenderer = fractalRenderer;
         setTitle(fractalRenderer.getName());
 
@@ -74,11 +82,9 @@ public class FractalViewer extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        resolutionXSpinner = new javax.swing.JSpinner();
-        jLabel2 = new javax.swing.JLabel();
-        resolutionYSpinner = new javax.swing.JSpinner();
         jLabel7 = new javax.swing.JLabel();
         jSpinner4 = new javax.swing.JSpinner();
+        resolutionComboBox = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
@@ -162,12 +168,6 @@ public class FractalViewer extends javax.swing.JFrame {
 
         jLabel3.setText("Resolution:");
 
-        resolutionXSpinner.setValue(1920);
-
-        jLabel2.setText("X");
-
-        resolutionYSpinner.setValue(1080);
-
         jLabel7.setText("Anti Alias Grid Width:");
 
         jSpinner4.setModel(new javax.swing.SpinnerNumberModel(1, 1, 8, 1));
@@ -188,30 +188,20 @@ public class FractalViewer extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel7)
                         .addGap(18, 18, 18)
-                        .addComponent(jSpinner4))
+                        .addComponent(jSpinner4, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel3)
-                        .addGap(24, 24, 24)
-                        .addComponent(resolutionXSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(resolutionYSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(resolutionComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {resolutionXSpinner, resolutionYSpinner});
-
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel2)
-                        .addComponent(resolutionYSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(resolutionXSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel3)))
+                .addGap(5, 5, 5)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(resolutionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jSpinner4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -346,7 +336,7 @@ public class FractalViewer extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 598, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 593, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(redrawButton)
@@ -381,7 +371,7 @@ public class FractalViewer extends javax.swing.JFrame {
                 newP1.i = temp;
             }
 
-            fractalRenderer.render((Integer) resolutionXSpinner.getValue(), (Integer) resolutionYSpinner.getValue(), newP1, newP2);
+            fractalRenderer.render(activeResolution.getWidth(), activeResolution.getHeight(), newP1, newP2);
         } else if (evt.getButton() == MouseEvent.BUTTON2) {
             Complex clickLocation = fractalRenderer.getMapper().mapToComplex(evt.getX(), evt.getY(), jXImagePanel1);
             fractalRenderer.performSpecialClickAction(clickLocation);
@@ -395,11 +385,11 @@ public class FractalViewer extends javax.swing.JFrame {
     }   
     
     private void redrawButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_redrawButtonActionPerformed
-        fractalRenderer.render((Integer) resolutionXSpinner.getValue(), (Integer) resolutionYSpinner.getValue(), fractalRenderer.getMapper().getTopLeft(), fractalRenderer.getMapper().getBottomRight());
+        fractalRenderer.render(activeResolution.getWidth(), activeResolution.getHeight(), fractalRenderer.getMapper().getTopLeft(), fractalRenderer.getMapper().getBottomRight());
     }//GEN-LAST:event_redrawButtonActionPerformed
 
     private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
-        fractalRenderer.render((Integer) resolutionXSpinner.getValue(), (Integer) resolutionYSpinner.getValue(), fractalRenderer.getFractalEngine().getDefaultView().getFirst(), fractalRenderer.getFractalEngine().getDefaultView().getSecond());
+        fractalRenderer.render((Integer) activeResolution.getWidth(), activeResolution.getHeight(), fractalRenderer.getFractalEngine().getDefaultView().getFirst(), fractalRenderer.getFractalEngine().getDefaultView().getSecond());
     }//GEN-LAST:event_resetButtonActionPerformed
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
@@ -481,7 +471,7 @@ public class FractalViewer extends javax.swing.JFrame {
         Complex newTopLeft = fractalRenderer.getMapper().mapToComplex(newLeft, newTop);
         Complex newBottomRight = fractalRenderer.getMapper().mapToComplex(newRight, newBottom);
         
-        fractalRenderer.render((Integer) resolutionXSpinner.getValue(), (Integer) resolutionYSpinner.getValue(), newTopLeft, newBottomRight);
+        fractalRenderer.render(activeResolution.getWidth(), activeResolution.getHeight(), newTopLeft, newBottomRight);
         
     }//GEN-LAST:event_jXImagePanel1MouseWheelMoved
 
@@ -490,7 +480,6 @@ public class FractalViewer extends javax.swing.JFrame {
     private javax.swing.JPanel engineOptionsPanel;
     private javax.swing.JPanel fractalOptionsPanel;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -506,8 +495,7 @@ public class FractalViewer extends javax.swing.JFrame {
     private org.jdesktop.swingx.JXImagePanel jXImagePanel1;
     private javax.swing.JButton redrawButton;
     private javax.swing.JButton resetButton;
-    private javax.swing.JSpinner resolutionXSpinner;
-    private javax.swing.JSpinner resolutionYSpinner;
+    private javax.swing.JComboBox<Resolution> resolutionComboBox;
     private javax.swing.JButton saveButton;
     // End of variables declaration//GEN-END:variables
 
@@ -538,6 +526,30 @@ public class FractalViewer extends javax.swing.JFrame {
             colorOptionsPanel.setVisible(false);
         }
         revalidate();
+    }
+
+    private void setResolutions() {
+        resolutionComboBox.removeAllItems();
+        for (Resolution r : Resolution.values()) {
+            resolutionComboBox.addItem(r);
+        }
+        resolutionComboBox.setSelectedItem(Resolution.HD);
+        
+        resolutionComboBox.setRenderer(new ListCellRenderer<Resolution>() {
+            @Override
+            public Component getListCellRendererComponent(JList<? extends Resolution> list, Resolution value, int index, boolean isSelected, boolean cellHasFocus) {
+                return new JLabel(value.getDisplayName());
+            }
+        });
+        
+        resolutionComboBox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    activeResolution = (Resolution) e.getItem();
+                }
+            }
+        });
     }
 
 }
