@@ -5,15 +5,8 @@
  */
 package fractal.mandelbrot.coloring.orbittrap.circle;
 
-import fractal.common.FractalRenderer;
 import fractal.mandelbrot.coloring.orbittrap.OrbitTrapColorStrategy;
-import java.awt.Component;
-import java.awt.GridLayout;
-import java.awt.event.ItemEvent;
 import java.util.List;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.ListCellRenderer;
 
 /**
  *
@@ -22,6 +15,8 @@ import javax.swing.ListCellRenderer;
 public class CircleOrbitTrapSettingsDialog extends javax.swing.JDialog {
 
     private final CircleOrbitTrap orbitTrap;
+    private final List<OrbitTrapColorStrategy<CircleOrbitTrap>> colorStrategies;
+    private OrbitTrapColorStrategy<CircleOrbitTrap> activeColorStrategy;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -32,30 +27,15 @@ public class CircleOrbitTrapSettingsDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        strategySelector = new javax.swing.JComboBox<>();
-        containerPanel = new javax.swing.JPanel();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jLabel1.setText("Color strategy:");
-
-        strategySelector.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                strategySelectorItemStateChanged(evt);
+        jTabbedPane1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jTabbedPane1StateChanged(evt);
             }
         });
-
-        javax.swing.GroupLayout containerPanelLayout = new javax.swing.GroupLayout(containerPanel);
-        containerPanel.setLayout(containerPanelLayout);
-        containerPanelLayout.setHorizontalGroup(
-            containerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        containerPanelLayout.setVerticalGroup(
-            containerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 325, Short.MAX_VALUE)
-        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -63,28 +43,23 @@ public class CircleOrbitTrapSettingsDialog extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(containerPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(strategySelector, 0, 529, Short.MAX_VALUE)))
+                .addComponent(jTabbedPane1)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(strategySelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(containerPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged
+        activeColorStrategy = colorStrategies.get(jTabbedPane1.getSelectedIndex());
+    }//GEN-LAST:event_jTabbedPane1StateChanged
 
     /**
      * Creates new form CircleOrbitTrapSettingsFrame
@@ -92,43 +67,18 @@ public class CircleOrbitTrapSettingsDialog extends javax.swing.JDialog {
     public CircleOrbitTrapSettingsDialog(CircleOrbitTrap orbitTrap, List<OrbitTrapColorStrategy<CircleOrbitTrap>> colorStrategies) {
         initComponents();
         this.orbitTrap = orbitTrap;
-        containerPanel.setLayout(new GridLayout(1, 1));
-
-        strategySelector.setRenderer(new ListCellRenderer<OrbitTrapColorStrategy>() {
-            @Override
-            public Component getListCellRendererComponent(JList<? extends OrbitTrapColorStrategy> list, OrbitTrapColorStrategy value, int index, boolean isSelected, boolean cellHasFocus) {
-                return new JLabel(value.getName());
-            }
-        });
-        for (OrbitTrapColorStrategy strategy : colorStrategies) {
-            strategySelector.addItem(strategy);
-        }
-        if (orbitTrap.getActiveColorStrategy().getSettingsComponent() != null) {
-            containerPanel.add(orbitTrap.getActiveColorStrategy().getSettingsComponent());
-        }
+        this.colorStrategies = colorStrategies;
 
         setModal(false);
         setTitle("Circle orbit trap coloring settings");
         validate();
+        
+        for (OrbitTrapColorStrategy<CircleOrbitTrap> colorStrategy : colorStrategies) {
+            jTabbedPane1.addTab(colorStrategy.getName(), colorStrategy.getSettingsComponent());
+        }
     }
 
-    private void strategySelectorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_strategySelectorItemStateChanged
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            orbitTrap.setActiveColorStrategy((OrbitTrapColorStrategy) evt.getItem());
-            containerPanel.removeAll();
-            if (orbitTrap.getActiveColorStrategy().getSettingsComponent() != null) {
-                containerPanel.add(orbitTrap.getActiveColorStrategy().getSettingsComponent());
-                orbitTrap.getActiveColorStrategy().getSettingsComponent().revalidate();
-                orbitTrap.getActiveColorStrategy().getSettingsComponent().repaint();
-            }
-            revalidate();
-            repaint();
-        }
-    }//GEN-LAST:event_strategySelectorItemStateChanged
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel containerPanel;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JComboBox<OrbitTrapColorStrategy> strategySelector;
+    private javax.swing.JTabbedPane jTabbedPane1;
     // End of variables declaration//GEN-END:variables
 }

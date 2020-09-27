@@ -28,7 +28,7 @@ import org.jdesktop.swingx.JXImagePanel;
  *
  * @author Lloyd
  */
-public class ColorPalette extends javax.swing.JDialog {
+public class ColorPalette extends javax.swing.JDialog {//TODO Refactor to JPanel
 
     JColorChooser colorChooser = new JColorChooser();
     List<Color> currentColors = new ArrayList<>();
@@ -127,6 +127,20 @@ public class ColorPalette extends javax.swing.JDialog {
         //apply cycles
         a = a * spectrumCycles;
 
+        return ColorInterpolator.interpolate(a, currentColors);
+    }
+    
+    private Color interpolateToColorIgnoreSpectrumCycles(float a) {// 0 <= a <= 1
+        //apply phase
+        a = (a + spectrumPhase) % 1;
+        
+        //apply gamma
+        if (gamma > 1) {
+            a = (float) Math.pow(a, gamma);
+        } else if (gamma < 1) {
+            a = (float) (1 - Math.pow(1 - a, 1 / gamma));
+        }
+        
         return ColorInterpolator.interpolate(a, currentColors);
     }
     
@@ -403,7 +417,7 @@ public class ColorPalette extends javax.swing.JDialog {
                 }
                 
                 
-                img.setRGB(x, y, interpolateToColor(i).getRGB());
+                img.setRGB(x, y, interpolateToColorIgnoreSpectrumCycles(i).getRGB());
             }
         }
         

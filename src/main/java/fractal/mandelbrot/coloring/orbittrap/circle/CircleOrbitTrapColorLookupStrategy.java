@@ -23,7 +23,7 @@ import javax.swing.JPanel;
 public class CircleOrbitTrapColorLookupStrategy implements OrbitTrapColorStrategy<CircleOrbitTrap> {
 
     private JPanel settingsPanel;
-    private final ColorPalette colorPalette = new ColorPalette(null, false, null);
+    private final ColorPalette colorPalette = new ColorPalette(null, false, null);//TODO: move to custom JPanel to be displayed in CircleOrbitTrapSettingsDialog
     
 
     public CircleOrbitTrapColorLookupStrategy() {
@@ -32,7 +32,7 @@ public class CircleOrbitTrapColorLookupStrategy implements OrbitTrapColorStrateg
 
     @Override
     public String getName() {
-        return "Color gradient lookup";
+        return "Color Lookup";
     }
 
     @Override

@@ -25,7 +25,7 @@ import javax.swing.JPanel;
 public class CircleOrbitTrapDistanceColorStrategy implements OrbitTrapColorStrategy<CircleOrbitTrap>, Redrawable {
 
     private JPanel settingsPanel;
-    private final ColorPalette colorPalette = new ColorPalette(null, false, this);
+    private final ColorPalette colorPalette = new ColorPalette(null, false, this);//TODO: move to custom JPanel to be displayed in CircleOrbitTrapSettingsDialog
     
     private double [][] minDists;
     private final FractalRenderer fractalRenderer;
@@ -39,7 +39,7 @@ public class CircleOrbitTrapDistanceColorStrategy implements OrbitTrapColorStrat
     
     @Override
     public String getName() {
-        return "Distance to circle";
+        return "Distance to Circle";
     }
     
     @Override
