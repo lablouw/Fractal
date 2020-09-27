@@ -24,8 +24,8 @@ import javax.swing.JPanel;
  */
 public class CircleOrbitTrapDistanceColorStrategy implements OrbitTrapColorStrategy<CircleOrbitTrap>, Redrawable {
 
-    private JPanel settingsPanel;
-    private final ColorPalette colorPalette = new ColorPalette(null, false, this);//TODO: move to custom JPanel to be displayed in CircleOrbitTrapSettingsDialog
+    private JPanel settingsPanel;//TODO: JPanel for every strategy to be displayed in CircleOrbitTrapSettingsDialog
+    private final ColorPalette colorPalette = new ColorPalette(null, false, this);
     
     private double [][] minDists;
     private final FractalRenderer fractalRenderer;
@@ -60,7 +60,7 @@ public class CircleOrbitTrapDistanceColorStrategy implements OrbitTrapColorStrat
         }
 
         minDists[x][y] = minDist;
-        return minDist == 0 ? Color.BLACK : colorPalette.interpolateToColor((float) -Math.log(minDist) * LOGARITHM_SUPPRESSION);
+        return minDist == 0 ? Color.BLACK : colorPalette.interpolateToColor((float) -Math.log(minDist) * LOGARITHM_SUPPRESSION, true);
     }
     
     @Override
@@ -74,12 +74,12 @@ public class CircleOrbitTrapDistanceColorStrategy implements OrbitTrapColorStrat
         }
 
         minDists[x][y] = minDist;
-        return minDist == 0 ? Color.BLACK : colorPalette.interpolateToColor((float) -Math.log(minDist) * LOGARITHM_SUPPRESSION);
+        return minDist == 0 ? Color.BLACK : colorPalette.interpolateToColor((float) -Math.log(minDist) * LOGARITHM_SUPPRESSION, true);
     }
 
     @Override
     public Color recalcColor(int x, int y) {
-        return minDists[x][y] == 0 ? Color.BLACK : colorPalette.interpolateToColor((float) -Math.log(minDists[x][y])*LOGARITHM_SUPPRESSION);
+        return minDists[x][y] == 0 ? Color.BLACK : colorPalette.interpolateToColor((float) -Math.log(minDists[x][y])*LOGARITHM_SUPPRESSION, true);
     }
 
     @Override

@@ -22,8 +22,8 @@ import javax.swing.JPanel;
  */
 public class CircleOrbitTrapColorLookupStrategy implements OrbitTrapColorStrategy<CircleOrbitTrap> {
 
-    private JPanel settingsPanel;
-    private final ColorPalette colorPalette = new ColorPalette(null, false, null);//TODO: move to custom JPanel to be displayed in CircleOrbitTrapSettingsDialog
+    private JPanel settingsPanel;//TODO: JPanel for every strategy to be displayed in CircleOrbitTrapSettingsDialog
+    private final ColorPalette colorPalette = new ColorPalette(null, false, null);
     
 
     public CircleOrbitTrapColorLookupStrategy() {
@@ -52,7 +52,7 @@ public class CircleOrbitTrapColorLookupStrategy implements OrbitTrapColorStrateg
         if (minDist > orbitTrap.getRadius()) {
             return Color.BLACK;
         } else {
-            return colorPalette.interpolateToColor((float) (-minDist / orbitTrap.getRadius() / 2));
+            return colorPalette.interpolateToColor((float) (-minDist / orbitTrap.getRadius() / 2), false);
         }
     }
 
@@ -69,7 +69,7 @@ public class CircleOrbitTrapColorLookupStrategy implements OrbitTrapColorStrateg
         if (minDist > orbitTrap.getRadius()) {
             return Color.BLACK;
         } else {
-            return colorPalette.interpolateToColor((float) (-minDist / orbitTrap.getRadius() / 2));
+            return colorPalette.interpolateToColor((float) (-minDist / orbitTrap.getRadius() / 2), false);
         }
     }
 

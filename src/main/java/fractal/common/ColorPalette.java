@@ -113,7 +113,7 @@ public class ColorPalette extends javax.swing.JDialog {//TODO Refactor to JPanel
         colorRepresentitiveJPanel();
     }
     
-    public Color interpolateToColor(float a) {// 0 <= a <= 1
+    public Color interpolateToColor(float a, boolean modular) {// 0 <= a <= 1, modular == true => last color will interpolate back to first
         //apply phase
         a = (a + spectrumPhase) % 1;
         
@@ -127,7 +127,7 @@ public class ColorPalette extends javax.swing.JDialog {//TODO Refactor to JPanel
         //apply cycles
         a = a * spectrumCycles;
 
-        return ColorInterpolator.interpolate(a, currentColors);
+        return ColorInterpolator.interpolate(a, currentColors, modular);
     }
     
     private Color interpolateToColorIgnoreSpectrumCycles(float a) {// 0 <= a <= 1
@@ -141,7 +141,7 @@ public class ColorPalette extends javax.swing.JDialog {//TODO Refactor to JPanel
             a = (float) (1 - Math.pow(1 - a, 1 / gamma));
         }
         
-        return ColorInterpolator.interpolate(a, currentColors);
+        return ColorInterpolator.interpolate(a, currentColors, true);
     }
     
     private void representitivePanelMouseClicked(MouseEvent evt) {

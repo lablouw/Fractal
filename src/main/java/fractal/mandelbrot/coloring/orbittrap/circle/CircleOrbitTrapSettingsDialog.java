@@ -16,7 +16,6 @@ public class CircleOrbitTrapSettingsDialog extends javax.swing.JDialog {
 
     private final CircleOrbitTrap orbitTrap;
     private final List<OrbitTrapColorStrategy<CircleOrbitTrap>> colorStrategies;
-    private OrbitTrapColorStrategy<CircleOrbitTrap> activeColorStrategy;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -43,14 +42,14 @@ public class CircleOrbitTrapSettingsDialog extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 637, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -58,7 +57,7 @@ public class CircleOrbitTrapSettingsDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged
-        activeColorStrategy = colorStrategies.get(jTabbedPane1.getSelectedIndex());
+        orbitTrap.setActiveColorStrategy(colorStrategies.get(jTabbedPane1.getSelectedIndex()));
     }//GEN-LAST:event_jTabbedPane1StateChanged
 
     /**

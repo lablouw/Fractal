@@ -34,7 +34,7 @@ public class PhaseColorer implements ColorCalculator {
 
     @Override
     public Color calcColor(int x, int y, List<Complex> orbit, FractalEngine fractalEngine) {
-        return colorPalette.interpolateToColor((float) orbit.get(0).r);//TODO: temporary for Henon only
+        return colorPalette.interpolateToColor((float) orbit.get(0).r, true);//TODO: temporary for Henon only
     }
 
     @Override
@@ -63,7 +63,7 @@ public class PhaseColorer implements ColorCalculator {
     @Override
     public Color calcColor(int x, int y, Complex lastOrbitPoint, int orbitLength, FractalEngine fractalEngine) {
         float a = (float)orbitLength/(float)fractalEngine.getMaxIter();
-        return colorPalette.interpolateToColor(a);
+        return colorPalette.interpolateToColor(a, true);
     }
 
     private void initSettingsPanel() {

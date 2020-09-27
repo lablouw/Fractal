@@ -31,7 +31,7 @@ public final class ColorInterpolator {
      *
      * @return color corresponding to the step
      */
-    public static Color interpolate(float step, List<Color> colors) {
+    public static Color interpolate(float step, List<Color> colors, boolean modular) {
         // Cutoff to range between 0.0f and 1.0f
 //        step = Math.max(Math.min(step, 1.0f), 0.0f);
         while (step < 0) {
@@ -41,7 +41,9 @@ public final class ColorInterpolator {
         
         List<Color> colorsCircular = new ArrayList<Color>(colors.size() + 1);
         colorsCircular.addAll(colors);
-        colorsCircular.add(colors.get(0));
+        if (modular) {
+            colorsCircular.add(colors.get(0));
+        }
         
         switch (colorsCircular.size()) {
             case 0:

@@ -52,7 +52,7 @@ public class InfiniteLineOrbitTrapDistanceColorStrategy implements OrbitTrapColo
 		}
 
 		minDists[x][y] = minDist;
-		return minDist == 0 ? Color.BLACK : colorPalette.interpolateToColor((float) -Math.log(minDist) * LOGARITHM_SUPPRESSION);
+		return minDist == 0 ? Color.BLACK : colorPalette.interpolateToColor((float) -Math.log(minDist) * LOGARITHM_SUPPRESSION, true);
 	}
     
     @Override
@@ -66,12 +66,12 @@ public class InfiniteLineOrbitTrapDistanceColorStrategy implements OrbitTrapColo
 		}
 
 		minDists[x][y] = minDist;
-		return minDist == 0 ? Color.BLACK : colorPalette.interpolateToColor((float) -Math.log(minDist) * LOGARITHM_SUPPRESSION);
+		return minDist == 0 ? Color.BLACK : colorPalette.interpolateToColor((float) -Math.log(minDist) * LOGARITHM_SUPPRESSION, true);
     }
 
 	@Override
 	public Color recalcColor(int x, int y) {
-		return minDists[x][y] == 0 ? Color.BLACK : colorPalette.interpolateToColor((float) -Math.log(minDists[x][y])*LOGARITHM_SUPPRESSION);
+		return minDists[x][y] == 0 ? Color.BLACK : colorPalette.interpolateToColor((float) -Math.log(minDists[x][y])*LOGARITHM_SUPPRESSION, true);
 	}
 
 	@Override
