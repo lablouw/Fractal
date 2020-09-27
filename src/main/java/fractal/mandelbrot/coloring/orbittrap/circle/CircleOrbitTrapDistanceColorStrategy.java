@@ -52,8 +52,8 @@ public class CircleOrbitTrapDistanceColorStrategy implements OrbitTrapColorStrat
     @Override
     public Color calcColor(int x, int y, List<Complex> orbit, FractalEngine fractalEngine, CircleOrbitTrap orbitTrap) {
         double minDist = Double.MAX_VALUE;
-        for (Complex c : orbit) {//skip first mandelbrot orbit point (always == perterb i.e. 0) TODO: what about other fractals
-            double d = Math.abs(orbitTrap.distanceFrom(c));
+        for (int i = 1; i < orbit.size(); i++) {//skip first mandelbrot orbit point (always == perterb i.e. 0) TODO: what about other fractals
+            double d = Math.abs(orbitTrap.distanceFrom(orbit.get(i)));
             if (d < minDist) {
                 minDist = d;
             }

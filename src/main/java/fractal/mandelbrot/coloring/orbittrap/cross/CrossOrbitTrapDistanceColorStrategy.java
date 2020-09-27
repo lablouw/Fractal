@@ -43,13 +43,12 @@ public class CrossOrbitTrapDistanceColorStrategy implements OrbitTrapColorStrate
 	@Override
 	public Color calcColor(int x, int y, List<Complex> orbit, FractalEngine fractalEngine, CrossOrbitTrap orbitTrap) {
 		double minDist = Double.MAX_VALUE;
-		for (Complex c : orbit) {//skip first mandelbrot orbit point (always == perterb i.e. 0) TODO: what about other fractals
-			double d = orbitTrap.distanceFrom(c);
+        for (int i = 1; i < orbit.size(); i++) {//skip first mandelbrot orbit point (always == perterb i.e. 0) TODO: what about other fractals
+			double d = orbitTrap.distanceFrom(orbit.get(i));
 			if (d < minDist) {
 				minDist = d;
 			}
 		}
-
 		minDists[x][y] = minDist;
 		return minDist == 0 ? Color.BLACK : colorPalette.interpolateToColor((float) -Math.log(minDist) * LOGARITHM_SUPPRESSION, true);
 	}

@@ -42,8 +42,8 @@ public class CircleOrbitTrapColorLookupStrategy implements OrbitTrapColorStrateg
     @Override
     public Color calcColor(int x, int y, List<Complex> orbit, FractalEngine fractalEngine, CircleOrbitTrap orbitTrap) {
         double minDist = Double.MAX_VALUE;
-        for (Complex c : orbit) {
-            double dist = orbitTrap.distanceFrom(c);
+        for (int i = 1; i < orbit.size(); i++) {
+            double dist = orbitTrap.distanceFrom(orbit.get(i));
             if (dist < minDist) {
                 minDist = dist;
             }
@@ -59,7 +59,7 @@ public class CircleOrbitTrapColorLookupStrategy implements OrbitTrapColorStrateg
     @Override
     public Color calcColor(int x, int y, RawGpuOrbitContainer rawGpuOrbitContainer, int orbitStartIndex, int orbitLength, FractalEngine fractalEngine, CircleOrbitTrap orbitTrap) {
         double minDist = Double.MAX_VALUE;
-        for (int i = 0; i < orbitLength; i++) {
+        for (int i = 1; i < orbitLength; i++) {
             double dist = orbitTrap.distanceFrom(new Complex(rawGpuOrbitContainer.orbitsR[orbitStartIndex + i], rawGpuOrbitContainer.orbitsI[orbitStartIndex + i]));
             if (dist < minDist) {
                 minDist = dist;
