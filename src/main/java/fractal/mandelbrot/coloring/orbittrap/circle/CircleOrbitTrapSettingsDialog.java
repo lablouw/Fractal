@@ -5,17 +5,19 @@
  */
 package fractal.mandelbrot.coloring.orbittrap.circle;
 
+import fractal.mandelbrot.coloring.orbittrap.OrbitTrap;
 import fractal.mandelbrot.coloring.orbittrap.OrbitTrapColorStrategy;
+
 import java.util.List;
 
 /**
  *
  * @author Lloyd
  */
-public class CircleOrbitTrapSettingsDialog extends javax.swing.JDialog {
+public class CircleOrbitTrapSettingsDialog extends javax.swing.JDialog {//TODO: make generic and use for all orbit traps, rename to OrbitTrapSettingsDialog
 
-    private final CircleOrbitTrap orbitTrap;
-    private final List<OrbitTrapColorStrategy<CircleOrbitTrap>> colorStrategies;
+    private final OrbitTrap orbitTrap;
+    private final List<OrbitTrapColorStrategy> colorStrategies;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -63,7 +65,7 @@ public class CircleOrbitTrapSettingsDialog extends javax.swing.JDialog {
     /**
      * Creates new form CircleOrbitTrapSettingsFrame
      */
-    public CircleOrbitTrapSettingsDialog(CircleOrbitTrap orbitTrap, List<OrbitTrapColorStrategy<CircleOrbitTrap>> colorStrategies) {
+    public CircleOrbitTrapSettingsDialog(CircleOrbitTrap orbitTrap, List<OrbitTrapColorStrategy> colorStrategies) {
         initComponents();
         this.orbitTrap = orbitTrap;
         this.colorStrategies = colorStrategies;
@@ -72,7 +74,7 @@ public class CircleOrbitTrapSettingsDialog extends javax.swing.JDialog {
         setTitle("Circle orbit trap coloring settings");
         validate();
         
-        for (OrbitTrapColorStrategy<CircleOrbitTrap> colorStrategy : colorStrategies) {
+        for (OrbitTrapColorStrategy colorStrategy : colorStrategies) {
             jTabbedPane1.addTab(colorStrategy.getName(), colorStrategy.getSettingsComponent());
         }
     }

@@ -12,7 +12,7 @@ package fractal.common;
 public enum Resolution {
     _640X480("640 x 480", 640, 480),
     _800X600("800 x 600", 800, 600),
-    _1280X1024("1280 x 1024", 640, 480),
+    _1280X1024("1280 x 1024", 1280, 1024),
     HD("HD", 1920, 1080),
     HD_DUEL("HD Dual Monitor", 3840, 1080),
     HD_TRIPLE("HD Triple Monitor", 5760, 1080),
@@ -27,7 +27,7 @@ public enum Resolution {
     private int width;
     private int height;
     
-    private Resolution(String displayName, int width, int height) {
+    Resolution(String displayName, int width, int height) {
         this.displayName = displayName;
         this.width = width;
         this.height = height;

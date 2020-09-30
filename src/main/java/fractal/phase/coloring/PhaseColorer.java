@@ -70,7 +70,7 @@ public class PhaseColorer implements ColorCalculator {
         settingsPanel = new JPanel();
         settingsPanel.setLayout(new GridLayout(0, 1));
         
-        settingsPanel.add(colorPalette.getRepresentitivePanel());
+        settingsPanel.add(colorPalette.getRepresentativePanel());
     }
     
 }

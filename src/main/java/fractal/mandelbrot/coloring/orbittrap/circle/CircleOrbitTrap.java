@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class CircleOrbitTrap extends OrbitTrap {
     
-    private final List<OrbitTrapColorStrategy<CircleOrbitTrap>> colorStrategies;
+    private final List<OrbitTrapColorStrategy> colorStrategies;
     private OrbitTrapColorStrategy<CircleOrbitTrap> activeColorStrategy;
 
     private final JDialog settingsDialog;
@@ -102,11 +102,4 @@ public class CircleOrbitTrap extends OrbitTrap {
         return radius;
     }
 
-    public OrbitTrapColorStrategy<CircleOrbitTrap> getActiveColorStrategy() {
-        return activeColorStrategy;
-    }
-
-    public void setActiveColorStrategy(OrbitTrapColorStrategy<CircleOrbitTrap> colorStrategy) {
-        this.activeColorStrategy = colorStrategy;
-    }
 }

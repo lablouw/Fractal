@@ -9,6 +9,7 @@ import fractal.common.Complex;
 import fractal.common.FractalEngine;
 import fractal.common.FractalRenderer;
 import fractal.mandelbrot.RawGpuOrbitContainer;
+import fractal.mandelbrot.coloring.orbittrap.circle.CircleOrbitTrap;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,6 +27,8 @@ public abstract class OrbitTrap {
 
     private MouseListener[] tempListeners;
     protected FractalRenderer fractalRenderer;
+
+    private OrbitTrapColorStrategy activeColorStrategy;
 
     public abstract String getName();
     public abstract void initForRender(FractalRenderer fractalRenderer);
@@ -93,6 +96,14 @@ public abstract class OrbitTrap {
         public void mouseEntered(MouseEvent e) {}
         public void mouseExited(MouseEvent e) {}
         public void mouseMoved(MouseEvent e) {}
+    }
+
+    public OrbitTrapColorStrategy getActiveColorStrategy() {
+        return activeColorStrategy;
+    }
+
+    public void setActiveColorStrategy(OrbitTrapColorStrategy colorStrategy) {
+        this.activeColorStrategy = colorStrategy;
     }
 
 

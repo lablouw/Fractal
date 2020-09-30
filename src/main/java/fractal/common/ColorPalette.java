@@ -28,22 +28,22 @@ import org.jdesktop.swingx.JXImagePanel;
  *
  * @author Lloyd
  */
-public class ColorPalette extends javax.swing.JDialog {//TODO Refactor to JPanel
+public class ColorPalette extends javax.swing.JDialog {
 
     JColorChooser colorChooser = new JColorChooser();
     List<Color> currentColors = new ArrayList<>();
     DefaultListModel<Color> colorListModel = new DefaultListModel<>();
     JXImagePanel gradientPanel = new JXImagePanel();
-    JXImagePanel representitivePanel = new JXImagePanel();
+    JXImagePanel representativePanel = new JXImagePanel();
     
     private float spectrumCycles = 1;
-    private float spectrumPhase = 1;
+    private float spectrumPhase = 0;
     private float gamma = 1;
     private final Redrawable redrawable;
     
 
-    public JPanel getRepresentitivePanel() {
-        return representitivePanel;
+    public JPanel getRepresentativePanel() {
+        return representativePanel;
     }
     
     /**
@@ -102,51 +102,44 @@ public class ColorPalette extends javax.swing.JDialog {//TODO Refactor to JPanel
         previewPanel.setLayout(new GridLayout(1, 1));
         previewPanel.add(gradientPanel);
         
-        representitivePanel.setStyle(JXImagePanel.Style.SCALED);
-        representitivePanel.addMouseListener(new java.awt.event.MouseAdapter() {
+        representativePanel.setStyle(JXImagePanel.Style.SCALED);
+        representativePanel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                representitivePanelMouseClicked(evt);
+                representativePanelMouseClicked(evt);
             }
 
         });
         
-        colorRepresentitiveJPanel();
+        colorRepresentativeJPanel();
     }
     
     public Color interpolateToColor(float a, boolean modular) {// 0 <= a <= 1, modular == true => last color will interpolate back to first
-        //apply phase
-        a = (a + spectrumPhase) % 1;
-        
+
+        //TODO: apply pre-gamma phase
+//        a = (a + 1 - preGammaSpectrumPhase) % 1;
+
         //apply gamma
+        //We want similar compression behaviour when x~0 as when x~1 but because x^g is not symmetric around y=-x+1,
+        //it behaves differently for x~0 and g<1 than it does for x~1 and g>1.
+        //g>1 and x~1 works fine but for g<1 and x~0 we get much more compression as x->0. Therefore, for g<1 we need to flip x^g around y=-x+1.
         if (gamma > 1) {
             a = (float) Math.pow(a, gamma);
         } else if (gamma < 1) {
             a = (float) (1 - Math.pow(1 - a, 1 / gamma));
         }
-        
+
+        //apply post-gamma phase
+        a = (a + 1 - spectrumPhase) % 1;
+
         //apply cycles
         a = a * spectrumCycles;
 
         return ColorInterpolator.interpolate(a, currentColors, modular);
     }
     
-    private Color interpolateToColorIgnoreSpectrumCycles(float a) {// 0 <= a <= 1
-        //apply phase
-        a = (a + spectrumPhase) % 1;
-        
-        //apply gamma
-        if (gamma > 1) {
-            a = (float) Math.pow(a, gamma);
-        } else if (gamma < 1) {
-            a = (float) (1 - Math.pow(1 - a, 1 / gamma));
-        }
-        
-        return ColorInterpolator.interpolate(a, currentColors, true);
-    }
-    
-    private void representitivePanelMouseClicked(MouseEvent evt) {
+    private void representativePanelMouseClicked(MouseEvent evt) {
         if (!isVisible()) {
-            colorRepresentitiveJPanel();
+            colorRepresentativeJPanel();
             setVisible(true);
         }
     }
@@ -243,8 +236,8 @@ public class ColorPalette extends javax.swing.JDialog {//TODO Refactor to JPanel
             }
         });
 
-        gammaSlider.setMaximum(90);
-        gammaSlider.setMinimum(-90);
+        gammaSlider.setMaximum(200);
+        gammaSlider.setMinimum(-200);
         gammaSlider.setPaintLabels(true);
         gammaSlider.setValue(0);
         gammaSlider.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -353,7 +346,7 @@ public class ColorPalette extends javax.swing.JDialog {//TODO Refactor to JPanel
         colorListModel.remove(i);
         currentColors.remove(i);
         colorList.setSelectedIndex(Math.min(i, colorListModel.getSize()));
-        colorRepresentitiveJPanel();
+        colorRepresentativeJPanel();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -361,16 +354,16 @@ public class ColorPalette extends javax.swing.JDialog {//TODO Refactor to JPanel
         Color c = new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256));
         colorListModel.addElement(c);
         currentColors.add(c);
-        colorRepresentitiveJPanel();
+        colorRepresentativeJPanel();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        colorRepresentitiveJPanel();
+        colorRepresentativeJPanel();
     }//GEN-LAST:event_formWindowClosed
 
     private void phaseSliderMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_phaseSliderMouseDragged
         spectrumPhase = (float)phaseSlider.getValue()/(float)phaseSlider.getMaximum();
-        colorRepresentitiveJPanel();
+        colorRepresentativeJPanel();
     }//GEN-LAST:event_phaseSliderMouseDragged
 
     private void gammaSliderMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gammaSliderMouseDragged
@@ -379,9 +372,9 @@ public class ColorPalette extends javax.swing.JDialog {//TODO Refactor to JPanel
         } else if (gammaSlider.getValue() > 0) {
             gamma = (gammaSlider.getValue()+10f) / 10f;
         } else if (gammaSlider.getValue() < 0) {
-            gamma = 10f/(float)(-gammaSlider.getValue()+10f);
+            gamma = 10f/(-gammaSlider.getValue()+10f);
         }
-        colorRepresentitiveJPanel();
+        colorRepresentativeJPanel();
     }//GEN-LAST:event_gammaSliderMouseDragged
 
     private void phaseSliderMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_phaseSliderMouseReleased
@@ -396,7 +389,7 @@ public class ColorPalette extends javax.swing.JDialog {//TODO Refactor to JPanel
        }
     }//GEN-LAST:event_gammaSliderMouseReleased
 
-    private void colorRepresentitiveJPanel() {
+    private void colorRepresentativeJPanel() {
         if (previewPanel.getWidth() == 0 || previewPanel.getHeight() == 0) {
             return;
         }
@@ -404,26 +397,30 @@ public class ColorPalette extends javax.swing.JDialog {//TODO Refactor to JPanel
         BufferedImage img = new BufferedImage(previewPanel.getWidth(), previewPanel.getHeight(), BufferedImage.TYPE_INT_RGB);
         for (int x = 0; x < previewPanel.getWidth(); x++) {
             for (int y = 0; y < previewPanel.getHeight(); y++) {
-                float i = (float)x / (float)previewPanel.getWidth();
-                
-                i = (i + spectrumPhase) % 1;
-                
-                //Because x^g is not symmetric around y=-x+1, it behaves differently for x~0 and g<1 than it does for x~1 and g>1.
-                //g>1 works fine but for g<1 we get much more compression around x~0. Therefore, for g<1 we need to flip x^g around y=-x+1.
+                float a = (float)x / (float)previewPanel.getWidth();
+
+                //TODO: pre-gamma phase
+//                a = (a + 1 - preGammaSpectrumPhase) % 1;
+
+                //We want similar compression behaviour when x~0 as when x~1 but because x^g is not symmetric around y=-x+1,
+                //it behaves differently for x~0 and g<1 than it does for x~1 and g>1.
+                //g>1 and x~1 works fine but for g<1 and x~0 we get much more compression as x->0. Therefore, for g<1 we need to flip x^g around y=-x+1.
                 if (gamma > 1) {
-                    i = (float) Math.pow(i, gamma);
+                    a = (float) Math.pow(a, gamma);
                 } else if (gamma < 1) {
-                    i = (float) (1 - Math.pow(1 - i, 1/gamma));
+                    a = (float) (1 - Math.pow(1 - a, 1/gamma));
                 }
-                
-                
-                img.setRGB(x, y, interpolateToColorIgnoreSpectrumCycles(i).getRGB());
+
+                //apply post-gamma phase
+                a = (a + 1 - spectrumPhase) % 1;
+
+                img.setRGB(x, y, ColorInterpolator.interpolate(a, currentColors, true).getRGB());
             }
         }
         
         gradientPanel.setImage(img);
-        representitivePanel.setPreferredSize(new Dimension(240, 25));
-        representitivePanel.setImage(img);
+        representativePanel.setPreferredSize(new Dimension(240, 25));
+        representativePanel.setImage(img);
     }
 
     private class ColorChooserMouseListener implements ChangeListener {
@@ -435,7 +432,7 @@ public class ColorPalette extends javax.swing.JDialog {//TODO Refactor to JPanel
             colorListModel.set(colorList.getSelectedIndex(), c);
             currentColors.set(colorList.getSelectedIndex(), c);
             colorList.setModel(colorListModel);
-            colorRepresentitiveJPanel();
+            colorRepresentativeJPanel();
             colorList.setSelectedIndex(i);
         }
 

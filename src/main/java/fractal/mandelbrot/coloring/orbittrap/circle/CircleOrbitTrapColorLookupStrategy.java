@@ -85,7 +85,7 @@ public class CircleOrbitTrapColorLookupStrategy implements OrbitTrapColorStrateg
     
     private void initSettingsPanel() {
         settingsPanel = new JPanel(new GridLayout(0, 1));
-        settingsPanel.add(colorPalette.getRepresentitivePanel());
+        settingsPanel.add(colorPalette.getRepresentativePanel());
     }
 
 }
