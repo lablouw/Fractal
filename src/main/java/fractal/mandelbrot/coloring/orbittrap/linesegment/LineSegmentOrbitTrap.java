@@ -17,7 +17,6 @@ import java.util.List;
 public class LineSegmentOrbitTrap extends OrbitTrap {
 
 	private final List<OrbitTrapColorStrategy<LineSegmentOrbitTrap>> colorStrategies;
-	private final OrbitTrapColorStrategy<LineSegmentOrbitTrap> activeColorStrategy;
 
 	private static final double EPSILON = 1E-15;
 

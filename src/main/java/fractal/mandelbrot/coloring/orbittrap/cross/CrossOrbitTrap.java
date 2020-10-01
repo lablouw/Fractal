@@ -17,7 +17,6 @@ import java.util.List;
 public class CrossOrbitTrap extends OrbitTrap {
 
 	private final List<OrbitTrapColorStrategy<CrossOrbitTrap>> colorStrategies;
-	private final OrbitTrapColorStrategy<CrossOrbitTrap> activeColorStrategy;
 
 	private static final double EPSILON = 1E-15;
 	private final JDialog settingsDialog;

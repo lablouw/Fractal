@@ -28,7 +28,7 @@ public abstract class OrbitTrap {
     private MouseListener[] tempListeners;
     protected FractalRenderer fractalRenderer;
 
-    private OrbitTrapColorStrategy activeColorStrategy;
+    protected OrbitTrapColorStrategy activeColorStrategy;
 
     public abstract String getName();
     public abstract void initForRender(FractalRenderer fractalRenderer);

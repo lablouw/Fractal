@@ -26,7 +26,6 @@ import java.util.List;
 public class InfiniteLineOrbitTrap extends OrbitTrap {
 
 	private final List<OrbitTrapColorStrategy<InfiniteLineOrbitTrap>> colorStrategies;
-	private final OrbitTrapColorStrategy<InfiniteLineOrbitTrap> activeColorStrategy;
 
 	private static final double EPSILON = 1E-15;
 	private final JDialog settingsDialog;

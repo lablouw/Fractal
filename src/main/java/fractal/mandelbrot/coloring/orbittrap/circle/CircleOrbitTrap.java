@@ -26,7 +26,6 @@ import java.util.List;
 public class CircleOrbitTrap extends OrbitTrap {
     
     private final List<OrbitTrapColorStrategy> colorStrategies;
-    private OrbitTrapColorStrategy<CircleOrbitTrap> activeColorStrategy;
 
     private final JDialog settingsDialog;
 
