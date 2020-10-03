@@ -35,17 +35,17 @@ public class ColorPalette extends javax.swing.JDialog {
     DefaultListModel<Color> colorListModel = new DefaultListModel<>();
     JXImagePanel gradientPanel = new JXImagePanel();
     JXImagePanel representativePanel = new JXImagePanel();
-    
+
     private float spectrumCycles = 1;
     private float spectrumPhase = 0;
     private float gamma = 1;
+    private float gammaOffset = 0;
     private final Redrawable redrawable;
-    
 
     public JPanel getRepresentativePanel() {
         return representativePanel;
     }
-    
+
     /**
      * Creates new form ColorPalette
      */
@@ -54,7 +54,7 @@ public class ColorPalette extends javax.swing.JDialog {
         initComponents();
         setAlwaysOnTop(true);
         this.redrawable = redrawable;
-        
+
         colorListModel.addElement(Color.RED);
         colorListModel.addElement(Color.GREEN);
         colorListModel.addElement(Color.BLUE);
@@ -63,7 +63,7 @@ public class ColorPalette extends javax.swing.JDialog {
         currentColors.add(Color.GREEN);
         currentColors.add(Color.BLUE);
         currentColors.add(Color.BLACK);
-        
+
         colorList.setModel(colorListModel);
         colorList.setCellRenderer(new ListCellRenderer<Color>() {
             @Override
@@ -73,35 +73,35 @@ public class ColorPalette extends javax.swing.JDialog {
                 l.setForeground(value);
                 l.setOpaque(true);
                 if (isSelected) {
-                    if (value.getRed()>=128 && value.getGreen()>=128 && value.getBlue()>=128) {
+                    if (value.getRed() >= 128 && value.getGreen() >= 128 && value.getBlue() >= 128) {
                         l.setForeground(value.brighter().brighter());
                     } else {
                         l.setForeground(value.darker().darker());
                     }
-                    
+
                     l.setText("Selected");
                 }
                 return l;
             }
         });
-        
+
         jSpinner1.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                spectrumCycles = (float)jSpinner1.getValue();
+                spectrumCycles = (float) jSpinner1.getValue();
                 if (redrawable != null && redrawCheckBox.isSelected()) {
                     redrawable.redraw();
                 }
             }
         });
-        
+
         jPanel1.setLayout(new GridLayout(1, 1));
         jPanel1.add(colorChooser);
         colorChooser.getSelectionModel().addChangeListener(new ColorChooserMouseListener());
-        
+
         previewPanel.setLayout(new GridLayout(1, 1));
         previewPanel.add(gradientPanel);
-        
+
         representativePanel.setStyle(JXImagePanel.Style.SCALED);
         representativePanel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -109,14 +109,14 @@ public class ColorPalette extends javax.swing.JDialog {
             }
 
         });
-        
+
         colorRepresentativeJPanel();
     }
-    
+
     public Color interpolateToColor(float a, boolean modular) {// 0 <= a <= 1, modular == true => last color will interpolate back to first
 
-        //TODO: apply pre-gamma phase
-//        a = (a + 1 - preGammaSpectrumPhase) % 1;
+        //apply gamma offset
+        a = (a + 1 - gammaOffset) % 1;
 
         //apply gamma
         //We want similar compression behaviour when x~0 as when x~1 but because x^g is not symmetric around y=-x+1,
@@ -136,7 +136,7 @@ public class ColorPalette extends javax.swing.JDialog {
 
         return ColorInterpolator.interpolate(a, currentColors, modular);
     }
-    
+
     private void representativePanelMouseClicked(MouseEvent evt) {
         if (!isVisible()) {
             colorRepresentativeJPanel();
@@ -166,6 +166,8 @@ public class ColorPalette extends javax.swing.JDialog {
         gammaSlider = new javax.swing.JSlider();
         jSpinner1 = new javax.swing.JSpinner();
         redrawCheckBox = new javax.swing.JCheckBox();
+        jLabel4 = new javax.swing.JLabel();
+        gammaOffsetSlider = new javax.swing.JSlider();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -208,7 +210,7 @@ public class ColorPalette extends javax.swing.JDialog {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 670, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -236,8 +238,8 @@ public class ColorPalette extends javax.swing.JDialog {
             }
         });
 
-        gammaSlider.setMaximum(200);
-        gammaSlider.setMinimum(-200);
+        gammaSlider.setMaximum(90);
+        gammaSlider.setMinimum(-90);
         gammaSlider.setPaintLabels(true);
         gammaSlider.setValue(0);
         gammaSlider.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -255,6 +257,21 @@ public class ColorPalette extends javax.swing.JDialog {
 
         redrawCheckBox.setText("Redraw if possible");
 
+        jLabel4.setText("Gamma Offset");
+
+        gammaOffsetSlider.setMaximum(255);
+        gammaOffsetSlider.setValue(0);
+        gammaOffsetSlider.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                gammaOffsetSliderMouseDragged(evt);
+            }
+        });
+        gammaOffsetSlider.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                gammaOffsetSliderMouseReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -262,6 +279,11 @@ public class ColorPalette extends javax.swing.JDialog {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(redrawCheckBox, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addGap(18, 18, 18)
+                        .addComponent(gammaOffsetSlider, javax.swing.GroupLayout.PREFERRED_SIZE, 558, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
@@ -269,30 +291,32 @@ public class ColorPalette extends javax.swing.JDialog {
                             .addComponent(jLabel3))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jSpinner1)
-                            .addComponent(phaseSlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(gammaSlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(redrawCheckBox)))
+                            .addComponent(gammaSlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(phaseSlider, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jSpinner1, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(phaseSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(gammaSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 125, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(phaseSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(gammaSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel4))
+                    .addComponent(gammaOffsetSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 164, Short.MAX_VALUE)
                 .addComponent(redrawCheckBox)
                 .addContainerGap())
         );
@@ -362,7 +386,7 @@ public class ColorPalette extends javax.swing.JDialog {
     }//GEN-LAST:event_formWindowClosed
 
     private void phaseSliderMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_phaseSliderMouseDragged
-        spectrumPhase = (float)phaseSlider.getValue()/(float)phaseSlider.getMaximum();
+        spectrumPhase = (float) phaseSlider.getValue() / (float) phaseSlider.getMaximum();
         colorRepresentativeJPanel();
     }//GEN-LAST:event_phaseSliderMouseDragged
 
@@ -370,9 +394,9 @@ public class ColorPalette extends javax.swing.JDialog {
         if (gammaSlider.getValue() == 0) {
             gamma = 1;
         } else if (gammaSlider.getValue() > 0) {
-            gamma = (gammaSlider.getValue()+10f) / 10f;
+            gamma = (gammaSlider.getValue() + 5f) / 5f;
         } else if (gammaSlider.getValue() < 0) {
-            gamma = 10f/(-gammaSlider.getValue()+10f);
+            gamma = 5f / (-gammaSlider.getValue() + 5f);
         }
         colorRepresentativeJPanel();
     }//GEN-LAST:event_gammaSliderMouseDragged
@@ -384,23 +408,34 @@ public class ColorPalette extends javax.swing.JDialog {
     }//GEN-LAST:event_phaseSliderMouseReleased
 
     private void gammaSliderMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gammaSliderMouseReleased
-       if (redrawable != null && redrawCheckBox.isSelected()) {
+        if (redrawable != null && redrawCheckBox.isSelected()) {
             redrawable.redraw();
-       }
+        }
     }//GEN-LAST:event_gammaSliderMouseReleased
+
+    private void gammaOffsetSliderMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gammaOffsetSliderMouseDragged
+        gammaOffset = (float) gammaOffsetSlider.getValue() / (float) gammaOffsetSlider.getMaximum();
+        colorRepresentativeJPanel();
+    }//GEN-LAST:event_gammaOffsetSliderMouseDragged
+
+    private void gammaOffsetSliderMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gammaOffsetSliderMouseReleased
+        if (redrawable != null && redrawCheckBox.isSelected()) {
+            redrawable.redraw();
+        }
+    }//GEN-LAST:event_gammaOffsetSliderMouseReleased
 
     private void colorRepresentativeJPanel() {
         if (previewPanel.getWidth() == 0 || previewPanel.getHeight() == 0) {
             return;
         }
-        
+
         BufferedImage img = new BufferedImage(previewPanel.getWidth(), previewPanel.getHeight(), BufferedImage.TYPE_INT_RGB);
         for (int x = 0; x < previewPanel.getWidth(); x++) {
             for (int y = 0; y < previewPanel.getHeight(); y++) {
-                float a = (float)x / (float)previewPanel.getWidth();
+                float a = (float) x / (float) previewPanel.getWidth();
 
-                //TODO: pre-gamma phase
-//                a = (a + 1 - preGammaSpectrumPhase) % 1;
+                //apply gamma offset
+                a = (a + 1 - gammaOffset) % 1;
 
                 //We want similar compression behaviour when x~0 as when x~1 but because x^g is not symmetric around y=-x+1,
                 //it behaves differently for x~0 and g<1 than it does for x~1 and g>1.
@@ -408,7 +443,7 @@ public class ColorPalette extends javax.swing.JDialog {
                 if (gamma > 1) {
                     a = (float) Math.pow(a, gamma);
                 } else if (gamma < 1) {
-                    a = (float) (1 - Math.pow(1 - a, 1/gamma));
+                    a = (float) (1 - Math.pow(1 - a, 1 / gamma));
                 }
 
                 //apply post-gamma phase
@@ -417,7 +452,7 @@ public class ColorPalette extends javax.swing.JDialog {
                 img.setRGB(x, y, ColorInterpolator.interpolate(a, currentColors, true).getRGB());
             }
         }
-        
+
         gradientPanel.setImage(img);
         representativePanel.setPreferredSize(new Dimension(240, 25));
         representativePanel.setImage(img);
@@ -436,17 +471,18 @@ public class ColorPalette extends javax.swing.JDialog {
             colorList.setSelectedIndex(i);
         }
 
-
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList<Color> colorList;
+    private javax.swing.JSlider gammaOffsetSlider;
     private javax.swing.JSlider gammaSlider;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane2;
