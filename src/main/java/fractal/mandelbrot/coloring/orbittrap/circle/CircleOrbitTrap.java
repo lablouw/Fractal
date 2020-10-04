@@ -5,6 +5,7 @@
  */
 package fractal.mandelbrot.coloring.orbittrap.circle;
 
+import fractal.mandelbrot.coloring.orbittrap.OrbitTrapSettingsDialog;
 import fractal.common.Complex;
 import fractal.common.FractalEngine;
 import fractal.common.FractalRenderer;
@@ -24,11 +25,11 @@ import java.util.List;
  * @author Lloyd
  */
 public class CircleOrbitTrap extends OrbitTrap {
+
+    private final List<OrbitTrapColorStrategy<CircleOrbitTrap>> colorStrategies;
     
-    private final List<OrbitTrapColorStrategy> colorStrategies;
-
-    private final JDialog settingsDialog;
-
+    private final OrbitTrapSettingsDialog<CircleOrbitTrap, OrbitTrapColorStrategy<CircleOrbitTrap>> settingsDialog;
+    
     private Complex center;
     private Complex pointOnCircle;
     private double radius;
@@ -42,11 +43,11 @@ public class CircleOrbitTrap extends OrbitTrap {
         colorStrategies.add(new CircleOrbitTrapColorLookupStrategy());
         activeColorStrategy = colorStrategies.get(0);
         
-        settingsDialog = new CircleOrbitTrapSettingsDialog(this, colorStrategies);
+        settingsDialog = new OrbitTrapSettingsDialog(this, colorStrategies);
     }
 
     @Override
-    public Component getSettingsComponent() {
+    public JDialog getSettingsDialog() {
         return settingsDialog;
     }
 

@@ -116,7 +116,7 @@ public class OrbitTrapColorCalculator implements ColorCalculator {
         JButton orbitTrapSettingsButton = new JButton("Orbit trap settings");
         orbitTrapSettingsButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                activeOrbitTrap.getSettingsComponent().setVisible(true);
+                activeOrbitTrap.getSettingsDialog().setVisible(true);
             }
         });
         settingsPanel.add(orbitTrapSettingsButton);

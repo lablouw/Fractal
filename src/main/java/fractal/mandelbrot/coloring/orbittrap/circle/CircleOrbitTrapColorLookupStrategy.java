@@ -5,16 +5,13 @@
  */
 package fractal.mandelbrot.coloring.orbittrap.circle;
 
-import fractal.common.ColorPalette;
 import fractal.mandelbrot.coloring.orbittrap.OrbitTrapColorStrategy;
 import fractal.common.Complex;
 import fractal.common.FractalEngine;
 import fractal.mandelbrot.RawGpuOrbitContainer;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.GridLayout;
 import java.util.List;
-import javax.swing.JPanel;
 
 /**
  *
@@ -22,14 +19,8 @@ import javax.swing.JPanel;
  */
 public class CircleOrbitTrapColorLookupStrategy implements OrbitTrapColorStrategy<CircleOrbitTrap> {
 
-    private JPanel settingsPanel;//TODO: JPanel for every strategy to be displayed in CircleOrbitTrapSettingsDialog
-    private final ColorPalette colorPalette = new ColorPalette(null, false, null);
+    private final CircleOrbitTrapColorLookupStrategySettingsPanel settingsPanel = new CircleOrbitTrapColorLookupStrategySettingsPanel();
     
-
-    public CircleOrbitTrapColorLookupStrategy() {
-        initSettingsPanel();
-    }
-
     @Override
     public String getName() {
         return "Color Lookup";
@@ -52,7 +43,7 @@ public class CircleOrbitTrapColorLookupStrategy implements OrbitTrapColorStrateg
         if (minDist > orbitTrap.getRadius()) {
             return Color.BLACK;
         } else {
-            return colorPalette.interpolateToColor((float) (-minDist / orbitTrap.getRadius() / 2), false);
+            return settingsPanel.getColorPalette().interpolateToColor((float) (-minDist / orbitTrap.getRadius() / 2), false);
         }
     }
 
@@ -69,7 +60,7 @@ public class CircleOrbitTrapColorLookupStrategy implements OrbitTrapColorStrateg
         if (minDist > orbitTrap.getRadius()) {
             return Color.BLACK;
         } else {
-            return colorPalette.interpolateToColor((float) (-minDist / orbitTrap.getRadius() / 2), false);
+            return settingsPanel.getColorPalette().interpolateToColor((float) (-minDist / orbitTrap.getRadius() / 2), false);
         }
     }
 
@@ -83,9 +74,4 @@ public class CircleOrbitTrapColorLookupStrategy implements OrbitTrapColorStrateg
         return settingsPanel;
     }
     
-    private void initSettingsPanel() {
-        settingsPanel = new JPanel(new GridLayout(0, 1));
-        settingsPanel.add(colorPalette.getRepresentativePanel());
-    }
-
 }

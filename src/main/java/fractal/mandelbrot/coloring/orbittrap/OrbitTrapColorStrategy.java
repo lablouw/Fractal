@@ -30,6 +30,5 @@ public interface OrbitTrapColorStrategy<T extends OrbitTrap> {
     Color recalcColor(int x, int y);
 
     Component getSettingsComponent();
-
     
 }

@@ -53,7 +53,7 @@ public class InfiniteLineOrbitTrap extends OrbitTrap {
 	}
 
 	@Override
-	public Component getSettingsComponent() {
+	public JDialog getSettingsDialog() {
 		return settingsDialog;
 	}
 

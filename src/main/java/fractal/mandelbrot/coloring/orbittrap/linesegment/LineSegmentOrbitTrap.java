@@ -46,7 +46,7 @@ public class LineSegmentOrbitTrap extends OrbitTrap {
 	}
 
 	@Override
-	public Component getSettingsComponent() {
+	public JDialog getSettingsDialog() {
 		return settingsDialog;
 	}
 

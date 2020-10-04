@@ -9,7 +9,6 @@ import fractal.common.Complex;
 import fractal.common.FractalEngine;
 import fractal.common.FractalRenderer;
 import fractal.mandelbrot.RawGpuOrbitContainer;
-import fractal.mandelbrot.coloring.orbittrap.circle.CircleOrbitTrap;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,11 +28,11 @@ public abstract class OrbitTrap {
     protected FractalRenderer fractalRenderer;
 
     protected OrbitTrapColorStrategy activeColorStrategy;
-
+    
     public abstract String getName();
     public abstract void initForRender(FractalRenderer fractalRenderer);
     public abstract void setDefiningPoints(Complex c1, Complex c2);
-    public abstract Component getSettingsComponent();
+    public abstract JDialog getSettingsDialog();
     public abstract BufferedImage drawOrbitTrap(BufferedImage baseImage, FractalRenderer fractalRenderer);
     public abstract Color calcColor(int x, int y, List<Complex> orbit, FractalEngine fractalEngine);
     public abstract Color calcColor(int x, int y, RawGpuOrbitContainer rawGpuOrbitContainer, int orbitStartIndex, int orbitLength, FractalEngine fractalEngine);

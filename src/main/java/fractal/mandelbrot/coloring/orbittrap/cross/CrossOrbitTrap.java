@@ -7,6 +7,7 @@ import fractal.common.ImageUtils;
 import fractal.mandelbrot.RawGpuOrbitContainer;
 import fractal.mandelbrot.coloring.orbittrap.OrbitTrap;
 import fractal.mandelbrot.coloring.orbittrap.OrbitTrapColorStrategy;
+import fractal.mandelbrot.coloring.orbittrap.OrbitTrapSettingsDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +20,7 @@ public class CrossOrbitTrap extends OrbitTrap {
 	private final List<OrbitTrapColorStrategy<CrossOrbitTrap>> colorStrategies;
 
 	private static final double EPSILON = 1E-15;
-	private final JDialog settingsDialog;
+	private final OrbitTrapSettingsDialog<CrossOrbitTrap, OrbitTrapColorStrategy<CrossOrbitTrap>> settingsDialog;
 
 	private double m1, c1; //y=mx+c
 	private double m2, c2; //y=mx+c
@@ -35,7 +36,7 @@ public class CrossOrbitTrap extends OrbitTrap {
 		colorStrategies.add(new CrossOrbitTrapDistanceColorStrategy(fractalRenderer, this));
 		activeColorStrategy = colorStrategies.get(0);
 
-		settingsDialog = null;//new CircleOrbitTrapSettingsDialog(this, fractalRenderer, colorStrategies);
+		settingsDialog = new OrbitTrapSettingsDialog<>(this, colorStrategies);
 	}
 
 	@Override
@@ -67,7 +68,7 @@ public class CrossOrbitTrap extends OrbitTrap {
 	}
 
 	@Override
-	public Component getSettingsComponent() {
+	public JDialog getSettingsDialog() {
 		return settingsDialog;
 	}
 

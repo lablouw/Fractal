@@ -24,8 +24,7 @@ import javax.swing.JPanel;
  */
 public class CircleOrbitTrapDistanceColorStrategy implements OrbitTrapColorStrategy<CircleOrbitTrap>, Redrawable {
 
-    private JPanel settingsPanel;//TODO: JPanel for every strategy to be displayed in CircleOrbitTrapSettingsDialog
-    private final ColorPalette colorPalette = new ColorPalette(null, false, this);
+    private final CircleOrbitTrapDistanceColorStrategySettingsPanel settingsPanel = new CircleOrbitTrapDistanceColorStrategySettingsPanel();
     
     private double [][] minDists;
     private final FractalRenderer fractalRenderer;
@@ -34,7 +33,6 @@ public class CircleOrbitTrapDistanceColorStrategy implements OrbitTrapColorStrat
     public CircleOrbitTrapDistanceColorStrategy(FractalRenderer fractalRenderer, CircleOrbitTrap orbitTrap) {
         this.fractalRenderer = fractalRenderer;
         this.orbitTrap = orbitTrap;
-        initSettingsPanel();
     }
     
     @Override
@@ -60,7 +58,7 @@ public class CircleOrbitTrapDistanceColorStrategy implements OrbitTrapColorStrat
         }
 
         minDists[x][y] = minDist;
-        return minDist == 0 ? Color.BLACK : colorPalette.interpolateToColor((float) -Math.log(minDist) * LOGARITHM_SUPPRESSION, true);
+        return minDist == 0 ? Color.BLACK : settingsPanel.getColorPalette().interpolateToColor((float) -Math.log(minDist) * LOGARITHM_SUPPRESSION, true);
     }
     
     @Override
@@ -74,22 +72,17 @@ public class CircleOrbitTrapDistanceColorStrategy implements OrbitTrapColorStrat
         }
 
         minDists[x][y] = minDist;
-        return minDist == 0 ? Color.BLACK : colorPalette.interpolateToColor((float) -Math.log(minDist) * LOGARITHM_SUPPRESSION, true);
+        return minDist == 0 ? Color.BLACK : settingsPanel.getColorPalette().interpolateToColor((float) -Math.log(minDist) * LOGARITHM_SUPPRESSION, true);
     }
 
     @Override
     public Color recalcColor(int x, int y) {
-        return minDists[x][y] == 0 ? Color.BLACK : colorPalette.interpolateToColor((float) -Math.log(minDists[x][y])*LOGARITHM_SUPPRESSION, true);
+        return minDists[x][y] == 0 ? Color.BLACK : settingsPanel.getColorPalette().interpolateToColor((float) -Math.log(minDists[x][y])*LOGARITHM_SUPPRESSION, true);
     }
 
     @Override
     public Component getSettingsComponent() {
         return settingsPanel;
-    }
-    
-    private void initSettingsPanel() {
-        settingsPanel = new JPanel(new GridLayout(0, 1));
-        settingsPanel.add(colorPalette.getRepresentativePanel());
     }
     
     @Override

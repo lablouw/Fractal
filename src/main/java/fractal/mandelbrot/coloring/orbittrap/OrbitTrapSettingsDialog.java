@@ -3,21 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fractal.mandelbrot.coloring.orbittrap.circle;
-
-import fractal.mandelbrot.coloring.orbittrap.OrbitTrap;
-import fractal.mandelbrot.coloring.orbittrap.OrbitTrapColorStrategy;
-
+package fractal.mandelbrot.coloring.orbittrap;
 import java.util.List;
 
 /**
  *
  * @author Lloyd
  */
-public class CircleOrbitTrapSettingsDialog extends javax.swing.JDialog {//TODO: make generic and use for all orbit traps, rename to OrbitTrapSettingsDialog
+public class OrbitTrapSettingsDialog<OT extends OrbitTrap, OTCS extends OrbitTrapColorStrategy<OT>> extends javax.swing.JDialog {//TODO: generics probably not necessary here
 
-    private final OrbitTrap orbitTrap;
-    private final List<OrbitTrapColorStrategy> colorStrategies;
+    private final OT orbitTrap;
+    private final List<OTCS> colorStrategies;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -65,7 +61,7 @@ public class CircleOrbitTrapSettingsDialog extends javax.swing.JDialog {//TODO: 
     /**
      * Creates new form CircleOrbitTrapSettingsFrame
      */
-    public CircleOrbitTrapSettingsDialog(CircleOrbitTrap orbitTrap, List<OrbitTrapColorStrategy> colorStrategies) {
+    public OrbitTrapSettingsDialog(OT orbitTrap, List<OTCS> colorStrategies) {
         initComponents();
         this.orbitTrap = orbitTrap;
         this.colorStrategies = colorStrategies;
