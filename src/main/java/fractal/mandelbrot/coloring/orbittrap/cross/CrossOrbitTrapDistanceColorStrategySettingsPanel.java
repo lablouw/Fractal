@@ -68,4 +68,9 @@ public class CrossOrbitTrapDistanceColorStrategySettingsPanel extends javax.swin
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
+
+    ColorPalette getColorPalette() {
+        return colorPalette;
+    }
+
 }

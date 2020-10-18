@@ -13,7 +13,7 @@ import java.awt.GridLayout;
  * @author Lloyd
  */
 public class InfiniteLineOrbitTrapDistanceColorStrategySettingsPanel extends javax.swing.JPanel {
-    
+
     ColorPalette colorPalette = new ColorPalette(null, false, null);
 
     /**
@@ -68,4 +68,9 @@ public class InfiniteLineOrbitTrapDistanceColorStrategySettingsPanel extends jav
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
+
+    ColorPalette getColorPalette() {
+        return colorPalette;
+    }
+
 }
