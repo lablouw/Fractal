@@ -12,6 +12,7 @@ import fractal.common.ImageUtils;
 import fractal.mandelbrot.RawGpuOrbitContainer;
 import fractal.mandelbrot.coloring.orbittrap.OrbitTrap;
 import fractal.mandelbrot.coloring.orbittrap.OrbitTrapColorStrategy;
+import fractal.mandelbrot.coloring.orbittrap.OrbitTrapSettingsDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,7 +50,7 @@ public class InfiniteLineOrbitTrap extends OrbitTrap {
 		colorStrategies.add(new InfiniteLineOrbitTrapDistanceColorStrategy(fractalRenderer, this));
 		activeColorStrategy = colorStrategies.get(0);
 
-		settingsDialog = null;//new CircleOrbitTrapSettingsDialog(this, fractalRenderer, colorStrategies);
+		settingsDialog = new OrbitTrapSettingsDialog(this, colorStrategies);
 	}
 
 	@Override

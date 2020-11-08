@@ -12,7 +12,7 @@ import java.util.List;
 
 public class InfiniteLineOrbitTrapDistanceColorStrategy implements OrbitTrapColorStrategy<InfiniteLineOrbitTrap>, Redrawable {
 
-	InfiniteLineOrbitTrapDistanceColorStrategySettingsPanel settingsPanel = new InfiniteLineOrbitTrapDistanceColorStrategySettingsPanel();
+	private final InfiniteLineOrbitTrapDistanceColorStrategySettingsPanel settingsPanel = new InfiniteLineOrbitTrapDistanceColorStrategySettingsPanel();
 
 	private final FractalRenderer fractalRenderer;
 	private final InfiniteLineOrbitTrap orbitTrap;

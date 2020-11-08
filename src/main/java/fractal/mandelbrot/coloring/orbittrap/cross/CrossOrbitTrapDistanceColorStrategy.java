@@ -12,7 +12,7 @@ import java.util.List;
 
 public class CrossOrbitTrapDistanceColorStrategy implements OrbitTrapColorStrategy<CrossOrbitTrap>, Redrawable {
 
-	private CrossOrbitTrapDistanceColorStrategySettingsPanel settingsPanel = new CrossOrbitTrapDistanceColorStrategySettingsPanel();
+	private final CrossOrbitTrapDistanceColorStrategySettingsPanel settingsPanel = new CrossOrbitTrapDistanceColorStrategySettingsPanel();
 
 	private final FractalRenderer fractalRenderer;
 	private final CrossOrbitTrap orbitTrap;

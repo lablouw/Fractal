@@ -12,7 +12,7 @@ import java.util.List;
 
 public class LineSegmentOrbitTrapDistanceColorStrategy implements OrbitTrapColorStrategy<LineSegmentOrbitTrap>, Redrawable {
 
-	LineSegmentOrbitTrapDistanceColorStrategySettingsPanel settingsPanel = new LineSegmentOrbitTrapDistanceColorStrategySettingsPanel();
+	private final LineSegmentOrbitTrapDistanceColorStrategySettingsPanel settingsPanel = new LineSegmentOrbitTrapDistanceColorStrategySettingsPanel();
 
 	private final FractalRenderer fractalRenderer;
 	private final LineSegmentOrbitTrap orbitTrap;
@@ -67,7 +67,6 @@ public class LineSegmentOrbitTrapDistanceColorStrategy implements OrbitTrapColor
 
 	@Override
 	public Color recalcColor(int x, int y) {
-//		return minDists[x][y] == 0 ? Color.BLACK : colorPalette.interpolateToColor((float) -Math.log(minDists[x][y])*spectrumComp);
         return minDists[x][y] == 0 ? Color.BLACK : settingsPanel.getColorPalette().interpolateToColor((float) -Math.log(minDists[x][y]), true);
 	}
 

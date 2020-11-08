@@ -7,6 +7,7 @@ import fractal.common.ImageUtils;
 import fractal.mandelbrot.RawGpuOrbitContainer;
 import fractal.mandelbrot.coloring.orbittrap.OrbitTrap;
 import fractal.mandelbrot.coloring.orbittrap.OrbitTrapColorStrategy;
+import fractal.mandelbrot.coloring.orbittrap.OrbitTrapSettingsDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,7 +24,6 @@ public class LineSegmentOrbitTrap extends OrbitTrap {
 	private final JDialog settingsDialog;
 
 	private double m, c; //y=mx+c
-	private double m2;
 	private Complex c1;
 	private Complex c2;
 	private boolean vertical = false;
@@ -42,7 +42,7 @@ public class LineSegmentOrbitTrap extends OrbitTrap {
 		colorStrategies.add(new LineSegmentOrbitTrapDistanceColorStrategy(fractalRenderer, this));
 		activeColorStrategy = colorStrategies.get(0);
 
-		settingsDialog = null;//new CircleOrbitTrapSettingsDialog(this, fractalRenderer, colorStrategies);
+		settingsDialog = new OrbitTrapSettingsDialog(this, colorStrategies);
 	}
 
 	@Override
@@ -119,16 +119,16 @@ public class LineSegmentOrbitTrap extends OrbitTrap {
 		}
 
 		//project point onto line
-		m2 = -1/m;
-		double r = (m*c1.r-m2*c.r+c.i-c1.i) / (m-m2);
+		double m2 = -1 / m;
+		double r = (m*c1.r - m2*c.r + c.i - c1.i) / (m - m2);
 		//double i = m2*(r-c.r)+c.i;
 
 		//check if left of, right of, or on line.
 		if (r < c1.r) {
-			return c1.sub(c).modulus();
+			return c1.sub(c).modulus();//left of line
 		} else if (r > c2.r) {
-			return c2.sub(c).modulus();
-		} else {
+			return c2.sub(c).modulus();//right of line
+		} else {//on line
 			return Math.abs(m*c.r - c.i + this.c) / Math.sqrt(m*m + 1);
 		}
 	}

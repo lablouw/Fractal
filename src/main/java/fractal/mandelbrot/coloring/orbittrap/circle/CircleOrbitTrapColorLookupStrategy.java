@@ -5,12 +5,12 @@
  */
 package fractal.mandelbrot.coloring.orbittrap.circle;
 
-import fractal.mandelbrot.coloring.orbittrap.OrbitTrapColorStrategy;
 import fractal.common.Complex;
 import fractal.common.FractalEngine;
 import fractal.mandelbrot.RawGpuOrbitContainer;
-import java.awt.Color;
-import java.awt.Component;
+import fractal.mandelbrot.coloring.orbittrap.OrbitTrapColorStrategy;
+
+import java.awt.*;
 import java.util.List;
 
 /**

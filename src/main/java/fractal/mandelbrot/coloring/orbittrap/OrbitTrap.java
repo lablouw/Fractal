@@ -97,10 +97,6 @@ public abstract class OrbitTrap {
         public void mouseMoved(MouseEvent e) {}
     }
 
-    public OrbitTrapColorStrategy getActiveColorStrategy() {
-        return activeColorStrategy;
-    }
-
     public void setActiveColorStrategy(OrbitTrapColorStrategy colorStrategy) {
         this.activeColorStrategy = colorStrategy;
     }
