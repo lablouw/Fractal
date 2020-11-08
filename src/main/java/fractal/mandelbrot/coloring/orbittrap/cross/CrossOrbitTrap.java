@@ -34,6 +34,8 @@ public class CrossOrbitTrap extends OrbitTrap {
 
 		colorStrategies = new ArrayList<>();
 		colorStrategies.add(new CrossOrbitTrapDistanceColorStrategy(fractalRenderer, this));
+        colorStrategies.add(new CrossOrbitTrapNearestAxisColorStrategy(fractalRenderer, this));
+        
 		activeColorStrategy = colorStrategies.get(0);
 
 		settingsDialog = new OrbitTrapSettingsDialog<>(this, colorStrategies);
@@ -125,4 +127,26 @@ public class CrossOrbitTrap extends OrbitTrap {
 				Math.abs(m2*c.r - c.i + c2) / Math.sqrt(m2*m2 + 1)
 		);
 	}
+    
+    public double distanceFromAxis1(Complex c) {
+        if (vertical) {
+            if (Math.abs(d2.i - d1.i) < EPSILON) {//axis1 is horizontal
+                return c.i - d1.i;
+            } else {//axis1 is vertical
+                return c.r - d1.r;
+            }
+        }
+        return Math.abs(m1*c.r - c.i + c1) / Math.sqrt(m1*m1 + 1);
+    }
+    
+    public double distanceFromAxis2(Complex c) {
+        if (vertical) {
+            if (Math.abs(d2.i - d1.i) < EPSILON) {//axis2 is vertical
+                return c.r - d1.r;
+            } else {//axis1 is horizontal
+                return c.i - d1.i;
+            }
+        }
+        return Math.abs(m2*c.r - c.i + c2) / Math.sqrt(m2*m2 + 1);
+    }
 }
