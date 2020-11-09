@@ -45,32 +45,51 @@ public class CrossOrbitTrapNearestAxisColorStrategy implements OrbitTrapColorStr
     public Color calcColor(int x, int y, List<Complex> orbit, FractalEngine fractalEngine, CrossOrbitTrap orbitTrap) {
         double minDist = Double.MAX_VALUE;
         int axisNo = 0;
-        for (Complex c : orbit) {
-            double d1 = orbitTrap.distanceFromAxis1(c);
-            double d2 = orbitTrap.distanceFromAxis2(c);
-            if (d1 < minDist) {
+        for (int i = 1; i < orbit.size(); i++) {//skip first mandelbrot orbit point (always == perterb i.e. 0)
+            double d1 = orbitTrap.distanceFromAxis1(orbit.get(i));
+            double d2 = orbitTrap.distanceFromAxis2(orbit.get(i));
+            if (d1 < minDist && d1 < settingsPanel.getAxis1MaxDistance()) {
                 minDist = d1;
                 axisNo = 1;
             }
-            if (d2 < minDist) {
+            if (d2 < minDist && d2 < settingsPanel.getAxis2MaxDistance()) {
                 minDist = d2;
                 axisNo = 2;
             }
         }
-        
+
+        return getColor(axisNo, minDist);
+    }
+
+    @Override
+    public Color calcColor(int x, int y, RawGpuOrbitContainer rawGpuOrbitContainer, int orbitStartIndex, int orbitLength, FractalEngine fractalEngine, CrossOrbitTrap orbitTrap) {
+        double minDist = Double.MAX_VALUE;
+        int axisNo = 0;
+        for (int i = 1; i < orbitLength; i++) {//skip first mandelbrot orbit point (always == perterb i.e. 0)
+            Complex c = new Complex(rawGpuOrbitContainer.orbitsR[orbitStartIndex + i], rawGpuOrbitContainer.orbitsI[orbitStartIndex + i]);
+            double d1 = orbitTrap.distanceFromAxis1(c);
+            double d2 = orbitTrap.distanceFromAxis2(c);
+            if (d1 < minDist && d1 < settingsPanel.getAxis1MaxDistance()) {
+                minDist = d1;
+                axisNo = 1;
+            }
+            if (d2 < minDist && d2 < settingsPanel.getAxis2MaxDistance()) {
+                minDist = d2;
+                axisNo = 2;
+            }
+        }
+
+        return getColor(axisNo, minDist);
+    }
+
+    private Color getColor(int axisNo, double minDist) {
         if (axisNo == 1 && minDist < settingsPanel.getAxis1MaxDistance()) {
             return settingsPanel.colorPalette1.interpolateToColor((float) (minDist/settingsPanel.getAxis1MaxDistance()), false);
         } else if (axisNo == 2 && minDist < settingsPanel.getAxis2MaxDistance()) {
             return settingsPanel.colorPalette2.interpolateToColor((float) (minDist/settingsPanel.getAxis2MaxDistance()), false);
         }
-        
-        return Color.BLACK;
-        
-    }
 
-    @Override
-    public Color calcColor(int x, int y, RawGpuOrbitContainer rawGpuOrbitContainer, int orbitStartIndex, int orbitLength, FractalEngine fractalEngine, CrossOrbitTrap orbitTrap) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return Color.BLACK;
     }
 
     @Override

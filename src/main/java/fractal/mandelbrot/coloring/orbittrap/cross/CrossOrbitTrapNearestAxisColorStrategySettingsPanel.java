@@ -151,7 +151,7 @@ public class CrossOrbitTrapNearestAxisColorStrategySettingsPanel extends javax.s
     }
     
     public double getAxis2MaxDistance() {
-        return Double.parseDouble(jTextField1.getText());
+        return Double.parseDouble(jTextField2.getText());
     }
 
 }
