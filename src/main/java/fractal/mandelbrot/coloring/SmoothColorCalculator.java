@@ -48,8 +48,8 @@ public class SmoothColorCalculator implements ColorCalculator, Redrawable {
         orbitEndPoints[x][y] = orbit.get(orbit.size() - 1);
         orbitLengths[x][y] = orbit.size();
         if (fractalEngine.isBailoutReached(orbit)) {
-            float nSmooth = (float) (orbit.size() + 1 - Math.log(Math.log(orbit.get(orbit.size() - 1).modulus())) / Math.log(2));
-            float a = nSmooth / (float) fractalRenderer.getFractalEngine().getMaxIter();
+            double nSmooth = (orbit.size() + 1 - Math.log(Math.log(orbit.get(orbit.size() - 1).modulus())) / Math.log(2));
+            double a = nSmooth / (double) fractalRenderer.getFractalEngine().getMaxIter();
             return colorPalette.interpolateToColor(a, true);
         } else {
             return Color.BLACK;
@@ -68,8 +68,8 @@ public class SmoothColorCalculator implements ColorCalculator, Redrawable {
         orbitEndPoints[x][y] = lastOrbitPoint;
         orbitLengths[x][y] = orbitLength;
         if (fractalEngine.isBailoutReached(Collections.singletonList(lastOrbitPoint))) {
-            float nSmooth = (float) (orbitLength + 1 - Math.log(Math.log(lastOrbitPoint.modulus())) / Math.log(2));
-            float a = nSmooth / (float) fractalRenderer.getFractalEngine().getMaxIter();
+            double nSmooth = (orbitLength + 1 - Math.log(Math.log(lastOrbitPoint.modulus())) / Math.log(2));
+            double a = nSmooth / (double) fractalRenderer.getFractalEngine().getMaxIter();
             return colorPalette.interpolateToColor(a, true);
         } else {
             return Color.BLACK;
@@ -78,8 +78,8 @@ public class SmoothColorCalculator implements ColorCalculator, Redrawable {
 
     private Color recalcColor(Complex lastOrbitPoint, int orbitLength, FractalEngine fractalEngine) {
         if (fractalEngine.isBailoutReached(Collections.singletonList(lastOrbitPoint))) {
-            float nSmooth = (float) (orbitLength + 1 - Math.log(Math.log(lastOrbitPoint.modulus())) / Math.log(2));
-            float a = nSmooth / (float) fractalRenderer.getFractalEngine().getMaxIter();
+            double nSmooth = (orbitLength + 1 - Math.log(Math.log(lastOrbitPoint.modulus())) / Math.log(2));
+            double a = nSmooth / (double) fractalRenderer.getFractalEngine().getMaxIter();
             return colorPalette.interpolateToColor(a, true);
         } else {
             return Color.BLACK;

@@ -31,7 +31,7 @@ public final class ColorInterpolator {
      *
      * @return color corresponding to the step
      */
-    public static Color interpolate(float step, List<Color> colors, boolean modular) {
+    public static Color interpolate(double step, List<Color> colors, boolean modular) {
         // Cutoff to range between 0.0f and 1.0f
 //        step = Math.max(Math.min(step, 1.0f), 0.0f);
         while (step < 0) {
@@ -58,7 +58,7 @@ public final class ColorInterpolator {
             default:
                 // Find local colors to interpolate between:
 
-                // Index of first color, because cast from float to int rounds down
+                // Index of first color, because cast from double to int rounds down
                 int firstColorIndex = (int) (step * (colorsCircular.size() - 1));
 
                 // Special case: last color (step >= 1.0f)
@@ -68,11 +68,11 @@ public final class ColorInterpolator {
 
                 // Calculate localStep between local colors:
                 // stepAtFirstColorIndex will be a bit smaller than step
-                float stepAtFirstColorIndex = (float) firstColorIndex
+                double stepAtFirstColorIndex = (double) firstColorIndex
                         / (colorsCircular.size() - 1);
 
                 // multiply to increase values to range between 0.0f and 1.0f
-                float localStep = (step - stepAtFirstColorIndex)
+                double localStep = (step - stepAtFirstColorIndex)
                         * (colorsCircular.size() - 1);
 
                 return interpolateTwoColors(localStep, colorsCircular.get(firstColorIndex),
@@ -90,7 +90,7 @@ public final class ColorInterpolator {
      *
      * @return interpolated color which may lie between the two colors
      */
-    private static Color interpolateTwoColors(float step, Color color1, Color color2) {
+    private static Color interpolateTwoColors(double step, Color color1, Color color2) {
         // Cutoff to range between 0.0f and 1.0f
         step = Math.max(Math.min(step, 1.0f), 0.0f);
 

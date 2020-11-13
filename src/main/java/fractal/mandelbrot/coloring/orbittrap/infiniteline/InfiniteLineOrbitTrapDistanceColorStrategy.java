@@ -12,7 +12,7 @@ import java.util.List;
 
 public class InfiniteLineOrbitTrapDistanceColorStrategy implements OrbitTrapColorStrategy<InfiniteLineOrbitTrap>, Redrawable {
 
-	private final InfiniteLineOrbitTrapDistanceColorStrategySettingsPanel settingsPanel = new InfiniteLineOrbitTrapDistanceColorStrategySettingsPanel();
+	private final InfiniteLineOrbitTrapDistanceColorStrategySettingsPanel settingsPanel = new InfiniteLineOrbitTrapDistanceColorStrategySettingsPanel(this);
 
 	private final FractalRenderer fractalRenderer;
 	private final InfiniteLineOrbitTrap orbitTrap;
@@ -47,7 +47,7 @@ public class InfiniteLineOrbitTrapDistanceColorStrategy implements OrbitTrapColo
 		}
 
 		minDists[x][y] = minDist;
-		return minDist == 0 ? Color.BLACK : settingsPanel.getColorPalette().interpolateToColor((float) -Math.log(minDist) * LOGARITHM_SUPPRESSION, true);
+		return minDist == 0 ? Color.BLACK : settingsPanel.getColorPalette().interpolateToColor(-Math.log(minDist) * LOGARITHM_SUPPRESSION, true);
 	}
     
     @Override
@@ -61,12 +61,12 @@ public class InfiniteLineOrbitTrapDistanceColorStrategy implements OrbitTrapColo
 		}
 
 		minDists[x][y] = minDist;
-		return minDist == 0 ? Color.BLACK : settingsPanel.getColorPalette().interpolateToColor((float) -Math.log(minDist) * LOGARITHM_SUPPRESSION, true);
+		return minDist == 0 ? Color.BLACK : settingsPanel.getColorPalette().interpolateToColor(-Math.log(minDist) * LOGARITHM_SUPPRESSION, true);
     }
 
 	@Override
 	public Color recalcColor(int x, int y) {
-		return minDists[x][y] == 0 ? Color.BLACK : settingsPanel.getColorPalette().interpolateToColor((float) -Math.log(minDists[x][y])*LOGARITHM_SUPPRESSION, true);
+		return minDists[x][y] == 0 ? Color.BLACK : settingsPanel.getColorPalette().interpolateToColor(-Math.log(minDists[x][y]) * LOGARITHM_SUPPRESSION, true);
 	}
 
 	@Override

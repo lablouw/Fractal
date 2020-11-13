@@ -6,6 +6,8 @@
 package fractal.mandelbrot.coloring.orbittrap.cross;
 
 import fractal.common.ColorPalette;
+import fractal.common.Redrawable;
+
 import java.awt.GridLayout;
 
 /**
@@ -14,14 +16,16 @@ import java.awt.GridLayout;
  */
 public class CrossOrbitTrapNearestAxisColorStrategySettingsPanel extends javax.swing.JPanel {
     
-    ColorPalette colorPalette1 = new ColorPalette(null, false, null);
-    ColorPalette colorPalette2 = new ColorPalette(null, false, null);
+    private ColorPalette colorPalette1;
+    private ColorPalette colorPalette2;
 
     /**
      * Creates new form CrossOrbitTrapDistanceColorStrategySettingsPanel
      */
-    public CrossOrbitTrapNearestAxisColorStrategySettingsPanel() {
+    public CrossOrbitTrapNearestAxisColorStrategySettingsPanel(Redrawable redrawable) {
         initComponents();
+        colorPalette1 = new ColorPalette(null, false, redrawable);
+        colorPalette2 = new ColorPalette(null, false, redrawable);
         jPanel1.setLayout(new GridLayout(1, 1));
         jPanel1.add(colorPalette1.getRepresentativePanel());
         jPanel2.setLayout(new GridLayout(1, 1));
@@ -147,11 +151,11 @@ public class CrossOrbitTrapNearestAxisColorStrategySettingsPanel extends javax.s
     }
     
     public double getAxis1MaxDistance() {
-        return Double.parseDouble(jTextField1.getText());
+        return Double.parseDouble(jTextField1.getText());//TODO: Cache. Important!
     }
     
     public double getAxis2MaxDistance() {
-        return Double.parseDouble(jTextField1.getText());
+        return Double.parseDouble(jTextField2.getText());//TODO: Cache. Important!
     }
 
 }

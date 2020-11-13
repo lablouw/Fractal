@@ -117,7 +117,7 @@ public class CrossOrbitTrap extends OrbitTrap {
 		return activeColorStrategy.recalcColor(x, y);
 	}
 
-	public double distanceFrom(Complex c) {
+	double distanceFrom(Complex c) {
 		if (vertical) {
 			return Math.min(Math.abs(c.r-d1.r), Math.abs(c.i - d1.i));
 		}
@@ -128,23 +128,23 @@ public class CrossOrbitTrap extends OrbitTrap {
 		);
 	}
     
-    public double distanceFromAxis1(Complex c) {
+    double distanceFromAxis1(Complex c) {
         if (vertical) {
             if (Math.abs(d2.i - d1.i) < EPSILON) {//axis1 is horizontal
-                return c.i - d1.i;
+                return Math.abs(c.i - d1.i);
             } else {//axis1 is vertical
-                return c.r - d1.r;
+                return Math.abs(c.r - d1.r);
             }
         }
         return Math.abs(m1*c.r - c.i + c1) / Math.sqrt(m1*m1 + 1);
     }
     
-    public double distanceFromAxis2(Complex c) {
+    double distanceFromAxis2(Complex c) {
         if (vertical) {
             if (Math.abs(d2.i - d1.i) < EPSILON) {//axis2 is vertical
-                return c.r - d1.r;
+                return Math.abs(c.r - d1.r);
             } else {//axis1 is horizontal
-                return c.i - d1.i;
+                return Math.abs(c.i - d1.i);
             }
         }
         return Math.abs(m2*c.r - c.i + c2) / Math.sqrt(m2*m2 + 1);

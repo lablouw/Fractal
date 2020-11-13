@@ -36,10 +36,10 @@ public class ColorPalette extends javax.swing.JDialog {
     JXImagePanel gradientPanel = new JXImagePanel();
     JXImagePanel representativePanel = new JXImagePanel();
 
-    private float spectrumCycles = 1;
-    private float spectrumPhase = 0;
-    private float gamma = 1;
-    private float gammaOffset = 0;
+    private double spectrumCycles = 1;
+    private double spectrumPhase = 0;
+    private double gamma = 1;
+    private double gammaOffset = 0;
     private final Redrawable redrawable;
 
     public JPanel getRepresentativePanel() {
@@ -88,7 +88,7 @@ public class ColorPalette extends javax.swing.JDialog {
         jSpinner1.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                spectrumCycles = (float) jSpinner1.getValue();
+                spectrumCycles = (double) jSpinner1.getValue();
                 if (redrawable != null && redrawCheckBox.isSelected()) {
                     redrawable.redraw();
                 }
@@ -113,7 +113,7 @@ public class ColorPalette extends javax.swing.JDialog {
         colorRepresentativeJPanel();
     }
 
-    public Color interpolateToColor(float a, boolean modular) {// 0 <= a <= 1, modular == true => last color will interpolate back to first
+    public Color interpolateToColor(double a, boolean modular) {// 0 <= a <= 1, modular == true => last color will interpolate back to first
 
         //apply gamma offset
         a = (a + 1 - gammaOffset) % 1;
@@ -123,9 +123,9 @@ public class ColorPalette extends javax.swing.JDialog {
         //it behaves differently for x~0 and g<1 than it does for x~1 and g>1.
         //g>1 and x~1 works fine but for g<1 and x~0 we get much more compression as x->0. Therefore, for g<1 we need to flip x^g around y=-x+1.
         if (gamma > 1) {
-            a = (float) Math.pow(a, gamma);
+            a = Math.pow(a, gamma);
         } else if (gamma < 1) {
-            a = (float) (1 - Math.pow(1 - a, 1 / gamma));
+            a = (1 - Math.pow(1 - a, 1 / gamma));
         }
 
         //apply post-gamma phase
@@ -386,7 +386,7 @@ public class ColorPalette extends javax.swing.JDialog {
     }//GEN-LAST:event_formWindowClosed
 
     private void phaseSliderMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_phaseSliderMouseDragged
-        spectrumPhase = (float) phaseSlider.getValue() / (float) phaseSlider.getMaximum();
+        spectrumPhase = (double) phaseSlider.getValue() / (double) phaseSlider.getMaximum();
         colorRepresentativeJPanel();
     }//GEN-LAST:event_phaseSliderMouseDragged
 
@@ -414,7 +414,7 @@ public class ColorPalette extends javax.swing.JDialog {
     }//GEN-LAST:event_gammaSliderMouseReleased
 
     private void gammaOffsetSliderMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gammaOffsetSliderMouseDragged
-        gammaOffset = (float) gammaOffsetSlider.getValue() / (float) gammaOffsetSlider.getMaximum();
+        gammaOffset = (double) gammaOffsetSlider.getValue() / (double) gammaOffsetSlider.getMaximum();
         colorRepresentativeJPanel();
     }//GEN-LAST:event_gammaOffsetSliderMouseDragged
 
@@ -432,7 +432,7 @@ public class ColorPalette extends javax.swing.JDialog {
         BufferedImage img = new BufferedImage(previewPanel.getWidth(), previewPanel.getHeight(), BufferedImage.TYPE_INT_RGB);
         for (int x = 0; x < previewPanel.getWidth(); x++) {
             for (int y = 0; y < previewPanel.getHeight(); y++) {
-                float a = (float) x / (float) previewPanel.getWidth();
+                double a = (double) x / (double) previewPanel.getWidth();
 
                 //apply gamma offset
                 a = (a + 1 - gammaOffset) % 1;
@@ -441,9 +441,9 @@ public class ColorPalette extends javax.swing.JDialog {
                 //it behaves differently for x~0 and g<1 than it does for x~1 and g>1.
                 //g>1 and x~1 works fine but for g<1 and x~0 we get much more compression as x->0. Therefore, for g<1 we need to flip x^g around y=-x+1.
                 if (gamma > 1) {
-                    a = (float) Math.pow(a, gamma);
+                    a = Math.pow(a, gamma);
                 } else if (gamma < 1) {
-                    a = (float) (1 - Math.pow(1 - a, 1 / gamma));
+                    a = (1 - Math.pow(1 - a, 1 / gamma));
                 }
 
                 //apply post-gamma phase
