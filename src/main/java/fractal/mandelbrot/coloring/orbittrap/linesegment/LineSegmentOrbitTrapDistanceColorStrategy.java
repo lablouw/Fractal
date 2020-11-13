@@ -19,7 +19,6 @@ public class LineSegmentOrbitTrapDistanceColorStrategy implements OrbitTrapColor
 
 	private double [][] minDists;
 
-
 	public LineSegmentOrbitTrapDistanceColorStrategy(FractalRenderer fractalRenderer, LineSegmentOrbitTrap orbitTrap) {
 		this.fractalRenderer = fractalRenderer;
 		this.orbitTrap = orbitTrap;

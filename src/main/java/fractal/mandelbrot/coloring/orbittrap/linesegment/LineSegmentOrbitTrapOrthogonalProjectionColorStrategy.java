@@ -85,7 +85,7 @@ public class LineSegmentOrbitTrapOrthogonalProjectionColorStrategy implements Or
 
 	@Override
 	public Component getSettingsComponent() {
-		return null;
+		return settingsPanel;
 	}
 
 	@Override
