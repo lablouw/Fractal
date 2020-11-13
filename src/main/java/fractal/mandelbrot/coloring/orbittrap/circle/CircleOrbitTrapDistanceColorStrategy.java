@@ -21,12 +21,12 @@ import java.util.List;
  */
 public class CircleOrbitTrapDistanceColorStrategy implements OrbitTrapColorStrategy<CircleOrbitTrap>, Redrawable {
 
-    private final CircleOrbitTrapDistanceColorStrategySettingsPanel settingsPanel = new CircleOrbitTrapDistanceColorStrategySettingsPanel();
+    private final CircleOrbitTrapDistanceColorStrategySettingsPanel settingsPanel = new CircleOrbitTrapDistanceColorStrategySettingsPanel(this);
     
     private double [][] minDists;
     private final FractalRenderer fractalRenderer;
     private final CircleOrbitTrap orbitTrap;
-    
+
     public CircleOrbitTrapDistanceColorStrategy(FractalRenderer fractalRenderer, CircleOrbitTrap orbitTrap) {
         this.fractalRenderer = fractalRenderer;
         this.orbitTrap = orbitTrap;
@@ -55,7 +55,7 @@ public class CircleOrbitTrapDistanceColorStrategy implements OrbitTrapColorStrat
         }
 
         minDists[x][y] = minDist;
-        return minDist == 0 ? Color.BLACK : settingsPanel.getColorPalette().interpolateToColor((float) -Math.log(minDist) * LOGARITHM_SUPPRESSION, true);
+        return minDist == 0 ? Color.BLACK : settingsPanel.getColorPalette().interpolateToColor(-Math.log(minDist) * LOGARITHM_SUPPRESSION, true);
     }
     
     @Override
@@ -69,12 +69,12 @@ public class CircleOrbitTrapDistanceColorStrategy implements OrbitTrapColorStrat
         }
 
         minDists[x][y] = minDist;
-        return minDist == 0 ? Color.BLACK : settingsPanel.getColorPalette().interpolateToColor((float) -Math.log(minDist) * LOGARITHM_SUPPRESSION, true);
+        return minDist == 0 ? Color.BLACK : settingsPanel.getColorPalette().interpolateToColor(-Math.log(minDist) * LOGARITHM_SUPPRESSION, true);
     }
 
     @Override
     public Color recalcColor(int x, int y) {
-        return minDists[x][y] == 0 ? Color.BLACK : settingsPanel.getColorPalette().interpolateToColor((float) -Math.log(minDists[x][y])*LOGARITHM_SUPPRESSION, true);
+        return minDists[x][y] == 0 ? Color.BLACK : settingsPanel.getColorPalette().interpolateToColor(-Math.log(minDists[x][y]) * LOGARITHM_SUPPRESSION, true);
     }
 
     @Override

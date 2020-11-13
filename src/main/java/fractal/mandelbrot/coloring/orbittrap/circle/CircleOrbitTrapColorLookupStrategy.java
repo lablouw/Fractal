@@ -7,6 +7,8 @@ package fractal.mandelbrot.coloring.orbittrap.circle;
 
 import fractal.common.Complex;
 import fractal.common.FractalEngine;
+import fractal.common.FractalRenderer;
+import fractal.common.Redrawable;
 import fractal.mandelbrot.RawGpuOrbitContainer;
 import fractal.mandelbrot.coloring.orbittrap.OrbitTrapColorStrategy;
 
@@ -17,10 +19,20 @@ import java.util.List;
  *
  * @author Lloyd
  */
-public class CircleOrbitTrapColorLookupStrategy implements OrbitTrapColorStrategy<CircleOrbitTrap> {
+public class CircleOrbitTrapColorLookupStrategy implements OrbitTrapColorStrategy<CircleOrbitTrap>, Redrawable {
 
-    private final CircleOrbitTrapColorLookupStrategySettingsPanel settingsPanel = new CircleOrbitTrapColorLookupStrategySettingsPanel();
-    
+    private final CircleOrbitTrapColorLookupStrategySettingsPanel settingsPanel = new CircleOrbitTrapColorLookupStrategySettingsPanel(this);
+
+    private final FractalRenderer fractalRenderer;
+    private final CircleOrbitTrap orbitTrap;
+
+    private double [][] minDists;
+
+    public CircleOrbitTrapColorLookupStrategy(FractalRenderer fractalRenderer, CircleOrbitTrap orbitTrap) {
+        this.fractalRenderer = fractalRenderer;
+        this.orbitTrap = orbitTrap;
+    }
+
     @Override
     public String getName() {
         return "Color Lookup";
@@ -28,6 +40,9 @@ public class CircleOrbitTrapColorLookupStrategy implements OrbitTrapColorStrateg
 
     @Override
     public void initForRender() {
+        int imageWidth = fractalRenderer.getImage().getBufferedImage().getWidth();
+        int imageHeight = fractalRenderer.getImage().getBufferedImage().getHeight();
+        minDists = new double[imageWidth][imageHeight];
     }
 
     @Override
@@ -40,10 +55,12 @@ public class CircleOrbitTrapColorLookupStrategy implements OrbitTrapColorStrateg
             }
         }
 
+        minDists[x][y] = minDist;
+
         if (minDist > orbitTrap.getRadius()) {
             return Color.BLACK;
         } else {
-            return settingsPanel.getColorPalette().interpolateToColor((float) (-minDist / orbitTrap.getRadius() / 2), false);
+            return settingsPanel.getColorPalette().interpolateToColor((-minDist / orbitTrap.getRadius() / 2), false);
         }
     }
 
@@ -57,21 +74,37 @@ public class CircleOrbitTrapColorLookupStrategy implements OrbitTrapColorStrateg
             }
         }
 
+        minDists[x][y] = minDist;
+
         if (minDist > orbitTrap.getRadius()) {
             return Color.BLACK;
         } else {
-            return settingsPanel.getColorPalette().interpolateToColor((float) (-minDist / orbitTrap.getRadius() / 2), false);
+            return settingsPanel.getColorPalette().interpolateToColor((-minDist / orbitTrap.getRadius() / 2), false);
         }
     }
 
     @Override
     public Color recalcColor(int x, int y) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (minDists[x][y] > orbitTrap.getRadius()) {
+            return Color.BLACK;
+        } else {
+            return settingsPanel.getColorPalette().interpolateToColor((-minDists[x][y] / orbitTrap.getRadius() / 2), false);
+        }
     }
 
     @Override
     public Component getSettingsComponent() {
         return settingsPanel;
+    }
+
+    @Override
+    public void redraw() {
+        for (int x = 0; x < fractalRenderer.getImage().getBufferedImage().getWidth(); x++) {
+            for (int y = 0; y < fractalRenderer.getImage().getBufferedImage().getHeight(); y++) {
+                fractalRenderer.getImage().setColor(x, y, orbitTrap.reCalcColor(x, y));
+            }
+        }
+        fractalRenderer.updateGui();
     }
     
 }

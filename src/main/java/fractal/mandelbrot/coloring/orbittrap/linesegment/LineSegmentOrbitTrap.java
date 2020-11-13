@@ -40,6 +40,7 @@ public class LineSegmentOrbitTrap extends OrbitTrap {
 
 		colorStrategies = new ArrayList<>();
 		colorStrategies.add(new LineSegmentOrbitTrapDistanceColorStrategy(fractalRenderer, this));
+		colorStrategies.add(new LineSegmentOrbitTrapOrthogonalProjectionColorStrategy(fractalRenderer, this));
 		activeColorStrategy = colorStrategies.get(0);
 
 		settingsDialog = new OrbitTrapSettingsDialog(this, colorStrategies);
@@ -133,4 +134,27 @@ public class LineSegmentOrbitTrap extends OrbitTrap {
 		}
 	}
 
+	public double getProjectedPosition(Complex c) {
+		if (vertical) {//Does not project onto line
+			if ((c1.i > c2.i && c.i > c1.i) || (c1.i < c2.i && c.i < c1.i)) {
+				return Double.MAX_VALUE;
+			}
+
+			if (c1.i > c2.i) {//projects onto line, c1->0, c2->1
+				return (c1.i-c.i) / (c1.i-c2.i);
+			} else {
+				return (c.i-c1.i) / (c2.i-c1.i);
+			}
+		}
+
+		//project point onto line
+		double m2 = -1 / m;
+		double r = (m*c1.r - m2*c.r + c.i - c1.i) / (m - m2);
+		if (r < c1.r || r > c2.r) { //Does not project onto line
+			return Double.MAX_VALUE;
+		}
+
+		return (r-c1.r) / (c2.r-c1.r);
+
+	}
 }

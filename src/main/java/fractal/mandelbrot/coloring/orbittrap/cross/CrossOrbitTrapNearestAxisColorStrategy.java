@@ -21,10 +21,14 @@ import java.util.List;
  */
 public class CrossOrbitTrapNearestAxisColorStrategy implements OrbitTrapColorStrategy<CrossOrbitTrap>, Redrawable {
 
-    private final CrossOrbitTrapNearestAxisColorStrategySettingsPanel settingsPanel = new CrossOrbitTrapNearestAxisColorStrategySettingsPanel();
+    private final CrossOrbitTrapNearestAxisColorStrategySettingsPanel settingsPanel = new CrossOrbitTrapNearestAxisColorStrategySettingsPanel(this);
     
     private final FractalRenderer fractalRenderer;
     private final CrossOrbitTrap orbitTrap;
+
+    private double [][] minDists;
+    private int [][] minDistsAxisNo;
+
     
     public CrossOrbitTrapNearestAxisColorStrategy(FractalRenderer fractalRenderer, CrossOrbitTrap orbitTrap) {
 		this.fractalRenderer = fractalRenderer;
@@ -38,7 +42,10 @@ public class CrossOrbitTrapNearestAxisColorStrategy implements OrbitTrapColorStr
 
     @Override
     public void initForRender() {
-        
+        int imageWidth = fractalRenderer.getImage().getBufferedImage().getWidth();
+        int imageHeight = fractalRenderer.getImage().getBufferedImage().getHeight();
+        minDists = new double[imageWidth][imageHeight];
+        minDistsAxisNo = new int[imageWidth][imageHeight];
     }
 
     @Override
@@ -57,6 +64,9 @@ public class CrossOrbitTrapNearestAxisColorStrategy implements OrbitTrapColorStr
                 axisNo = 2;
             }
         }
+
+        minDists[x][y] = minDist;
+        minDistsAxisNo[x][y] = axisNo;
 
         return getColor(axisNo, minDist);
     }
@@ -79,14 +89,17 @@ public class CrossOrbitTrapNearestAxisColorStrategy implements OrbitTrapColorStr
             }
         }
 
+        minDists[x][y] = minDist;
+        minDistsAxisNo[x][y] = axisNo;
+
         return getColor(axisNo, minDist);
     }
 
     private Color getColor(int axisNo, double minDist) {
         if (axisNo == 1 && minDist < settingsPanel.getAxis1MaxDistance()) {
-            return settingsPanel.colorPalette1.interpolateToColor((float) (minDist/settingsPanel.getAxis1MaxDistance()), false);
+            return settingsPanel.getAxis1ColorPalette().interpolateToColor(minDist/settingsPanel.getAxis1MaxDistance(), false);
         } else if (axisNo == 2 && minDist < settingsPanel.getAxis2MaxDistance()) {
-            return settingsPanel.colorPalette2.interpolateToColor((float) (minDist/settingsPanel.getAxis2MaxDistance()), false);
+            return settingsPanel.getAxis2ColorPalette().interpolateToColor(minDist/settingsPanel.getAxis2MaxDistance(), false);
         }
 
         return Color.BLACK;
@@ -94,7 +107,7 @@ public class CrossOrbitTrapNearestAxisColorStrategy implements OrbitTrapColorStr
 
     @Override
     public Color recalcColor(int x, int y) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return getColor(minDistsAxisNo[x][y], minDists[x][y]);
     }
 
     @Override
@@ -104,7 +117,12 @@ public class CrossOrbitTrapNearestAxisColorStrategy implements OrbitTrapColorStr
 
     @Override
     public void redraw() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        for (int x = 0; x < fractalRenderer.getImage().getBufferedImage().getWidth(); x++) {
+            for (int y = 0; y < fractalRenderer.getImage().getBufferedImage().getHeight(); y++) {
+                fractalRenderer.getImage().setColor(x, y, orbitTrap.reCalcColor(x, y));
+            }
+        }
+        fractalRenderer.updateGui();
     }
     
     

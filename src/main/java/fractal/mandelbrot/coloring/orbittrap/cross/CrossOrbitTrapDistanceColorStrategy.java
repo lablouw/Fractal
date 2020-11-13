@@ -12,7 +12,7 @@ import java.util.List;
 
 public class CrossOrbitTrapDistanceColorStrategy implements OrbitTrapColorStrategy<CrossOrbitTrap>, Redrawable {
 
-	private final CrossOrbitTrapDistanceColorStrategySettingsPanel settingsPanel = new CrossOrbitTrapDistanceColorStrategySettingsPanel();
+	private final CrossOrbitTrapDistanceColorStrategySettingsPanel settingsPanel = new CrossOrbitTrapDistanceColorStrategySettingsPanel(this);
 
 	private final FractalRenderer fractalRenderer;
 	private final CrossOrbitTrap orbitTrap;
@@ -46,7 +46,7 @@ public class CrossOrbitTrapDistanceColorStrategy implements OrbitTrapColorStrate
 			}
 		}
 		minDists[x][y] = minDist;
-		return minDist == 0 ? Color.BLACK : settingsPanel.getColorPalette().interpolateToColor((float) -Math.log(minDist) * LOGARITHM_SUPPRESSION, true);
+		return minDist == 0 ? Color.BLACK : settingsPanel.getColorPalette().interpolateToColor(-Math.log(minDist) * LOGARITHM_SUPPRESSION, true);
 	}
     
     @Override
@@ -60,12 +60,12 @@ public class CrossOrbitTrapDistanceColorStrategy implements OrbitTrapColorStrate
 		}
 
 		minDists[x][y] = minDist;
-		return minDist == 0 ? Color.BLACK : settingsPanel.getColorPalette().interpolateToColor((float) -Math.log(minDist) * LOGARITHM_SUPPRESSION, true);
+		return minDist == 0 ? Color.BLACK : settingsPanel.getColorPalette().interpolateToColor(-Math.log(minDist) * LOGARITHM_SUPPRESSION, true);
     }
 
 	@Override
 	public Color recalcColor(int x, int y) {
-		return minDists[x][y] == 0 ? Color.BLACK : settingsPanel.getColorPalette().interpolateToColor((float) -Math.log(minDists[x][y]) * LOGARITHM_SUPPRESSION, true);
+		return minDists[x][y] == 0 ? Color.BLACK : settingsPanel.getColorPalette().interpolateToColor(-Math.log(minDists[x][y]) * LOGARITHM_SUPPRESSION, true);
 	}
 
 	@Override

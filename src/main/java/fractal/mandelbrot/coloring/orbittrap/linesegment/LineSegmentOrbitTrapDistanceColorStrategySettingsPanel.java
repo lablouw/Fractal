@@ -6,6 +6,8 @@
 package fractal.mandelbrot.coloring.orbittrap.linesegment;
 
 import fractal.common.ColorPalette;
+import fractal.common.Redrawable;
+
 import java.awt.GridLayout;
 
 /**
@@ -14,13 +16,14 @@ import java.awt.GridLayout;
  */
 public class LineSegmentOrbitTrapDistanceColorStrategySettingsPanel extends javax.swing.JPanel {
     
-    ColorPalette colorPalette = new ColorPalette(null, false, null);
+    ColorPalette colorPalette;
 
     /**
      * Creates new form LineSegmentOrbitTrapDistanceColorStrategySettingsPanel
      */
-    public LineSegmentOrbitTrapDistanceColorStrategySettingsPanel() {
+    public LineSegmentOrbitTrapDistanceColorStrategySettingsPanel(Redrawable redrawable) {
         initComponents();
+        colorPalette = new ColorPalette(null, false, redrawable);
         jPanel1.setLayout(new GridLayout(1, 1));
         jPanel1.add(colorPalette.getRepresentativePanel());
     }
