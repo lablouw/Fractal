@@ -18,6 +18,9 @@ public class CrossOrbitTrapNearestAxisColorStrategySettingsPanel extends javax.s
     
     private ColorPalette colorPalette1;
     private ColorPalette colorPalette2;
+    
+    private double axis1MaxDistance = 0.01d;
+    private double axis2MaxDistance = 0.01d;
 
     /**
      * Creates new form CrossOrbitTrapDistanceColorStrategySettingsPanel
@@ -76,12 +79,22 @@ public class CrossOrbitTrapNearestAxisColorStrategySettingsPanel extends javax.s
         jLabel2.setText("Axis 2 Colour Pallete");
 
         jTextField1.setText("0.01");
+        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextField1KeyReleased(evt);
+            }
+        });
 
         jLabel3.setText("Maximum Distance from axis 1:");
 
         jLabel4.setText("Maximum Distance from axis 2:");
 
         jTextField2.setText("0.01");
+        jTextField2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextField2KeyReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -130,6 +143,20 @@ public class CrossOrbitTrapNearestAxisColorStrategySettingsPanel extends javax.s
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
+        try {
+            axis1MaxDistance = Double.parseDouble(jTextField1.getText());
+            System.out.println(axis1MaxDistance);
+        } catch (NumberFormatException ex) {}
+    }//GEN-LAST:event_jTextField1KeyReleased
+
+    private void jTextField2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyReleased
+         try {
+            axis2MaxDistance = Double.parseDouble(jTextField2.getText());
+            System.out.println(axis2MaxDistance);
+        } catch (NumberFormatException ex) {}
+    }//GEN-LAST:event_jTextField2KeyReleased
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
@@ -151,11 +178,11 @@ public class CrossOrbitTrapNearestAxisColorStrategySettingsPanel extends javax.s
     }
     
     public double getAxis1MaxDistance() {
-        return Double.parseDouble(jTextField1.getText());//TODO: Cache. Important!
+        return axis1MaxDistance;
     }
     
     public double getAxis2MaxDistance() {
-        return Double.parseDouble(jTextField2.getText());//TODO: Cache. Important!
+        return axis2MaxDistance;
     }
 
 }
