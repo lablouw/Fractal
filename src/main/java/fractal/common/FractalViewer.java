@@ -30,6 +30,7 @@ public class FractalViewer extends javax.swing.JFrame {
     private final FractalRenderer fractalRenderer;
     
     private Resolution activeResolution = Resolution.HD;
+    private BufferedImage baseImage;
 
     /**
      * Creates new form FractalViewer
@@ -100,6 +101,9 @@ public class FractalViewer extends javax.swing.JFrame {
         jXImagePanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jXImagePanel1.setStyle(org.jdesktop.swingx.JXImagePanel.Style.SCALED_KEEP_ASPECT_RATIO);
         jXImagePanel1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jXImagePanel1MouseDragged(evt);
+            }
             public void mouseMoved(java.awt.event.MouseEvent evt) {
                 jXImagePanel1MouseMoved(evt);
             }
@@ -349,29 +353,32 @@ public class FractalViewer extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private Complex newP1, newP2;
+//    private Complex newC1, newC;
+    private Point newP1, newP2;
     private void jXImagePanel1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jXImagePanel1MousePressed
         if (evt.getButton() == MouseEvent.BUTTON1) {
-            newP1 = fractalRenderer.getMapper().mapToComplex(evt.getX(), evt.getY(), jXImagePanel1);
+            newP1 = new Point(evt.getX(), evt.getY());
+            baseImage = (BufferedImage) jXImagePanel1.getImage();
         }
     }//GEN-LAST:event_jXImagePanel1MousePressed
 
     private void jXImagePanel1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jXImagePanel1MouseReleased
         if (evt.getButton() == MouseEvent.BUTTON1) {
-            newP2 = fractalRenderer.getMapper().mapToComplex(evt.getX(), evt.getY(), jXImagePanel1);
+            Complex newC1 = fractalRenderer.getMapper().mapToComplex(newP1.x, newP1.y, jXImagePanel1);
+            Complex newC2 = fractalRenderer.getMapper().mapToComplex(evt.getX(), evt.getY(), jXImagePanel1);
 
-            if (newP2.r < newP1.r) {
-                double temp = newP2.r;
-                newP2.r = newP1.r;
-                newP1.r = temp;
+            if (newC2.r < newC1.r) {
+                double temp = newC2.r;
+                newC2.r = newC1.r;
+                newC1.r = temp;
             }
-            if (newP2.i > newP1.i) {
-                double temp = newP2.i;
-                newP2.i = newP1.i;
-                newP1.i = temp;
+            if (newC2.i > newC1.i) {
+                double temp = newC2.i;
+                newC2.i = newC1.i;
+                newC1.i = temp;
             }
 
-            fractalRenderer.render(activeResolution.getWidth(), activeResolution.getHeight(), newP1, newP2);
+            fractalRenderer.render(activeResolution.getWidth(), activeResolution.getHeight(), newC1, newC2);
         } else if (evt.getButton() == MouseEvent.BUTTON2) {
             Complex clickLocation = fractalRenderer.getMapper().mapToComplex(evt.getX(), evt.getY(), jXImagePanel1);
             fractalRenderer.performSpecialClickAction(clickLocation);
@@ -474,6 +481,74 @@ public class FractalViewer extends javax.swing.JFrame {
         fractalRenderer.render(activeResolution.getWidth(), activeResolution.getHeight(), newTopLeft, newBottomRight);
         
     }//GEN-LAST:event_jXImagePanel1MouseWheelMoved
+
+    private void jXImagePanel1MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jXImagePanel1MouseDragged
+        
+//        double imageAspect = (double)fractalRenderer.getImage().getBufferedImage().getWidth()/(double)fractalRenderer.getImage().getBufferedImage().getHeight();
+//        
+//        Point p1 = newP1;
+//        Point p2 = new Point(evt.getX(), evt.getY());
+//        double marqueeAspect = Math.abs((double)(p2.x-p1.x) / (double)(p2.y-p1.y));
+//        
+//        if (p2.x > p1.x) {//dragging RIGHT
+//            if (p2.y > p1.y) {//dragging DOWN
+//                if (marqueeAspect > imageAspect) {//wide marquee, make taller
+//                    
+//                } else if (marqueeAspect < imageAspect) {
+//                    
+//                }
+//            } else if (p2.y < p1.y) {//dragging UP
+//                if (marqueeAspect > imageAspect) {//wide marquee, make taller
+//                     
+//                } else if (marqueeAspect < imageAspect) {
+//                    
+//                }
+//            }
+//        } else if (p2.x < p1.x) {//dragging LEFT
+//            if (p2.y > p1.y) {//dragging DOWN
+//                if (marqueeAspect > imageAspect) {//wide marquee, make taller
+//                    
+//                } else if (marqueeAspect < imageAspect) {
+//                    
+//                }
+//            } else if (p2.y < p1.y){//dragging UP
+//                if (marqueeAspect > imageAspect) {//wide marquee, make taller
+//                    
+//                } else if (marqueeAspect < imageAspect) {
+//                    
+//                }
+//            }
+//        }
+        
+        
+        
+//        Complex transientP2 = fractalRenderer.getMapper().mapToComplex(evt.getX(), evt.getY(), jXImagePanel1);
+//        
+//        Point p1 = fractalRenderer.getMapper().mapToImage(newP1);
+//        Point p2 = fractalRenderer.getMapper().mapToImage(transientP2);
+//        
+//        if (p2.x < p1.x) {
+//            int temp = p2.x;
+//            p2.x = p1.x;
+//            p1.x = temp;
+//        }
+//        if (p2.y < p1.y) {
+//            int temp = p2.y;
+//            p2.y = p1.y;
+//            p1.y = temp;
+//        }
+//        
+//        double marqueeAspect = (double)(p2.x-p1.x) / (double)(p2.y-p1.y);
+//        if (marqueeAspect < aspectRatio) {//wide marquee, make taller
+//            p2.x = (int) (p1.x + (p2.y-p1.y)*aspectRatio);
+//        } else if (marqueeAspect > aspectRatio) {
+//            p2.y = (int) (p1.y + (p2.x-p1.x)/aspectRatio);
+//        }
+        
+//        BufferedImage im = ImageUtils.deepCopy(baseImage);
+//        im.getGraphics().drawRect(p1.x, p1.y, p2.x-p1.x, p2.y-p1.y);
+//        jXImagePanel1.setImage(im);
+    }//GEN-LAST:event_jXImagePanel1MouseDragged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel colorOptionsPanel;

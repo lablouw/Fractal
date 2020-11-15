@@ -56,17 +56,19 @@ public abstract class OrbitTrap {
         private Complex p1;
         private Complex p2;
         private final JButton buttonToEnable;
-        private BufferedImage baseImage;
+        private final BufferedImage baseImage;
 
         private OrbitTrapDefiningMouseListener(JButton buttonToEnable) {
             this.buttonToEnable = buttonToEnable;
             this.baseImage = fractalRenderer.getFractalViewer().getImage();
         }
 
+        @Override
         public void mousePressed(MouseEvent e) {
             p1 = fractalRenderer.getMapper().mapToComplex(e.getX(), e.getY(), fractalRenderer.getFractalViewer().getImagePanel());
         }
 
+        @Override
         public void mouseReleased(MouseEvent e) {
             p2 = fractalRenderer.getMapper().mapToComplex(e.getX(), e.getY(), fractalRenderer.getFractalViewer().getImagePanel());
             fractalRenderer.getFractalViewer().getImagePanel().removeMouseListener(this);
@@ -85,16 +87,17 @@ public abstract class OrbitTrap {
                     fractalRenderer.getMapper().getBottomRight());
         }
 
+        @Override
         public void mouseDragged(MouseEvent e) {
             p2 = fractalRenderer.getMapper().mapToComplex(e.getX(), e.getY(), fractalRenderer.getFractalViewer().getImagePanel());
             setDefiningPoints(p1, p2);
             fractalRenderer.getFractalViewer().setImage(drawOrbitTrap(baseImage, fractalRenderer));
         }
 
-        public void mouseClicked(MouseEvent e) {}
-        public void mouseEntered(MouseEvent e) {}
-        public void mouseExited(MouseEvent e) {}
-        public void mouseMoved(MouseEvent e) {}
+        @Override public void mouseClicked(MouseEvent e) {}
+        @Override public void mouseEntered(MouseEvent e) {}
+        @Override public void mouseExited(MouseEvent e) {}
+        @Override public void mouseMoved(MouseEvent e) {}
     }
 
     public void setActiveColorStrategy(OrbitTrapColorStrategy colorStrategy) {
