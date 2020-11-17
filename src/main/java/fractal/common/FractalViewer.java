@@ -353,18 +353,16 @@ public class FractalViewer extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-//    private Complex newC1, newC;
-    private Point newP1, newP2;
+    private Complex newC1, newC2;
     private void jXImagePanel1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jXImagePanel1MousePressed
         if (evt.getButton() == MouseEvent.BUTTON1) {
-            newP1 = new Point(evt.getX(), evt.getY());
+            newC1 = fractalRenderer.getMapper().mapToComplex(evt.getX(), evt.getY(), jXImagePanel1);
             baseImage = (BufferedImage) jXImagePanel1.getImage();
         }
     }//GEN-LAST:event_jXImagePanel1MousePressed
 
     private void jXImagePanel1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jXImagePanel1MouseReleased
         if (evt.getButton() == MouseEvent.BUTTON1) {
-            Complex newC1 = fractalRenderer.getMapper().mapToComplex(newP1.x, newP1.y, jXImagePanel1);
             Complex newC2 = fractalRenderer.getMapper().mapToComplex(evt.getX(), evt.getY(), jXImagePanel1);
 
             if (newC2.r < newC1.r) {
@@ -483,44 +481,46 @@ public class FractalViewer extends javax.swing.JFrame {
     }//GEN-LAST:event_jXImagePanel1MouseWheelMoved
 
     private void jXImagePanel1MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jXImagePanel1MouseDragged
-        
-//        double imageAspect = (double)fractalRenderer.getImage().getBufferedImage().getWidth()/(double)fractalRenderer.getImage().getBufferedImage().getHeight();
-//        
-//        Point p1 = newP1;
-//        Point p2 = new Point(evt.getX(), evt.getY());
-//        double marqueeAspect = Math.abs((double)(p2.x-p1.x) / (double)(p2.y-p1.y));
-//        
-//        if (p2.x > p1.x) {//dragging RIGHT
-//            if (p2.y > p1.y) {//dragging DOWN
-//                if (marqueeAspect > imageAspect) {//wide marquee, make taller
-//                    
-//                } else if (marqueeAspect < imageAspect) {
-//                    
-//                }
-//            } else if (p2.y < p1.y) {//dragging UP
-//                if (marqueeAspect > imageAspect) {//wide marquee, make taller
-//                     
-//                } else if (marqueeAspect < imageAspect) {
-//                    
-//                }
-//            }
-//        } else if (p2.x < p1.x) {//dragging LEFT
-//            if (p2.y > p1.y) {//dragging DOWN
-//                if (marqueeAspect > imageAspect) {//wide marquee, make taller
-//                    
-//                } else if (marqueeAspect < imageAspect) {
-//                    
-//                }
-//            } else if (p2.y < p1.y){//dragging UP
-//                if (marqueeAspect > imageAspect) {//wide marquee, make taller
-//                    
-//                } else if (marqueeAspect < imageAspect) {
-//                    
-//                }
-//            }
-//        }
-        
-        
+
+//        Complex a = fractalRenderer.getMapper().mapToComplex(evt.getX(), evt.getY(), jXImagePanel1);
+//        Point b = fractalRenderer.getMapper().mapToImage(a);
+//        Complex c = fractalRenderer.getMapper().mapToComplex((int) b.getX(), (int) b.getY());
+//        System.out.println(a);
+//        System.out.println(b);
+//        System.out.println(c);
+
+
+
+        double imageAspect = (double)fractalRenderer.getImage().getBufferedImage().getWidth()/(double)fractalRenderer.getImage().getBufferedImage().getHeight();
+        newC2 = fractalRenderer.getMapper().mapToComplex(evt.getX(), evt.getY(), jXImagePanel1);
+
+        double marqueeAspect = Math.abs((newC2.r-newC1.r) / (newC2.i-newC1.i));
+
+        if (marqueeAspect > imageAspect) {//too wide
+            double newHeight = (newC2.r-newC1.r)/imageAspect;
+            newC2.i = newC1.i + newHeight * (newC2.i > newC1.i ? 1 : -1);
+//            System.out.println("newHeight="+newHeight * (newC2.i > newC1.i ? 1 : -1));
+        } else if (marqueeAspect < imageAspect) {//too tall
+            double newWidth = (newC2.i-newC1.i)*imageAspect;
+            newC2.r = newC1.r + newWidth * (newC2.r > newC1.r ? 1 : -1);
+//            System.out.println("newWidth="+newWidth * (newC2.r > newC1.r ? 1 : -1));
+        }
+
+        Point p1 = fractalRenderer.getMapper().mapToImage(newC1);
+        Point p2 = fractalRenderer.getMapper().mapToImage(newC2);
+
+
+//        BufferedImage im = ImageUtils.deepCopy(baseImage);
+//        im.getGraphics().drawRect(p1.x, p1.y, p2.x-p1.x, p2.y-p1.y);
+//        jXImagePanel1.setImage(im);
+
+
+
+
+
+
+
+
         
 //        Complex transientP2 = fractalRenderer.getMapper().mapToComplex(evt.getX(), evt.getY(), jXImagePanel1);
 //        

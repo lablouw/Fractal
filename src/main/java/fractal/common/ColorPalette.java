@@ -122,6 +122,7 @@ public class ColorPalette extends javax.swing.JDialog {
         //We want similar compression behaviour when x~0 as when x~1 but because x^g is not symmetric around y=-x+1,
         //it behaves differently for x~0 and g<1 than it does for x~1 and g>1.
         //g>1 and x~1 works fine but for g<1 and x~0 we get much more compression as x->0. Therefore, for g<1 we need to flip x^g around y=-x+1.
+        double a2 = a;
         if (gamma > 1) {
             a = Math.pow(a, gamma);
         } else if (gamma < 1) {
@@ -130,6 +131,11 @@ public class ColorPalette extends javax.swing.JDialog {
 
         //apply post-gamma phase
         a = (a + 1 - spectrumPhase) % 1;
+
+        //Floating point issue
+        if (a2 < 1 && a == 0) {
+            a = 1 - 10E-10;
+        }
 
         //apply cycles
         a = a * spectrumCycles;
