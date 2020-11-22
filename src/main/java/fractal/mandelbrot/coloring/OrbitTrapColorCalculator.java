@@ -16,6 +16,7 @@ import fractal.mandelbrot.coloring.orbittrap.cross.CrossOrbitTrap;
 import fractal.mandelbrot.coloring.orbittrap.infiniteline.InfiniteLineOrbitTrap;
 import fractal.mandelbrot.coloring.orbittrap.linesegment.LineSegmentOrbitTrap;
 import fractal.mandelbrot.coloring.orbittrap.OrbitTrap;
+import fractal.mandelbrot.coloring.orbittrap.imagelookup.ImageLookupOrbitTrap;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,7 +45,8 @@ public class OrbitTrapColorCalculator implements ColorCalculator {
             new CircleOrbitTrap(fractalRenderer),
             new InfiniteLineOrbitTrap(fractalRenderer),
             new LineSegmentOrbitTrap(fractalRenderer),
-            new CrossOrbitTrap(fractalRenderer)
+            new CrossOrbitTrap(fractalRenderer),
+            new ImageLookupOrbitTrap(fractalRenderer)
         };
         
         initSettingsPanel();
