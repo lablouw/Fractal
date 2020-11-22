@@ -64,13 +64,7 @@ public class ImageLookupOrbitTrapLookupColorStrategy implements OrbitTrapColorSt
                 int imgX = (int) (posOnImage.getFirst() * settingsPanel.getTrapImage().getWidth());
                 int imgY = (int) (posOnImage.getSecond() * settingsPanel.getTrapImage().getHeight());
                 
-                Color c = Color.WHITE;
-                try {
-                    c = new Color(settingsPanel.getTrapImage().getRGB(imgX, imgY));
-                } catch (java.lang.ArrayIndexOutOfBoundsException e) {
-                    System.out.println(imgX+"/");
-                }
-                return c;
+                return new Color(settingsPanel.getTrapImage().getRGB(imgX, imgY));
             }
         }
         
