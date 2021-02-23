@@ -456,8 +456,8 @@ public class FractalViewer extends javax.swing.JFrame {
         int scaledImageHeight = (int) (jXImagePanel1.getImage().getHeight(null) * scaleRatio);
         int xSub = (jXImagePanel1.getWidth() - scaledImageWidth) / 2;
         int ySub = (jXImagePanel1.getHeight() - scaledImageHeight) / 2;
-        double relativeX = (double) ((evt.getX() - xSub)) / scaleRatio;
-        double relativeY = imageHeight - (double) ((evt.getY() - ySub)) / scaleRatio;
+        double relativeX = (double) (evt.getX() - xSub) / scaleRatio;
+        double relativeY = imageHeight - (double) (evt.getY() - ySub) / scaleRatio;
         
         double fracRight = relativeX/(double)fractalRenderer.getImage().getBufferedImage().getWidth();
         double fracTop = relativeY/(double)fractalRenderer.getImage().getBufferedImage().getHeight();

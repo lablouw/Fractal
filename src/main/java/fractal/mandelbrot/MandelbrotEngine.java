@@ -6,10 +6,9 @@ package fractal.mandelbrot;
 
 import com.aparapi.Range;
 import com.aparapi.device.Device;
-import com.aparapi.device.OpenCLDevice;
 import fractal.common.Complex;
 import fractal.common.FractalEngine;
-import fractal.common.Mappers.Mapper;
+import fractal.common.mappers.Mapper;
 import fractal.common.Pair;
 import java.awt.GridLayout;
 import java.util.ArrayList;

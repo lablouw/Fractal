@@ -32,18 +32,6 @@ public class Pair<T1,T2>
         return o2;
     }
 
-    public void setFirst(T1 first)
-    {
-        this.o1 = first;
-    }
-
-    public void setSecond(T2 second)
-    {
-        this.o2 = second;
-    }
-
-
-
     public boolean equals(Pair<T1,T2> other)
     {
         return o1.equals(other.getFirst()) && o2.equals(other.getSecond());

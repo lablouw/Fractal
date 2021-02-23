@@ -4,8 +4,8 @@
  */
 package fractal.common;
 
-import fractal.common.Mappers.LinearMapper;
-import fractal.common.Mappers.Mapper;
+import fractal.common.mappers.LinearMapper;
+import fractal.common.mappers.Mapper;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridLayout;
@@ -50,9 +50,6 @@ public abstract class FractalRenderer<T extends FractalEngine> {
     }
 
     public Mapper getMapper() {
-        if (mapper == null && fractalEngine != null) {
-        	mapper = new LinearMapper(fractalEngine.getDefaultView().getFirst(), fractalEngine.getDefaultView().getSecond(), imageWidth, imageHeight);
-        }
         return mapper;
     }
     
@@ -76,7 +73,7 @@ public abstract class FractalRenderer<T extends FractalEngine> {
         return synchronizedBufferedImage;
     }
 
-    public void render(final int width, final int height, Complex p1, Complex p2) {
+    public void render(final int width, final int height, Complex topLeft, Complex bottomRight) {
         stopRendering();
         this.imageWidth = width;
         this.imageHeight = height;
@@ -86,14 +83,14 @@ public abstract class FractalRenderer<T extends FractalEngine> {
 
         //fix aspect ratio if required
         double imageAspect = (double) width / (double) height;
-        double complexAspect = (p2.r - p1.r) / (p2.i - p1.i);
+        double complexAspect = (bottomRight.r - topLeft.r) / (bottomRight.i - topLeft.i);
         if (complexAspect > imageAspect) {
-            p1.i = p2.i - Math.abs(p2.r - p1.r) / imageAspect;
+            topLeft.i = bottomRight.i - Math.abs(bottomRight.r - topLeft.r) / imageAspect;
         } else if (imageAspect > complexAspect) {
-            p2.r = p1.r + Math.abs(p2.i - p1.i) * imageAspect;
+            bottomRight.r = topLeft.r + Math.abs(bottomRight.i - topLeft.i) * imageAspect;
         }
 
-        mapper = new LinearMapper(p1, p2, width, height);
+        mapper = new LinearMapper(topLeft, bottomRight, width, height);
 
         new Thread(new Runnable() {
             @Override

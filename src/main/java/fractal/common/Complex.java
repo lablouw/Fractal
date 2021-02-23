@@ -13,6 +13,7 @@ public class Complex
     public double r=0, i=0;
     private static final double EPSILON = 1E-15;
     public static final Complex ONE = new Complex(1, 0);
+    public static final Complex ZERO = new Complex(0, 0);
 
     public Complex(double r, double i) {
         this.r = r;
