@@ -52,6 +52,8 @@ public class JuliaCalculatorCPU implements Runnable {
                 juliaRenderer.enginePerformedCalculation(points, orbits);
             }
         } else {
+            double xStep = Math.abs(juliaRenderer.getMapper().getRStep());
+            double yStep = Math.abs(juliaRenderer.getMapper().getIStep());
             double aaXStep = xStep / (double) subSamples;
             double aaYStep = yStep / (double) subSamples;
             int xSteps, ySteps;
