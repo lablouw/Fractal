@@ -56,7 +56,7 @@ public class MandelbrotCalculatorGPU implements Runnable {
 
     @Override
     public void run() {
-        if (mandelbrotRenderer.getAA() == Antialiasable.NONE) {
+        if (mandelbrotRenderer.getSubSamples() == Antialiasable.NONE) {
             xOffset = subImageWidth * roundNumber;
             if (xOffset > imageWidth) return;// we might overshoot because of **
             Range range = Range.create(subImageWidth * imageHeight);

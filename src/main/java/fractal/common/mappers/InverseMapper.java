@@ -21,6 +21,6 @@ public class InverseMapper extends Mapper {
 
 	@Override
 	public Complex mapToComplex(int x, int y) {
-		return null;
+		return new Complex(1/(topLeft.r + rStep * x), 1/(topLeft.i + iStep * y));
 	}
 }

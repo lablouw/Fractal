@@ -12,6 +12,6 @@ public interface Antialiasable
 {
     int NONE = 1;
 
-    int getAA();
-    void setAA(int aa);
+    int getSubSamples();
+    void setSubSamples(int subSamples);
 }

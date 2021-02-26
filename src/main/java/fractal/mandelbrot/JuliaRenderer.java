@@ -167,12 +167,12 @@ public class JuliaRenderer extends FractalRenderer<JuliaEngine> implements Antia
     }
 
     @Override
-    public int getAA() {
+    public int getSubSamples() {
         return aa;
     }
 
     @Override
-    public void setAA(int aa) {
+    public void setSubSamples(int aa) {
         this.aa = aa;
     }
 

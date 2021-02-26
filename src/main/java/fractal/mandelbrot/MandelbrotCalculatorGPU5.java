@@ -12,7 +12,6 @@ import com.aparapi.device.OpenCLDevice;
 import fractal.common.Antialiasable;
 import fractal.common.Complex;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -67,7 +66,7 @@ public class MandelbrotCalculatorGPU5 implements Runnable {
 
     @Override
     public void run() {
-        if (mandelbrotRenderer.getAA() == Antialiasable.NONE) {
+        if (mandelbrotRenderer.getSubSamples() == Antialiasable.NONE) {
             for (xOffset = 0; xOffset < imageWidth; xOffset += subImageWidth) {
                 for (yOffset = 0; yOffset < imageHeight; yOffset += subImageHeight) {
                     if (stopped) {

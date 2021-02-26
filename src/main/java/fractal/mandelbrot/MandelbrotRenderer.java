@@ -235,12 +235,12 @@ public class MandelbrotRenderer extends FractalRenderer<MandelbrotEngine> implem
     }
 
     @Override
-    public int getAA() {
+    public int getSubSamples() {
         return aa;
     }
 
     @Override
-    public void setAA(int aa) {
+    public void setSubSamples(int aa) {
         this.aa = aa;
     }
 

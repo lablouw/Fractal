@@ -57,7 +57,7 @@ public class MandelbrotCalculatorGPU2 implements Runnable {
 
     @Override
     public void run() {
-        if (mandelbrotRenderer.getAA() == Antialiasable.NONE) {
+        if (mandelbrotRenderer.getSubSamples() == Antialiasable.NONE) {
             
             for (xOffset = 0; xOffset < imageWidth; xOffset += subImageWidth) {
                 for (yOffset = 0; yOffset < imageHeight; yOffset += subImageHeight){

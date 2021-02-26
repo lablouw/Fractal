@@ -22,21 +22,21 @@ public class JuliaCalculatorCPU implements Runnable {
     private final int coreIndex;
     private boolean stopped = false;
     private final JuliaRenderer juliaRenderer;
-    private final int aa;
+    private final int subSamples;
     private final int imageWidth;
     private final int imageHeight;
 
     public JuliaCalculatorCPU(int coreIndex, JuliaRenderer juliaRenderer) {
         this.coreIndex = coreIndex;
         this.juliaRenderer = juliaRenderer;
-        this.aa = juliaRenderer.getAA();
+        this.subSamples = juliaRenderer.getSubSamples();
         this.imageWidth = juliaRenderer.getImage().getBufferedImage().getWidth();
         this.imageHeight = juliaRenderer.getImage().getBufferedImage().getHeight();
     }
 
     @Override
     public void run() {
-        if (aa == Antialiasable.NONE) {
+        if (subSamples == Antialiasable.NONE) {
             for (int x = coreIndex; x < imageWidth; x += numCores) {
                 List<List<Complex>> orbits = new ArrayList<>(imageHeight);
                 List<Point> points = new ArrayList<>(imageWidth);
@@ -52,10 +52,8 @@ public class JuliaCalculatorCPU implements Runnable {
                 juliaRenderer.enginePerformedCalculation(points, orbits);
             }
         } else {
-            double xStep = Math.abs(juliaRenderer.getMapper().getRStep());
-            double yStep = Math.abs(juliaRenderer.getMapper().getIStep());
-            double aaXStep = xStep / (double) aa;
-            double aaYStep = yStep / (double) aa;
+            double aaXStep = xStep / (double) subSamples;
+            double aaYStep = yStep / (double) subSamples;
             int xSteps, ySteps;
             for (int x = coreIndex; x < imageWidth; x += numCores) {
                 for (int y = 0; y < imageHeight; y++) {
@@ -65,9 +63,9 @@ public class JuliaCalculatorCPU implements Runnable {
                     int colorB = 0;
                     List<Complex> repOrbit = null;
                     xSteps = 0;
-                    for (double r = c.r - aaXStep * (aa - 1) / 2; xSteps < aa; r += aaXStep) {
+                    for (double r = c.r - aaXStep * (subSamples - 1) / 2; xSteps < subSamples; r += aaXStep) {
                         ySteps = 0;
-                        for (double i = c.i - aaYStep * (aa - 1) / 2; ySteps < aa; i += aaYStep) {
+                        for (double i = c.i - aaYStep * (subSamples - 1) / 2; ySteps < subSamples; i += aaYStep) {
                             Complex aaStep = new Complex(r, i);
                             List<Complex> orbit = juliaRenderer.getFractalEngine().calcOrbit(aaStep);
                             if (aaStep.equals(c)) {
@@ -87,9 +85,9 @@ public class JuliaCalculatorCPU implements Runnable {
                     if (repOrbit == null) {
                         repOrbit = juliaRenderer.getFractalEngine().calcOrbit(c);
                     }
-                    colorR = colorR / (aa * aa);
-                    colorG = colorG / (aa * aa);
-                    colorB = colorB / (aa * aa);
+                    colorR = colorR / (subSamples * subSamples);
+                    colorG = colorG / (subSamples * subSamples);
+                    colorB = colorB / (subSamples * subSamples);
                     juliaRenderer.enginePerformedCalculation(x, y, repOrbit, new Color(colorR, colorG, colorB));
                 }
             }

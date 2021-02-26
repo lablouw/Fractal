@@ -98,7 +98,7 @@ public class ImageLookupOrbitTrap extends OrbitTrap {
         double posR = (c.r-c1.r)/(c2.r-c1.r);
         double posI = (c.i-c1.i)/(c2.i-c1.i);
         
-        return new Pair<Double, Double>(posR, posI);
+        return new Pair<>(posR, posI);
     }
     
 }

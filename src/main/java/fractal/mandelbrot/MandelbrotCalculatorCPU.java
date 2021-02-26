@@ -22,21 +22,21 @@ public class MandelbrotCalculatorCPU implements Runnable {
     private final int coreIndex;
     private boolean stopped = false;
     private final MandelbrotRenderer mandelbrotRenderer;
-    private final int aa;
+    private final int subSamples;
     private final int imageWidth;
     private final int imageHeight;
 
     public MandelbrotCalculatorCPU(int coreIndex, MandelbrotRenderer mandelbrotRenderer) {
         this.coreIndex = coreIndex;
         this.mandelbrotRenderer = mandelbrotRenderer;
-        this.aa = mandelbrotRenderer.getAA();
+        this.subSamples = mandelbrotRenderer.getSubSamples();
         this.imageWidth = mandelbrotRenderer.getImage().getBufferedImage().getWidth();
         this.imageHeight = mandelbrotRenderer.getImage().getBufferedImage().getHeight();
     }
     
     @Override
     public void run() {
-        if (aa == Antialiasable.NONE) {
+        if (subSamples == Antialiasable.NONE) {
             for (int x = coreIndex; x < imageWidth; x += numCores) {
                 List<List<Complex>> orbits = new ArrayList<>(imageHeight);
                 List<Point> points = new ArrayList<>(imageWidth);
@@ -54,8 +54,8 @@ public class MandelbrotCalculatorCPU implements Runnable {
         } else {
             double xStep = Math.abs(mandelbrotRenderer.getMapper().getRStep());
             double yStep = Math.abs(mandelbrotRenderer.getMapper().getIStep());
-            double aaXStep = xStep / (double) aa;
-            double aaYStep = yStep / (double) aa;
+            double aaXStep = xStep / (double) subSamples;
+            double aaYStep = yStep / (double) subSamples;
             int xSteps, ySteps;
             for (int x = coreIndex; x < imageWidth; x += numCores) {
                 for (int y = 0; y < imageHeight; y++) {
@@ -65,9 +65,9 @@ public class MandelbrotCalculatorCPU implements Runnable {
                     int colorB = 0;
                     List<Complex> representitiveOrbit = null;
                     xSteps = 0;
-                    for (double r = c.r - aaXStep * (aa - 1) / 2; xSteps < aa; r += aaXStep) {
+                    for (double r = c.r - aaXStep * (subSamples - 1) / 2; xSteps < subSamples; r += aaXStep) {
                         ySteps = 0;
-                        for (double i = c.i - aaYStep * (aa - 1) / 2; ySteps < aa; i += aaYStep) {
+                        for (double i = c.i - aaYStep * (subSamples - 1) / 2; ySteps < subSamples; i += aaYStep) {
                             Complex aaStep = new Complex(r, i);
                             List<Complex> orbit = mandelbrotRenderer.getFractalEngine().calcOrbit(aaStep);
                             if (aaStep.equals(c)) {
@@ -87,9 +87,9 @@ public class MandelbrotCalculatorCPU implements Runnable {
                     if (representitiveOrbit == null) {
                         representitiveOrbit = mandelbrotRenderer.getFractalEngine().calcOrbit(c);
                     }
-                    colorR = colorR / (aa * aa);
-                    colorG = colorG / (aa * aa);
-                    colorB = colorB / (aa * aa);
+                    colorR = colorR / (subSamples * subSamples);
+                    colorG = colorG / (subSamples * subSamples);
+                    colorB = colorB / (subSamples * subSamples);
                     mandelbrotRenderer.enginePerformedCalculation(x, y, representitiveOrbit, new Color(colorR, colorG, colorB));
                 }
             }

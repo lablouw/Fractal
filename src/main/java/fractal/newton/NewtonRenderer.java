@@ -238,12 +238,12 @@ public class NewtonRenderer extends FractalRenderer<NewtonEngine> implements Ant
     }
     
     @Override
-    public int getAA() {
+    public int getSubSamples() {
         return aa;
     }
 
     @Override
-    public void setAA(int aa) {
+    public void setSubSamples(int aa) {
         this.aa = aa;
     }
     

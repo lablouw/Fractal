@@ -54,7 +54,7 @@ public class MandelbrotCalculatorGPU4 implements Runnable {
 
     @Override
     public void run() {
-        if (mandelbrotRenderer.getAA() == Antialiasable.NONE) {
+        if (mandelbrotRenderer.getSubSamples() == Antialiasable.NONE) {
             for (xOffset = 0; xOffset < imageWidth; xOffset += mandelbrotEngine.getSubImageWidth()) {
                 for (yOffset = 0; yOffset < imageHeight; yOffset += mandelbrotEngine.getSubImageHeight()) {
                     mandelbrotEngine.doRunGPU(xOffset, yOffset, mandelbrotRenderer.getMapper(), 0, 0);
@@ -65,24 +65,27 @@ public class MandelbrotCalculatorGPU4 implements Runnable {
                 }
             }
         } else {
-            int aa = mandelbrotRenderer.getAA();
+            int subSamples = mandelbrotRenderer.getSubSamples();
             double rStep = Math.abs(mandelbrotRenderer.getMapper().getRStep());
             double iStep = Math.abs(mandelbrotRenderer.getMapper().getIStep());
-            double aaRStep = rStep / (double) aa;
-            double aaIStep = iStep / (double) aa;
+            double aaRStep = rStep / (double) subSamples;
+            double aaIStep = iStep / (double) subSamples;
 
-            double[] aaROffsets = new double[aa];
-            double[] aaIOffsets = new double[aa];
-            for (int i = 0; i < aa; i++) {
+            double[] aaROffsets = new double[subSamples];
+            double[] aaIOffsets = new double[subSamples];
+            for (int i = 0; i < subSamples; i++) {
                 aaROffsets[i] = i*aaRStep - rStep/2;
                 aaIOffsets[i] = i*aaIStep - iStep/2;
             }
 
             for (xOffset = 0; xOffset < imageWidth; xOffset += mandelbrotEngine.getSubImageWidth()) {
                 for (yOffset = 0; yOffset < imageHeight; yOffset += mandelbrotEngine.getSubImageHeight()) {
+                    int a = 1;
                     preAAColors = new List[mandelbrotEngine.getSubImageWidth()][mandelbrotEngine.getSubImageHeight()];
                     for (double aaROffset : aaROffsets) {
                         for (double aaIOffset : aaIOffsets) {
+                            System.out.println("Round "+a+" of "+aaROffsets.length*aaIOffsets.length);
+                            a++;
 
                             mandelbrotEngine.doRunGPU(xOffset, yOffset, mandelbrotRenderer.getMapper(), aaROffset, aaIOffset);
                             if (stopped) {
@@ -144,7 +147,7 @@ public class MandelbrotCalculatorGPU4 implements Runnable {
                     } else {
                         Color c = mandelbrotRenderer.getActiveColorCalculator().calcColor(x + xOffset, y + yOffset, mandelbrotEngine.getLastOrbitPoint(x, y), mandelbrotEngine.getOrbitLength(x, y), mandelbrotEngine);
                         if (preAAColors[x][y] == null) {
-                            preAAColors[x][y] = new ArrayList<>(mandelbrotRenderer.getAA()*mandelbrotRenderer.getAA());
+                            preAAColors[x][y] = new ArrayList<>(mandelbrotRenderer.getSubSamples()*mandelbrotRenderer.getSubSamples());
                         }
                         preAAColors[x][y].add(c);
                     }
@@ -206,7 +209,7 @@ public class MandelbrotCalculatorGPU4 implements Runnable {
                         } else {//Save color for later averaging
                             Color c = mandelbrotRenderer.getActiveColorCalculator().calcColor(x + xOffset, y + yOffset, rawGpuOrbitContainer, orbitStartIndex, orbitLength, mandelbrotEngine);
                             if (preAAColors[x][y] == null) {
-                                preAAColors[x][y] = new ArrayList<>(mandelbrotRenderer.getAA()*mandelbrotRenderer.getAA());
+                                preAAColors[x][y] = new ArrayList<>(mandelbrotRenderer.getSubSamples()*mandelbrotRenderer.getSubSamples());
                             }
                             preAAColors[x][y].add(c);
                         }

@@ -426,7 +426,7 @@ public class FractalViewer extends javax.swing.JFrame {
 
     private void jSpinner4StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner4StateChanged
         if (fractalRenderer instanceof Antialiasable) {
-            ((Antialiasable) fractalRenderer).setAA((Integer) jSpinner4.getValue());
+            ((Antialiasable) fractalRenderer).setSubSamples((Integer) jSpinner4.getValue());
         }
     }//GEN-LAST:event_jSpinner4StateChanged
 
