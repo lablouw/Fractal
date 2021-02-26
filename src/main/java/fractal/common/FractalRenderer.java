@@ -50,6 +50,9 @@ public abstract class FractalRenderer<T extends FractalEngine> {
     }
 
     public Mapper getMapper() {
+        if (mapper == null && fractalEngine != null) {
+            mapper = new LinearMapper(fractalEngine.getDefaultView().getFirst(), fractalEngine.getDefaultView().getSecond(), imageWidth, imageHeight);
+        }
         return mapper;
     }
     

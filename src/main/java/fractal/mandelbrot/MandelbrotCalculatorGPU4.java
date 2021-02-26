@@ -57,7 +57,7 @@ public class MandelbrotCalculatorGPU4 implements Runnable {
         if (mandelbrotRenderer.getSubSamples() == Antialiasable.NONE) {
             for (xOffset = 0; xOffset < imageWidth; xOffset += mandelbrotEngine.getSubImageWidth()) {
                 for (yOffset = 0; yOffset < imageHeight; yOffset += mandelbrotEngine.getSubImageHeight()) {
-                    mandelbrotEngine.doRunGPU(xOffset, yOffset, mandelbrotRenderer.getMapper(), 0, 0);
+                    mandelbrotEngine.doRunGPU(xOffset, yOffset, mandelbrotRenderer.getMapper(), 0, 0, Antialiasable.NONE);
                     if (stopped) {
                         return;
                     }
@@ -66,33 +66,16 @@ public class MandelbrotCalculatorGPU4 implements Runnable {
             }
         } else {
             int subSamples = mandelbrotRenderer.getSubSamples();
-            double rStep = Math.abs(mandelbrotRenderer.getMapper().getRStep());
-            double iStep = Math.abs(mandelbrotRenderer.getMapper().getIStep());
-            double aaRStep = rStep / (double) subSamples;
-            double aaIStep = iStep / (double) subSamples;
-
-            double[] aaROffsets = new double[subSamples];
-            double[] aaIOffsets = new double[subSamples];
-            for (int i = 0; i < subSamples; i++) {
-                aaROffsets[i] = i*aaRStep - rStep/2;
-                aaIOffsets[i] = i*aaIStep - iStep/2;
-            }
-
             for (xOffset = 0; xOffset < imageWidth; xOffset += mandelbrotEngine.getSubImageWidth()) {
                 for (yOffset = 0; yOffset < imageHeight; yOffset += mandelbrotEngine.getSubImageHeight()) {
-                    int a = 1;
                     preAAColors = new List[mandelbrotEngine.getSubImageWidth()][mandelbrotEngine.getSubImageHeight()];
-                    for (double aaROffset : aaROffsets) {
-                        for (double aaIOffset : aaIOffsets) {
-                            System.out.println("Round "+a+" of "+aaROffsets.length*aaIOffsets.length);
-                            a++;
-
-                            mandelbrotEngine.doRunGPU(xOffset, yOffset, mandelbrotRenderer.getMapper(), aaROffset, aaIOffset);
+                    for (double xSubSamplePos = 0; xSubSamplePos < subSamples; xSubSamplePos++) {
+                        for (double ySubSamplePos = 0; ySubSamplePos < subSamples; ySubSamplePos++) {
+                            mandelbrotEngine.doRunGPU(xOffset, yOffset, mandelbrotRenderer.getMapper(), xSubSamplePos, ySubSamplePos, subSamples);
                             if (stopped) {
                                 return;
                             }
                             doPostProcess(xOffset, yOffset, true);
-
                         }
                     }
                 }

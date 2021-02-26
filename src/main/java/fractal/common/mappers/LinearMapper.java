@@ -14,12 +14,17 @@ import java.awt.Point;
  */
 public class LinearMapper extends Mapper {
 
+    private double rStep; //horizontal distance per pixel
+    private double iStep; //vertical distance per pixel
+
     public LinearMapper(Complex topLeft, Complex bottomRight, int width, int height) {
         super(topLeft, bottomRight, width, height);
+        rStep = (bottomRight.r - topLeft.r) / (double) width;
+        iStep = (bottomRight.i - topLeft.i) / (double) height;
     }
 
     @Override
-    public Complex mapToComplex(int x, int y) {
+    public Complex mapToComplex(double x, double y) {
         return new Complex(topLeft.r + rStep * x, topLeft.i + iStep * y);
     }
 

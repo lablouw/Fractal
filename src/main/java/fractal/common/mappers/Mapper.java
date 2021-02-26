@@ -17,8 +17,6 @@ import java.awt.Point;
 public abstract class Mapper {
     final Complex topLeft;
     final Complex bottomRight;
-    final double rStep; //horizontal distance per pixel
-    final double iStep; //vertical distance per pixel
     private final int width;
     private final int height;
 
@@ -27,13 +25,11 @@ public abstract class Mapper {
         this.bottomRight = bottomRight;
         this.width = width;
         this.height = height;
-        this.rStep = (bottomRight.r - topLeft.r) / (double) width;
-        this.iStep = (bottomRight.i - topLeft.i) / (double) height;
     }
 
     public abstract Point mapToImage(Complex c);
 
-    public abstract Complex mapToComplex(int x, int y);
+    public abstract Complex mapToComplex(double x, double y);
 
     /**
      * Use if the x and y coordinates are from a scaled image (i.e. mouse position) rather than absolute/exact.
@@ -65,12 +61,4 @@ public abstract class Mapper {
         return width;
     }
 
-    public double getRStep() {
-        return rStep;
-    }
-
-    public double getIStep() {
-        return iStep;
-    }
-    
 }

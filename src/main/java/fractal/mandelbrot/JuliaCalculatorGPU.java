@@ -65,35 +65,35 @@ public class JuliaCalculatorGPU implements Runnable {
                 }
             }
         } else {
-            int subSamples = juliaRenderer.getSubSamples();
-            double rStep = Math.abs(juliaRenderer.getMapper().getRStep());
-            double iStep = Math.abs(juliaRenderer.getMapper().getIStep());
-            double aaRStep = rStep / (double) subSamples;
-            double aaIStep = iStep / (double) subSamples;
-
-            double[] aaROffsets = new double[subSamples];
-            double[] aaIOffsets = new double[subSamples];
-            for (int i = 0; i < subSamples; i++) {
-                aaROffsets[i] = i*aaRStep - rStep/2;
-                aaIOffsets[i] = i*aaIStep - iStep/2;
-            }
-
-            for (xOffset = 0; xOffset < imageWidth; xOffset += juliaEngine.getSubImageWidth()) {
-                for (yOffset = 0; yOffset < imageHeight; yOffset += juliaEngine.getSubImageHeight()) {
-                    preAAColors = new List[juliaEngine.getSubImageWidth()][juliaEngine.getSubImageHeight()];
-                    for (double aaROffset : aaROffsets) {
-                        for (double aaIOffset : aaIOffsets) {
-
-                            juliaEngine.doRunGPU(xOffset, yOffset, juliaRenderer.getMapper(), aaROffset, aaIOffset);
-                            if (stopped) {
-                                return;
-                            }
-                            doPostProcess(xOffset, yOffset, true);
-
-                        }
-                    }
-                }
-            }
+//            int subSamples = juliaRenderer.getSubSamples();
+//            double rStep = Math.abs(juliaRenderer.getMapper().getRStep());
+//            double iStep = Math.abs(juliaRenderer.getMapper().getIStep());
+//            double aaRStep = rStep / (double) subSamples;
+//            double aaIStep = iStep / (double) subSamples;
+//
+//            double[] aaROffsets = new double[subSamples];
+//            double[] aaIOffsets = new double[subSamples];
+//            for (int i = 0; i < subSamples; i++) {
+//                aaROffsets[i] = i*aaRStep - rStep/2;
+//                aaIOffsets[i] = i*aaIStep - iStep/2;
+//            }
+//
+//            for (xOffset = 0; xOffset < imageWidth; xOffset += juliaEngine.getSubImageWidth()) {
+//                for (yOffset = 0; yOffset < imageHeight; yOffset += juliaEngine.getSubImageHeight()) {
+//                    preAAColors = new List[juliaEngine.getSubImageWidth()][juliaEngine.getSubImageHeight()];
+//                    for (double aaROffset : aaROffsets) {
+//                        for (double aaIOffset : aaIOffsets) {
+//
+//                            juliaEngine.doRunGPU(xOffset, yOffset, juliaRenderer.getMapper(), aaROffset, aaIOffset);
+//                            if (stopped) {
+//                                return;
+//                            }
+//                            doPostProcess(xOffset, yOffset, true);
+//
+//                        }
+//                    }
+//                }
+//            }
         }
 
     }
