@@ -192,13 +192,14 @@ public class MandelbrotEngine implements FractalEngine {
             mandelbrotGPUKernelFast.initForRender(subImageWidth, subImageHeight, maxIter, bailoutSquared, perterbation);
         }
     }
-    public void doRunGPU(int xOffset, int yOffset, Mapper mapper, double aaROffset, double aaIOffset) {
+
+    public void doRunGPU(int xOffset, int yOffset, Mapper mapper, double xSubSamplePos, double ySubSamplePos, int subSamples) {
         if (useGPUFull) {
-            mandelbrotGPUKernelFull.initArrays(xOffset, yOffset, mapper, aaROffset, aaIOffset);
+            mandelbrotGPUKernelFull.initArrays(xOffset, yOffset, mapper, xSubSamplePos, ySubSamplePos, subSamples);
             Range range = Range.create2D(mandelbrotGPUKernelFull.getSubImageWidth(), mandelbrotGPUKernelFull.getSubImageHeight());
             mandelbrotGPUKernelFull.execute(range);
         } else if (useGPUFast) {
-            mandelbrotGPUKernelFast.initArrays(xOffset, yOffset, mapper, aaROffset, aaIOffset);
+            mandelbrotGPUKernelFast.initArrays(xOffset, yOffset, mapper, xSubSamplePos, ySubSamplePos, subSamples);
             Range range = Range.create2D(mandelbrotGPUKernelFast.getSubImageWidth(), mandelbrotGPUKernelFast.getSubImageHeight());
             mandelbrotGPUKernelFast.execute(range);
         }
