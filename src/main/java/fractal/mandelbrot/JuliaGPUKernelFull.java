@@ -48,12 +48,12 @@ public class JuliaGPUKernelFull extends Kernel {
         rawGpuOrbitContainer.orbitLengths = new int[subImageWidth][subImageHeight];
     }
 
-    public void initArrays(int xOffset, int yOffset, Mapper mapper, double aaROffset, double aaIOffset) {
+    public void initArrays(int xOffset, int yOffset, Mapper mapper, double xSubSamplePos, double ySubSamplePos, int subSamples) {
         for (int x = 0; x < subImageWidth; x++) {
             for (int y = 0; y < subImageHeight; y++) {
                 Complex z0 = mapper.mapToComplex(x + xOffset, y + yOffset);
-                z0r[x + y * subImageWidth] = z0.r + aaROffset;
-                z0i[x + y * subImageWidth] = z0.i + aaIOffset;
+                z0r[x + y * subImageWidth] = z0.r;
+                z0i[x + y * subImageWidth] = z0.i;
             }
         }
     }
