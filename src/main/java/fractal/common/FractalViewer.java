@@ -363,8 +363,8 @@ public class FractalViewer extends javax.swing.JFrame {
 
     private void jXImagePanel1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jXImagePanel1MouseReleased
         if (evt.getButton() == MouseEvent.BUTTON1) {
-            Complex newC1 = fractalRenderer.getMapper().mapToComplex(newP1.x, newP1.y, jXImagePanel1);
-            Complex newC2 = fractalRenderer.getMapper().mapToComplex(evt.getX(), evt.getY(), jXImagePanel1);
+            Complex newC1 = fractalRenderer.getImagePlaneMapper().mapToComplex(newP1.x, newP1.y, jXImagePanel1);
+            Complex newC2 = fractalRenderer.getImagePlaneMapper().mapToComplex(evt.getX(), evt.getY(), jXImagePanel1);
 
             if (newC2.r < newC1.r) {
                 double temp = newC2.r;
@@ -379,7 +379,7 @@ public class FractalViewer extends javax.swing.JFrame {
 
             fractalRenderer.render(activeResolution.getWidth(), activeResolution.getHeight(), newC1, newC2);
         } else if (evt.getButton() == MouseEvent.BUTTON2) {
-            Complex clickLocation = fractalRenderer.getMapper().mapToComplex(evt.getX(), evt.getY(), jXImagePanel1);
+            Complex clickLocation = fractalRenderer.getImagePlaneMapper().mapToComplex(evt.getX(), evt.getY(), jXImagePanel1);
             fractalRenderer.performSpecialClickAction(clickLocation);
         } else if (evt.getButton() == MouseEvent.BUTTON3) {
             System.out.println("zoom out");
@@ -391,7 +391,7 @@ public class FractalViewer extends javax.swing.JFrame {
     }   
     
     private void redrawButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_redrawButtonActionPerformed
-        fractalRenderer.render(activeResolution.getWidth(), activeResolution.getHeight(), fractalRenderer.getMapper().getTopLeft(), fractalRenderer.getMapper().getBottomRight());
+        fractalRenderer.render(activeResolution.getWidth(), activeResolution.getHeight(), fractalRenderer.getImagePlaneMapper().getTopLeft(), fractalRenderer.getImagePlaneMapper().getBottomRight());
     }//GEN-LAST:event_redrawButtonActionPerformed
 
     private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
@@ -432,7 +432,7 @@ public class FractalViewer extends javax.swing.JFrame {
 
     private void jXImagePanel1MouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jXImagePanel1MouseMoved
         if (jXImagePanel1.getImage() != null) {
-            Complex mousePosition = fractalRenderer.getMapper().mapToComplex(evt.getX(), evt.getY(), jXImagePanel1);
+            Complex mousePosition = fractalRenderer.getImagePlaneMapper().mapToComplex(evt.getX(), evt.getY(), jXImagePanel1);
             jLabel4.setText(mousePosition.toStringZeroFill());
 
             fractalRenderer.mouseMoved(mousePosition);
@@ -474,8 +474,8 @@ public class FractalViewer extends javax.swing.JFrame {
         int newLeft = (int) Math.round(cutoffLeft);
         int newRight = (int) Math.round(imageWidth - cutoffRight);
         
-        Complex newTopLeft = fractalRenderer.getMapper().mapToComplex(newLeft, newTop);
-        Complex newBottomRight = fractalRenderer.getMapper().mapToComplex(newRight, newBottom);
+        Complex newTopLeft = fractalRenderer.getImagePlaneMapper().mapToComplex(newLeft, newTop);
+        Complex newBottomRight = fractalRenderer.getImagePlaneMapper().mapToComplex(newRight, newBottom);
         
         fractalRenderer.render(activeResolution.getWidth(), activeResolution.getHeight(), newTopLeft, newBottomRight);
         
@@ -483,9 +483,9 @@ public class FractalViewer extends javax.swing.JFrame {
 
     private void jXImagePanel1MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jXImagePanel1MouseDragged
 
-//        Complex a = fractalRenderer.getMapper().mapToComplex(evt.getX(), evt.getY(), jXImagePanel1);
-//        Point b = fractalRenderer.getMapper().mapToImage(a);
-//        Complex c = fractalRenderer.getMapper().mapToComplex((int) b.getX(), (int) b.getY());
+//        Complex a = fractalRenderer.getImagePlaneMapper().mapToComplex(evt.getX(), evt.getY(), jXImagePanel1);
+//        Point b = fractalRenderer.getImagePlaneMapper().mapToImage(a);
+//        Complex c = fractalRenderer.getImagePlaneMapper().mapToComplex((int) b.getX(), (int) b.getY());
 //        System.out.println(a);
 //        System.out.println(b);
 //        System.out.println(c);
@@ -510,11 +510,11 @@ public class FractalViewer extends javax.swing.JFrame {
 //        System.out.println(Math.abs((double)(newP2.x-newP1.x) / (double)(newP2.y-newP1.y)));
 
 
-        Complex newC1 = fractalRenderer.getMapper().mapToComplex(newP1.x, newP1.y, jXImagePanel1);
-        Complex newC2 = fractalRenderer.getMapper().mapToComplex(newP2.x, newP2.y, jXImagePanel1);
+        Complex newC1 = fractalRenderer.getImagePlaneMapper().mapToComplex(newP1.x, newP1.y, jXImagePanel1);
+        Complex newC2 = fractalRenderer.getImagePlaneMapper().mapToComplex(newP2.x, newP2.y, jXImagePanel1);
 
-        Point drawP1 = fractalRenderer.getMapper().mapToImage(newC1);
-        Point drawP2 = fractalRenderer.getMapper().mapToImage(newC2);
+        Point drawP1 = fractalRenderer.getImagePlaneMapper().mapToImage(newC1);
+        Point drawP2 = fractalRenderer.getImagePlaneMapper().mapToImage(newC2);
 
         if (drawP2.x < drawP1.x) {
             int temp = drawP2.x;
@@ -540,10 +540,10 @@ public class FractalViewer extends javax.swing.JFrame {
 
 
         
-//        Complex transientP2 = fractalRenderer.getMapper().mapToComplex(evt.getX(), evt.getY(), jXImagePanel1);
+//        Complex transientP2 = fractalRenderer.getImagePlaneMapper().mapToComplex(evt.getX(), evt.getY(), jXImagePanel1);
 //        
-//        Point p1 = fractalRenderer.getMapper().mapToImage(newP1);
-//        Point p2 = fractalRenderer.getMapper().mapToImage(transientP2);
+//        Point p1 = fractalRenderer.getImagePlaneMapper().mapToImage(newP1);
+//        Point p2 = fractalRenderer.getImagePlaneMapper().mapToImage(transientP2);
 //        
 //        if (p2.x < p1.x) {
 //            int temp = p2.x;

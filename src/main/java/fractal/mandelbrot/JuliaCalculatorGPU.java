@@ -57,7 +57,7 @@ public class JuliaCalculatorGPU implements Runnable {
         if (juliaRenderer.getSubSamples() == Antialiasable.NONE) {
             for (xOffset = 0; xOffset < imageWidth; xOffset += juliaEngine.getSubImageWidth()) {
                 for (yOffset = 0; yOffset < imageHeight; yOffset += juliaEngine.getSubImageHeight()) {
-                    juliaEngine.doRunGPU(xOffset, yOffset, juliaRenderer.getMapper(), 0, 0, Antialiasable.NONE);
+                    juliaEngine.doRunGPU(xOffset, yOffset, juliaRenderer.getImagePlaneMapper(), 0, 0, Antialiasable.NONE);
                     if (stopped) {
                         return;
                     }
@@ -71,7 +71,7 @@ public class JuliaCalculatorGPU implements Runnable {
                     preAAColors = new List[juliaEngine.getSubImageWidth()][juliaEngine.getSubImageHeight()];
                     for (double xSubSamplePos = 0; xSubSamplePos < subSamples; xSubSamplePos++) {
                         for (double ySubSamplePos = 0; ySubSamplePos < subSamples; ySubSamplePos++) {
-                            juliaEngine.doRunGPU(xOffset, yOffset, juliaRenderer.getMapper(), xSubSamplePos, ySubSamplePos, subSamples);
+                            juliaEngine.doRunGPU(xOffset, yOffset, juliaRenderer.getImagePlaneMapper(), xSubSamplePos, ySubSamplePos, subSamples);
                             if (stopped) {
                                 return;
                             }

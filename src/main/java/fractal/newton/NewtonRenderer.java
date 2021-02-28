@@ -84,7 +84,7 @@ public class NewtonRenderer extends FractalRenderer<NewtonEngine> implements Ant
             SynchronizedBufferedImage orbitImage = new SynchronizedBufferedImage(ImageUtils.deepCopy(orbitImageBase.getBufferedImage()));
             for (Complex o : orbit)
             {
-                Point p = getMapper().mapToImage(o);
+                Point p = getImagePlaneMapper().mapToImage(o);
                 if (p.x>=0 && p.x<orbitImage.getBufferedImage().getWidth() &&
                     p.y>=0 && p.y<orbitImage.getBufferedImage().getHeight()) {
                     orbitImage.setColor(p.x, p.y, Color.WHITE);
@@ -284,7 +284,7 @@ public class NewtonRenderer extends FractalRenderer<NewtonEngine> implements Ant
                     List<Point> points = new ArrayList<>(imageWidth);
                     for (int y=0; y<imageHeight; y++)
                     {
-                        Complex c = getMapper().mapToComplex(x, y);
+                        Complex c = getImagePlaneMapper().mapToComplex(x, y);
                         List<Complex> orbit = fractalEngine.calcOrbit(c);
                         points.add(new Point(x,y));
                         orbits.add(orbit);
@@ -303,7 +303,7 @@ public class NewtonRenderer extends FractalRenderer<NewtonEngine> implements Ant
                         List<Complex> repOrbit = null;
                         for (double xSubSamplePos = 0; xSubSamplePos < subSamples; xSubSamplePos++) {
                             for (double ySubSamplePos = 0; ySubSamplePos < subSamples; ySubSamplePos++) {
-                                Complex c = getMapper().mapToComplex(x+xSubSamplePos/subSamples, y+ySubSamplePos/subSamples);
+                                Complex c = getImagePlaneMapper().mapToComplex(x+xSubSamplePos/subSamples, y+ySubSamplePos/subSamples);
                                 List<Complex> orbit = fractalEngine.calcOrbit(c);
                                 repOrbit = orbit;
                                 Color color = activeColorCalculator.calcColor(x, y, orbit, fractalEngine);

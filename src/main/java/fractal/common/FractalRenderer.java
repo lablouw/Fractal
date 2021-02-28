@@ -4,8 +4,6 @@
  */
 package fractal.common;
 
-import fractal.common.mappers.LinearMapper;
-import fractal.common.mappers.Mapper;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridLayout;
@@ -30,7 +28,7 @@ import org.jdesktop.swingx.VerticalLayout;
  */
 public abstract class FractalRenderer<T extends FractalEngine> {
 
-    private Mapper mapper;
+    private ImagePlaneMapper imagePlaneMapper;
     private List<ColorCalculator> colorCalculators = new ArrayList<>();
     protected ColorCalculator activeColorCalculator;
     protected T fractalEngine;
@@ -49,11 +47,11 @@ public abstract class FractalRenderer<T extends FractalEngine> {
         colorCalculators.add(colorCalculator);
     }
 
-    public Mapper getMapper() {
-        if (mapper == null && fractalEngine != null) {
-            mapper = new LinearMapper(fractalEngine.getDefaultView().getFirst(), fractalEngine.getDefaultView().getSecond(), imageWidth, imageHeight);
+    public ImagePlaneMapper getImagePlaneMapper() {
+        if (imagePlaneMapper == null && fractalEngine != null) {
+            imagePlaneMapper = new ImagePlaneMapper(fractalEngine.getDefaultView().getFirst(), fractalEngine.getDefaultView().getSecond(), imageWidth, imageHeight);
         }
-        return mapper;
+        return imagePlaneMapper;
     }
     
     public boolean isBusy() {
@@ -93,7 +91,7 @@ public abstract class FractalRenderer<T extends FractalEngine> {
             bottomRight.r = topLeft.r + Math.abs(bottomRight.i - topLeft.i) * imageAspect;
         }
 
-        mapper = new LinearMapper(topLeft, bottomRight, width, height);
+        imagePlaneMapper = new ImagePlaneMapper(topLeft, bottomRight, width, height);
 
         new Thread(new Runnable() {
             @Override

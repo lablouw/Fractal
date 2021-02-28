@@ -117,7 +117,7 @@ public class HenonEngine implements FractalEngine {
                 aLabel.setText("\u03F4 = 2*\u03c0 * " + aSlider.getValue() / 1000d);
                 henonRenderer.stopRendering();
                 henonRenderer.clearImage();
-                henonRenderer.render(henonRenderer.getImage().getBufferedImage().getWidth(), henonRenderer.getImage().getBufferedImage().getHeight(), henonRenderer.getMapper().getTopLeft(), henonRenderer.getMapper().getBottomRight());
+                henonRenderer.render(henonRenderer.getImage().getBufferedImage().getWidth(), henonRenderer.getImage().getBufferedImage().getHeight(), henonRenderer.getImagePlaneMapper().getTopLeft(), henonRenderer.getImagePlaneMapper().getBottomRight());
             }
         });
 
@@ -153,7 +153,7 @@ public class HenonEngine implements FractalEngine {
                 for (Traveler t : travelers) {
                     t.move();
                     int rgb = (((t.getColor().getRed() << 8) + t.getColor().getGreen()) << 8) + t.getColor().getBlue();
-                    Point p = henonRenderer.getMapper().mapToImage(t.getPosition());
+                    Point p = henonRenderer.getImagePlaneMapper().mapToImage(t.getPosition());
                     henonRenderer.enginePerformedCalculation(p.x, p.y, Collections.singletonList(new Complex(rgb, rgb)));// quite the hack passing color back through the orbit vars...
                 }
             }

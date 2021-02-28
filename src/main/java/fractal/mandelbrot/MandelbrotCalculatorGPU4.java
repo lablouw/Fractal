@@ -57,7 +57,7 @@ public class MandelbrotCalculatorGPU4 implements Runnable {
         if (mandelbrotRenderer.getSubSamples() == Antialiasable.NONE) {
             for (xOffset = 0; xOffset < imageWidth; xOffset += mandelbrotEngine.getSubImageWidth()) {
                 for (yOffset = 0; yOffset < imageHeight; yOffset += mandelbrotEngine.getSubImageHeight()) {
-                    mandelbrotEngine.doRunGPU(xOffset, yOffset, mandelbrotRenderer.getMapper(), 0, 0, Antialiasable.NONE);
+                    mandelbrotEngine.doRunGPU(xOffset, yOffset, mandelbrotRenderer.getImagePlaneMapper(), 0, 0, Antialiasable.NONE);
                     if (stopped) {
                         return;
                     }
@@ -71,7 +71,7 @@ public class MandelbrotCalculatorGPU4 implements Runnable {
                     preAAColors = new List[mandelbrotEngine.getSubImageWidth()][mandelbrotEngine.getSubImageHeight()];
                     for (double xSubSamplePos = 0; xSubSamplePos < subSamples; xSubSamplePos++) {
                         for (double ySubSamplePos = 0; ySubSamplePos < subSamples; ySubSamplePos++) {
-                            mandelbrotEngine.doRunGPU(xOffset, yOffset, mandelbrotRenderer.getMapper(), xSubSamplePos, ySubSamplePos, subSamples);
+                            mandelbrotEngine.doRunGPU(xOffset, yOffset, mandelbrotRenderer.getImagePlaneMapper(), xSubSamplePos, ySubSamplePos, subSamples);
                             if (stopped) {
                                 return;
                             }

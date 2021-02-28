@@ -65,12 +65,12 @@ public abstract class OrbitTrap {
 
         @Override
         public void mousePressed(MouseEvent e) {
-            p1 = fractalRenderer.getMapper().mapToComplex(e.getX(), e.getY(), fractalRenderer.getFractalViewer().getImagePanel());
+            p1 = fractalRenderer.getImagePlaneMapper().mapToComplex(e.getX(), e.getY(), fractalRenderer.getFractalViewer().getImagePanel());
         }
 
         @Override
         public void mouseReleased(MouseEvent e) {
-            p2 = fractalRenderer.getMapper().mapToComplex(e.getX(), e.getY(), fractalRenderer.getFractalViewer().getImagePanel());
+            p2 = fractalRenderer.getImagePlaneMapper().mapToComplex(e.getX(), e.getY(), fractalRenderer.getFractalViewer().getImagePanel());
             fractalRenderer.getFractalViewer().getImagePanel().removeMouseListener(this);
             fractalRenderer.getFractalViewer().getImagePanel().removeMouseMotionListener(this);
             for (MouseListener ml : tempListeners) {
@@ -83,13 +83,13 @@ public abstract class OrbitTrap {
             fractalRenderer.render(
                     fractalRenderer.getImage().getBufferedImage().getWidth(),
                     fractalRenderer.getImage().getBufferedImage().getHeight(),
-                    fractalRenderer.getMapper().getTopLeft(),
-                    fractalRenderer.getMapper().getBottomRight());
+                    fractalRenderer.getImagePlaneMapper().getTopLeft(),
+                    fractalRenderer.getImagePlaneMapper().getBottomRight());
         }
 
         @Override
         public void mouseDragged(MouseEvent e) {
-            p2 = fractalRenderer.getMapper().mapToComplex(e.getX(), e.getY(), fractalRenderer.getFractalViewer().getImagePanel());
+            p2 = fractalRenderer.getImagePlaneMapper().mapToComplex(e.getX(), e.getY(), fractalRenderer.getFractalViewer().getImagePanel());
             setDefiningPoints(p1, p2);
             fractalRenderer.getFractalViewer().setImage(drawOrbitTrap(baseImage, fractalRenderer));
         }

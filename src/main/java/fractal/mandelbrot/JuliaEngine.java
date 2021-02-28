@@ -8,7 +8,7 @@ import com.aparapi.Range;
 import com.aparapi.device.Device;
 import fractal.common.Complex;
 import fractal.common.FractalEngine;
-import fractal.common.mappers.Mapper;
+import fractal.common.ImagePlaneMapper;
 import fractal.common.Pair;
 import java.awt.GridLayout;
 import java.util.ArrayList;
@@ -209,13 +209,13 @@ public class JuliaEngine implements FractalEngine {
         }
     }
     
-    public void doRunGPU(int xOffset, int yOffset, Mapper mapper, double xSubSamplePos, double ySubSamplePos, int subSamples) {
+    public void doRunGPU(int xOffset, int yOffset, ImagePlaneMapper imagePlaneMapper, double xSubSamplePos, double ySubSamplePos, int subSamples) {
         if (useGPUFull) {
-            juliaGPUKernelFull.initArrays(xOffset, yOffset, mapper, xSubSamplePos, ySubSamplePos, subSamples);
+            juliaGPUKernelFull.initArrays(xOffset, yOffset, imagePlaneMapper, xSubSamplePos, ySubSamplePos, subSamples);
             Range range = Range.create2D(juliaGPUKernelFull.getSubImageWidth(), juliaGPUKernelFull.getSubImageHeight());
             juliaGPUKernelFull.execute(range);
         } else if (useGPUFast) {
-            juliaGPUKernelFast.initArrays(xOffset, yOffset, mapper, xSubSamplePos, ySubSamplePos, subSamples);
+            juliaGPUKernelFast.initArrays(xOffset, yOffset, imagePlaneMapper, xSubSamplePos, ySubSamplePos, subSamples);
             Range range = Range.create2D(juliaGPUKernelFast.getSubImageWidth(), juliaGPUKernelFast.getSubImageHeight());
             juliaGPUKernelFast.execute(range);
         }

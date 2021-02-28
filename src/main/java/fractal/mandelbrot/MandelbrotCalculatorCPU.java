@@ -41,7 +41,7 @@ public class MandelbrotCalculatorCPU implements Runnable {
                 List<List<Complex>> orbits = new ArrayList<>(imageHeight);
                 List<Point> points = new ArrayList<>(imageWidth);
                 for (int y = 0; y < imageHeight; y++) {
-                    Complex c = mandelbrotRenderer.getMapper().mapToComplex(x, y);
+                    Complex c = mandelbrotRenderer.getImagePlaneMapper().mapToComplex(x, y);
                     List<Complex> orbit = mandelbrotRenderer.getFractalEngine().calcOrbit(c);
                     points.add(new Point(x, y));
                     orbits.add(orbit);
@@ -60,7 +60,7 @@ public class MandelbrotCalculatorCPU implements Runnable {
                     List<Complex> repOrbit = null;
                     for (double xSubSamplePos = 0; xSubSamplePos < subSamples; xSubSamplePos++) {
                         for (double ySubSamplePos = 0; ySubSamplePos < subSamples; ySubSamplePos++) {
-                            Complex c = mandelbrotRenderer.getMapper().mapToComplex(x+xSubSamplePos/subSamples, y+ySubSamplePos/subSamples);
+                            Complex c = mandelbrotRenderer.getImagePlaneMapper().mapToComplex(x+xSubSamplePos/subSamples, y+ySubSamplePos/subSamples);
                             List<Complex> orbit = mandelbrotRenderer.getFractalEngine().calcOrbit(c);
                             repOrbit = orbit;
                             Color color = mandelbrotRenderer.getActiveColorCalculator().calcColor(x, y, orbit, mandelbrotRenderer.getFractalEngine());

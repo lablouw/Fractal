@@ -120,7 +120,7 @@ public class WalkerEngine implements FractalEngine {
                 }
                 for (TwoTargetSeekingTraveler w : twoTargetSeekingTravelers) {
                     w.updatePosition();
-                    Point p = walkerRenderer.getMapper().mapToImage(w.getPosition());
+                    Point p = walkerRenderer.getImagePlaneMapper().mapToImage(w.getPosition());
                     int rgb = (((w.getColor().getRed() << 8) + w.getColor().getGreen()) << 8) + w.getColor().getBlue();
                     walkerRenderer.enginePerformedCalculation(p.x, p.y, Collections.singletonList(new Complex(rgb, rgb)));// quite the hack passing color back through the orbit vars...
                 }

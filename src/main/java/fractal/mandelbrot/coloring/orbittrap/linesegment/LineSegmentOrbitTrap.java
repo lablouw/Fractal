@@ -83,8 +83,8 @@ public class LineSegmentOrbitTrap extends OrbitTrap {
 	@Override
 	public BufferedImage drawOrbitTrap(BufferedImage baseImage, FractalRenderer fractalRenderer) {
 		BufferedImage im = ImageUtils.deepCopy(baseImage);
-		Point p1 = fractalRenderer.getMapper().mapToImage(c1);
-		Point p2 = fractalRenderer.getMapper().mapToImage(c2);
+		Point p1 = fractalRenderer.getImagePlaneMapper().mapToImage(c1);
+		Point p2 = fractalRenderer.getImagePlaneMapper().mapToImage(c2);
 		im.getGraphics().drawLine(p1.x, p1.y, p2.x, p2.y);
 
 		return im;

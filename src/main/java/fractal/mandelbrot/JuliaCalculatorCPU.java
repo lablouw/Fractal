@@ -41,7 +41,7 @@ public class JuliaCalculatorCPU implements Runnable {
                 List<List<Complex>> orbits = new ArrayList<>(imageHeight);
                 List<Point> points = new ArrayList<>(imageWidth);
                 for (int y = 0; y < imageHeight; y++) {
-                    Complex z0 = juliaRenderer.getMapper().mapToComplex(x, y);
+                    Complex z0 = juliaRenderer.getImagePlaneMapper().mapToComplex(x, y);
                     List<Complex> orbit = juliaRenderer.getFractalEngine().calcOrbit(z0);
                     orbits.add(orbit);
                     points.add(new Point(x, y));
@@ -60,7 +60,7 @@ public class JuliaCalculatorCPU implements Runnable {
                     List<Complex> repOrbit = null;
                     for (double xSubSamplePos = 0; xSubSamplePos < subSamples; xSubSamplePos++) {
                         for (double ySubSamplePos = 0; ySubSamplePos < subSamples; ySubSamplePos++) {
-                            Complex c = juliaRenderer.getMapper().mapToComplex(x+xSubSamplePos/subSamples, y+ySubSamplePos/subSamples);
+                            Complex c = juliaRenderer.getImagePlaneMapper().mapToComplex(x+xSubSamplePos/subSamples, y+ySubSamplePos/subSamples);
                             List<Complex> orbit = juliaRenderer.getFractalEngine().calcOrbit(c);
                             repOrbit = orbit;
                             Color color = juliaRenderer.getActiveColorCalculator().calcColor(x, y, orbit, juliaRenderer.getFractalEngine());

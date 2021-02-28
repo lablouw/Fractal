@@ -8,7 +8,7 @@ import com.aparapi.Range;
 import com.aparapi.device.Device;
 import fractal.common.Complex;
 import fractal.common.FractalEngine;
-import fractal.common.mappers.Mapper;
+import fractal.common.ImagePlaneMapper;
 import fractal.common.Pair;
 import java.awt.GridLayout;
 import java.util.ArrayList;
@@ -193,13 +193,13 @@ public class MandelbrotEngine implements FractalEngine {
         }
     }
 
-    public void doRunGPU(int xOffset, int yOffset, Mapper mapper, double xSubSamplePos, double ySubSamplePos, int subSamples) {
+    public void doRunGPU(int xOffset, int yOffset, ImagePlaneMapper imagePlaneMapper, double xSubSamplePos, double ySubSamplePos, int subSamples) {
         if (useGPUFull) {
-            mandelbrotGPUKernelFull.initArrays(xOffset, yOffset, mapper, xSubSamplePos, ySubSamplePos, subSamples);
+            mandelbrotGPUKernelFull.initArrays(xOffset, yOffset, imagePlaneMapper, xSubSamplePos, ySubSamplePos, subSamples);
             Range range = Range.create2D(mandelbrotGPUKernelFull.getSubImageWidth(), mandelbrotGPUKernelFull.getSubImageHeight());
             mandelbrotGPUKernelFull.execute(range);
         } else if (useGPUFast) {
-            mandelbrotGPUKernelFast.initArrays(xOffset, yOffset, mapper, xSubSamplePos, ySubSamplePos, subSamples);
+            mandelbrotGPUKernelFast.initArrays(xOffset, yOffset, imagePlaneMapper, xSubSamplePos, ySubSamplePos, subSamples);
             Range range = Range.create2D(mandelbrotGPUKernelFast.getSubImageWidth(), mandelbrotGPUKernelFast.getSubImageHeight());
             mandelbrotGPUKernelFast.execute(range);
         }

@@ -91,7 +91,7 @@ public class MandelbrotCalculatorGPU3 implements Runnable {
         public void initArrays() {
             for (int x = 0; x < subImageWidth; x++) {
                 for (int y = 0; y < subImageHeight; y++) {
-                    Complex c = mandelbrotRenderer.getMapper().mapToComplex(x + xOffset, y + yOffset);
+                    Complex c = mandelbrotRenderer.getImagePlaneMapper().mapToComplex(x + xOffset, y + yOffset);
                     cr[x + y * subImageWidth] = c.r;
                     ci[x + y * subImageWidth] = c.i;
                 }

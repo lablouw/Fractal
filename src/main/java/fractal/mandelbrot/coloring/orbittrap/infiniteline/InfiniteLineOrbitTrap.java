@@ -92,14 +92,14 @@ public class InfiniteLineOrbitTrap extends OrbitTrap {
 		int leftX = 0;
 		int rightX = fractalRenderer.getImage().getBufferedImage().getWidth();
 
-		double leftR = fractalRenderer.getMapper().mapToComplex(leftX, 0).r;
-		double rightR = fractalRenderer.getMapper().mapToComplex(rightX, 0).r;
+		double leftR = fractalRenderer.getImagePlaneMapper().mapToComplex(leftX, 0).r;
+		double rightR = fractalRenderer.getImagePlaneMapper().mapToComplex(rightX, 0).r;
 
 		double leftI = m * leftR + c;
 		double rightI = m * rightR +c;
 
-		int leftY = fractalRenderer.getMapper().mapToImage(new Complex(0, leftI)).y;
-		int rightY = fractalRenderer.getMapper().mapToImage(new Complex(0, rightI)).y;
+		int leftY = fractalRenderer.getImagePlaneMapper().mapToImage(new Complex(0, leftI)).y;
+		int rightY = fractalRenderer.getImagePlaneMapper().mapToImage(new Complex(0, rightI)).y;
 
 		BufferedImage im = ImageUtils.deepCopy(baseImage);
 		im.getGraphics().drawLine(leftX, leftY, rightX, rightY);
