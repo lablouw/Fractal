@@ -13,7 +13,6 @@ import fractal.common.SynchronizedBufferedImage;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.Point;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JSpinner;
@@ -94,19 +93,19 @@ public class BuddahColorCalculator implements ColorCalculator {
 
     private void initHitMaps() {
         if (hitMapRed == null) {
-            hitMapRed = new long[fractalRenderer.getMapper().getWidth()][fractalRenderer.getMapper().getHeight()];
+            hitMapRed = new long[fractalRenderer.getImagePlaneMapper().getWidth()][fractalRenderer.getImagePlaneMapper().getHeight()];
         }
         if (hitMapGreen == null) {
-            hitMapGreen = new long[fractalRenderer.getMapper().getWidth()][fractalRenderer.getMapper().getHeight()];
+            hitMapGreen = new long[fractalRenderer.getImagePlaneMapper().getWidth()][fractalRenderer.getImagePlaneMapper().getHeight()];
         }
         if (hitMapBlue == null) {
-            hitMapBlue = new long[fractalRenderer.getMapper().getWidth()][fractalRenderer.getMapper().getHeight()];
+            hitMapBlue = new long[fractalRenderer.getImagePlaneMapper().getWidth()][fractalRenderer.getImagePlaneMapper().getHeight()];
         }
     }
 
     private void addToHitMaps(Complex c, int i) {
-        Point p = fractalRenderer.getMapper().mapToImage(c);
-        if (p.x<0 || p.y<0 || p.x>=fractalRenderer.getMapper().getWidth() || p.y>=fractalRenderer.getMapper().getHeight()) return;
+        Point p = fractalRenderer.getImagePlaneMapper().mapToImage(c);
+        if (p.x<0 || p.y<0 || p.x>=fractalRenderer.getImagePlaneMapper().getWidth() || p.y>=fractalRenderer.getImagePlaneMapper().getHeight()) return;
         if (i <= maxIterRed){
             hitMapRed[p.x][p.y]++;
             if (hitMapRed[p.x][p.y] > maxHitsRed) maxHitsRed = hitMapRed[p.x][p.y];

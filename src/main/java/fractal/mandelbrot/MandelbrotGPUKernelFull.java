@@ -7,7 +7,7 @@ package fractal.mandelbrot;
 
 import com.aparapi.Kernel;
 import fractal.common.Complex;
-import fractal.common.mappers.Mapper;
+import fractal.common.ImagePlaneMapper;
 
 /**
  *
@@ -48,12 +48,12 @@ public class MandelbrotGPUKernelFull extends Kernel {
         rawGpuOrbitContainer.orbitLengths = new int[subImageWidth][subImageHeight];
     }
 
-    public void initArrays(int xOffset, int yOffset, Mapper mapper, double aaROffset, double aaIOffset) {
+    public void initArrays(int xOffset, int yOffset, ImagePlaneMapper imagePlaneMapper, double xSubSamplePos, double ySubSamplePos, int subSamples) {
         for (int x = 0; x < subImageWidth; x++) {
             for (int y = 0; y < subImageHeight; y++) {
-                Complex c = mapper.mapToComplex(x + xOffset, y + yOffset);
-                cr[x + y * subImageWidth] = c.r + aaROffset;
-                ci[x + y * subImageWidth] = c.i + aaIOffset;
+                Complex c = imagePlaneMapper.mapToComplex(xOffset + x + xSubSamplePos/subSamples, yOffset + y + ySubSamplePos/subSamples);
+                cr[x + y * subImageWidth] = c.r;
+                ci[x + y * subImageWidth] = c.i;
             }
         }
     }

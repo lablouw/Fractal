@@ -70,8 +70,8 @@ public class CircleOrbitTrap extends OrbitTrap {
 
     @Override
     public BufferedImage drawOrbitTrap(BufferedImage baseImage, FractalRenderer fractalRenderer) {
-        Point c = fractalRenderer.getMapper().mapToImage(center);
-        Point poc = fractalRenderer.getMapper().mapToImage(pointOnCircle);
+        Point c = fractalRenderer.getImagePlaneMapper().mapToImage(center);
+        Point poc = fractalRenderer.getImagePlaneMapper().mapToImage(pointOnCircle);
         int r = (int) Math.sqrt((poc.x-c.x) * (poc.x-c.x) + (poc.y-c.y) * (poc.y-c.y));
 
         BufferedImage im = ImageUtils.deepCopy(baseImage);

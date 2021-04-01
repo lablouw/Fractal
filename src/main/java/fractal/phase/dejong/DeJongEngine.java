@@ -239,7 +239,7 @@ public class DeJongEngine implements FractalEngine {
                 
                 if (e != null) {//not the inititalizing call from the constructor
                     renderer.stopRendering();
-                    renderer.render(renderer.getImage().getBufferedImage().getWidth(), renderer.getImage().getBufferedImage().getHeight(), renderer.getMapper().getTopLeft(), renderer.getMapper().getBottomRight());
+                    renderer.render(renderer.getImage().getBufferedImage().getWidth(), renderer.getImage().getBufferedImage().getHeight(), renderer.getImagePlaneMapper().getTopLeft(), renderer.getImagePlaneMapper().getBottomRight());
                 }
             }
         });
@@ -275,7 +275,7 @@ public class DeJongEngine implements FractalEngine {
                 for (Traveler t : travelers) {
                     t.move();
                     int rgb = (((t.getColor().getRed() << 8) + t.getColor().getGreen()) << 8) + t.getColor().getBlue();
-                    Point p = renderer.getMapper().mapToImage(t.getPosition());
+                    Point p = renderer.getImagePlaneMapper().mapToImage(t.getPosition());
                     if (!stopped && t.getAge() > skipInitIters) {
                         renderer.enginePerformedCalculation(p.x, p.y, Collections.singletonList(new Complex(rgb, rgb)));// quite the hack passing color back through the orbit vars...
                     }

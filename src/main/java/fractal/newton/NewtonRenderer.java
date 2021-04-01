@@ -45,7 +45,7 @@ public class NewtonRenderer extends FractalRenderer<NewtonEngine> implements Ant
     private Complex[][] orbitEndPoints;
     private int[][] orbitLengths;
     private List<NewtonCalculator> currentCalculators = new ArrayList<>();
-    private int aa = 1;
+    private int subSamples = 1;
     private SynchronizedBufferedImage orbitImageBase;
     private boolean orbitPreview = false;
     private long lastGuiUpdate;
@@ -84,7 +84,7 @@ public class NewtonRenderer extends FractalRenderer<NewtonEngine> implements Ant
             SynchronizedBufferedImage orbitImage = new SynchronizedBufferedImage(ImageUtils.deepCopy(orbitImageBase.getBufferedImage()));
             for (Complex o : orbit)
             {
-                Point p = getMapper().mapToImage(o);
+                Point p = getImagePlaneMapper().mapToImage(o);
                 if (p.x>=0 && p.x<orbitImage.getBufferedImage().getWidth() &&
                     p.y>=0 && p.y<orbitImage.getBufferedImage().getHeight()) {
                     orbitImage.setColor(p.x, p.y, Color.WHITE);
@@ -239,12 +239,12 @@ public class NewtonRenderer extends FractalRenderer<NewtonEngine> implements Ant
     
     @Override
     public int getSubSamples() {
-        return aa;
+        return subSamples;
     }
 
     @Override
     public void setSubSamples(int aa) {
-        this.aa = aa;
+        this.subSamples = aa;
     }
     
     public Complex getLastOrbitPoint(int x, int y)
@@ -276,7 +276,7 @@ public class NewtonRenderer extends FractalRenderer<NewtonEngine> implements Ant
 
         @Override
         public void run() {
-            if (aa == Antialiasable.NONE)
+            if (subSamples == Antialiasable.NONE)
             {
                 for (int x=coreIndex; x<imageWidth; x+=numCores)
                 {
@@ -284,7 +284,7 @@ public class NewtonRenderer extends FractalRenderer<NewtonEngine> implements Ant
                     List<Point> points = new ArrayList<>(imageWidth);
                     for (int y=0; y<imageHeight; y++)
                     {
-                        Complex c = getMapper().mapToComplex(x, y);
+                        Complex c = getImagePlaneMapper().mapToComplex(x, y);
                         List<Complex> orbit = fractalEngine.calcOrbit(c);
                         points.add(new Point(x,y));
                         orbits.add(orbit);
@@ -295,42 +295,27 @@ public class NewtonRenderer extends FractalRenderer<NewtonEngine> implements Ant
             }
             else
             {
-                double xStep = Math.abs(getMapper().getRStep());
-                double yStep = Math.abs(getMapper().getIStep());
-                double aaXStep = xStep/(double)aa;
-                double aaYStep = yStep/(double)aa;
-                int xSteps, ySteps;
-                for (int x=coreIndex; x<imageWidth; x+=numCores)
-                {
-                    for (int y=0; y<imageHeight; y++)
-                    {
-                        Complex c = getMapper().mapToComplex(x, y);
+                for (int x=coreIndex; x<imageWidth; x+=numCores) {
+                    for (int y=0; y<imageHeight; y++) {
                         int colorR = 0;
                         int colorG = 0;
                         int colorB = 0;
                         List<Complex> repOrbit = null;
-                        xSteps=0;
-                        for (double r=c.r-aaXStep*(aa-1)/2; xSteps<aa; r+=aaXStep)
-                        {
-                            ySteps=0;
-                            for (double i=c.i-aaYStep*(aa-1)/2; ySteps<aa; i+=aaYStep)
-                            {
-                                Complex aaStep = new Complex(r,i);
-                                List<Complex> orbit = fractalEngine.calcOrbit(aaStep);
-                                if (aaStep.equals(c)) repOrbit = orbit;
+                        for (double xSubSamplePos = 0; xSubSamplePos < subSamples; xSubSamplePos++) {
+                            for (double ySubSamplePos = 0; ySubSamplePos < subSamples; ySubSamplePos++) {
+                                Complex c = getImagePlaneMapper().mapToComplex(x+xSubSamplePos/subSamples, y+ySubSamplePos/subSamples);
+                                List<Complex> orbit = fractalEngine.calcOrbit(c);
+                                repOrbit = orbit;
                                 Color color = activeColorCalculator.calcColor(x, y, orbit, fractalEngine);
                                 colorR += color.getRed();
                                 colorG += color.getGreen();
                                 colorB += color.getBlue();
-                                ySteps++;
                             }
-                            xSteps++;
                         }
                         if (stopped) return;
-                        if (repOrbit == null) repOrbit = fractalEngine.calcOrbit(c);
-                        colorR = colorR/(aa*aa);
-                        colorG = colorG/(aa*aa);
-                        colorB = colorB/(aa*aa);
+                        colorR = colorR/(subSamples * subSamples);
+                        colorG = colorG/(subSamples * subSamples);
+                        colorB = colorB/(subSamples * subSamples);
                         enginePerformedCalculation(x, y, repOrbit, new Color(colorR, colorG, colorB));
                     }
                 }

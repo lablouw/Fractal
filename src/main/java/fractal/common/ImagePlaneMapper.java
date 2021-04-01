@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package fractal.common.mappers;
+package fractal.common;
 
 import fractal.common.Complex;
 import org.jdesktop.swingx.JXImagePanel;
@@ -14,26 +14,31 @@ import java.awt.Point;
  *
  * @author lloyd
  */
-public abstract class Mapper {
-    final Complex topLeft;
-    final Complex bottomRight;
-    final double rStep; //horizontal distance per pixel
-    final double iStep; //vertical distance per pixel
+public class ImagePlaneMapper {
+    private final Complex topLeft;
+    private final Complex bottomRight;
     private final int width;
     private final int height;
 
-    protected Mapper(Complex topLeft, Complex bottomRight, int width, int height) {
+    private double rStep; //horizontal distance per pixel
+    private double iStep; //vertical distance per pixel
+
+    public ImagePlaneMapper(Complex topLeft, Complex bottomRight, int width, int height) {
         this.topLeft = topLeft;
         this.bottomRight = bottomRight;
         this.width = width;
         this.height = height;
-        this.rStep = (bottomRight.r - topLeft.r) / (double) width;
-        this.iStep = (bottomRight.i - topLeft.i) / (double) height;
+        rStep = (bottomRight.r - topLeft.r) / (double) width;
+        iStep = (bottomRight.i - topLeft.i) / (double) height;
     }
 
-    public abstract Point mapToImage(Complex c);
+    public Complex mapToComplex(double x, double y) {
+        return new Complex(topLeft.r + rStep * x, topLeft.i + iStep * y);
+    }
 
-    public abstract Complex mapToComplex(int x, int y);
+    public Point mapToImage(Complex c) {
+        return new Point((int) Math.round((c.r - topLeft.r) / rStep), (int) Math.round((c.i - topLeft.i) / iStep));
+    }
 
     /**
      * Use if the x and y coordinates are from a scaled image (i.e. mouse position) rather than absolute/exact.
@@ -65,12 +70,4 @@ public abstract class Mapper {
         return width;
     }
 
-    public double getRStep() {
-        return rStep;
-    }
-
-    public double getIStep() {
-        return iStep;
-    }
-    
 }

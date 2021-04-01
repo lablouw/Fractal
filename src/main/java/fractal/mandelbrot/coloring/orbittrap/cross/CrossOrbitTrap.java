@@ -81,20 +81,20 @@ public class CrossOrbitTrap extends OrbitTrap {
 		int leftX = 0;
 		int rightX = fractalRenderer.getImage().getBufferedImage().getWidth();
 
-		double leftR = fractalRenderer.getMapper().mapToComplex(leftX, 0).r;
-		double rightR = fractalRenderer.getMapper().mapToComplex(rightX, 0).r;
+		double leftR = fractalRenderer.getImagePlaneMapper().mapToComplex(leftX, 0).r;
+		double rightR = fractalRenderer.getImagePlaneMapper().mapToComplex(rightX, 0).r;
 
 		double leftI = m1 * leftR + c1;
 		double rightI = m1 * rightR +c1;
-		int leftY = fractalRenderer.getMapper().mapToImage(new Complex(0, leftI)).y;
-		int rightY = fractalRenderer.getMapper().mapToImage(new Complex(0, rightI)).y;
+		int leftY = fractalRenderer.getImagePlaneMapper().mapToImage(new Complex(0, leftI)).y;
+		int rightY = fractalRenderer.getImagePlaneMapper().mapToImage(new Complex(0, rightI)).y;
 
 		im.getGraphics().drawLine(leftX, leftY, rightX, rightY);
 
 		leftI = m2 * leftR + c2;
 		rightI = m2 * rightR + c2;
-		leftY = fractalRenderer.getMapper().mapToImage(new Complex(0, leftI)).y;
-		rightY = fractalRenderer.getMapper().mapToImage(new Complex(0, rightI)).y;
+		leftY = fractalRenderer.getImagePlaneMapper().mapToImage(new Complex(0, leftI)).y;
+		rightY = fractalRenderer.getImagePlaneMapper().mapToImage(new Complex(0, rightI)).y;
 
 		im.getGraphics().drawLine(leftX, leftY, rightX, rightY);
 

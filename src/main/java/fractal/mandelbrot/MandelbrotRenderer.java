@@ -336,7 +336,7 @@ public class MandelbrotRenderer extends FractalRenderer<MandelbrotEngine> implem
             List<Complex> orbit = getFractalEngine().calcOrbit(pointOnImage);
             SynchronizedBufferedImage orbitImage = new SynchronizedBufferedImage(ImageUtils.deepCopy(orbitImageBase.getBufferedImage()));
             for (Complex o : orbit) {
-                Point p = getMapper().mapToImage(o);
+                Point p = getImagePlaneMapper().mapToImage(o);
                 if (p.x >= 0 && p.x < orbitImage.getBufferedImage().getWidth()
                         && p.y >= 0 && p.y < orbitImage.getBufferedImage().getHeight()) {
                     orbitImage.setColor(p.x, p.y, Color.WHITE);

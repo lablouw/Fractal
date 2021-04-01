@@ -102,7 +102,7 @@ public class MandelbrotCalculatorGPU2 implements Runnable {
                 if (x + xOffset >= imageWidth) continue;
                 for (int y = 0; y < subImageHeight; y++) {
                     if (y + yOffset >= imageHeight) continue;
-                    Complex c = mandelbrotRenderer.getMapper().mapToComplex(x + xOffset, y + yOffset);
+                    Complex c = mandelbrotRenderer.getImagePlaneMapper().mapToComplex(x + xOffset, y + yOffset);
                     orbitR[x*subImageHeight*maxIter + y*maxIter] = c.r;
                     orbitI[x*subImageHeight*maxIter + y*maxIter] = c.i;
 //                    System.out.println("("+x+","+y+")("+(x*subImageWidth*maxIter + y*maxIter)+")="+c.r);

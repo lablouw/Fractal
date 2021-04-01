@@ -102,7 +102,7 @@ public class MandelbrotCalculatorGPU implements Runnable {
         public void updateRangeValues() {
             for (int x = 0; x < subImageWidth; x++) {
                 for (int y = 0; y < imageHeight; y++) {
-                    Complex c = mandelbrotRenderer.getMapper().mapToComplex(x + xOffset, y);
+                    Complex c = mandelbrotRenderer.getImagePlaneMapper().mapToComplex(x + xOffset, y);
                     cr[x + y * subImageWidth] = c.r;
                     ci[x + y * subImageWidth] = c.i;
                 }
