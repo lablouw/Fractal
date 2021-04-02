@@ -30,7 +30,7 @@ import javax.swing.event.ChangeListener;
  *
  * @author CP316928
  */
-public class HenonEngine implements FractalEngine {
+public class HenonEngine extends FractalEngine {
 
     private static final Random RANDOM = new Random();
     private boolean stopped = true;
@@ -70,7 +70,7 @@ public class HenonEngine implements FractalEngine {
     }
 
     @Override
-    public List<Complex> calcOrbit(Complex c) {
+    public List<Complex> calcStraightOrbit(Complex c) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

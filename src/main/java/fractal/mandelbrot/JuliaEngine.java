@@ -22,7 +22,7 @@ import javax.swing.event.ChangeListener;
  *
  * @author lloyd
  */
-public class JuliaEngine implements FractalEngine {
+public class JuliaEngine extends FractalEngine {
 
     private Complex exponent = new Complex(2, 0);
     private double bailout = 2;
@@ -141,7 +141,7 @@ public class JuliaEngine implements FractalEngine {
     }
 
     @Override
-    public List<Complex> calcOrbit(Complex z) {
+    public List<Complex> calcStraightOrbit(Complex z) {
         List<Complex> orbit = new ArrayList<>(maxIter);
         orbit.add(z);
         int iter = 1;
@@ -212,11 +212,11 @@ public class JuliaEngine implements FractalEngine {
     
     public void doRunGPU(int xOffset, int yOffset, ImagePlaneMapper imagePlaneMapper, double xSubSamplePos, double ySubSamplePos, int subSamples) {
         if (useGPUFull) {
-            juliaGPUKernelFull.initArrays(xOffset, yOffset, imagePlaneMapper, xSubSamplePos, ySubSamplePos, subSamples);
+            juliaGPUKernelFull.initArrays(xOffset, yOffset, imagePlaneMapper, xSubSamplePos, ySubSamplePos, subSamples, parameterMapper);
             Range range = Range.create2D(juliaGPUKernelFull.getSubImageWidth(), juliaGPUKernelFull.getSubImageHeight());
             juliaGPUKernelFull.execute(range);
         } else if (useGPUFast) {
-            juliaGPUKernelFast.initArrays(xOffset, yOffset, imagePlaneMapper, xSubSamplePos, ySubSamplePos, subSamples);
+            juliaGPUKernelFast.initArrays(xOffset, yOffset, imagePlaneMapper, xSubSamplePos, ySubSamplePos, subSamples, parameterMapper);
             Range range = Range.create2D(juliaGPUKernelFast.getSubImageWidth(), juliaGPUKernelFast.getSubImageHeight());
             juliaGPUKernelFast.execute(range);
         }

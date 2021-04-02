@@ -26,7 +26,7 @@ import javax.swing.event.ChangeListener;
  *
  * @author Lloyd
  */
-public class NewtonEngine implements FractalEngine {
+public class NewtonEngine extends FractalEngine {
 
     private int maxIter = 100;
     private double bailout = 0.000001;
@@ -51,7 +51,7 @@ public class NewtonEngine implements FractalEngine {
     }
     
     @Override
-    public List<Complex> calcOrbit(Complex c) {
+    public List<Complex> calcStraightOrbit(Complex c) {
         int iter = 0;
         Complex z0 = new Complex(c);
         Complex z1 = null;

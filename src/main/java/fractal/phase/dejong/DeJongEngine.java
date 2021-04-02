@@ -32,7 +32,7 @@ import javax.swing.event.ChangeListener;
  *
  * @author Lloyd
  */
-public class DeJongEngine implements FractalEngine {
+public class DeJongEngine extends FractalEngine {
 
     private static final Random RANDOM = new Random();
     private FractalEngine INSTANCE;
@@ -82,7 +82,7 @@ public class DeJongEngine implements FractalEngine {
     }
 
     @Override
-    public List<Complex> calcOrbit(Complex c) {
+    public List<Complex> calcStraightOrbit(Complex c) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

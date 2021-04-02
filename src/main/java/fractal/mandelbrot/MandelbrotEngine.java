@@ -22,7 +22,7 @@ import javax.swing.event.ChangeListener;
  *
  * @author lloyd
  */
-public class MandelbrotEngine implements FractalEngine {
+public class MandelbrotEngine extends FractalEngine {
 
     private Complex exponent = new Complex(2, 0);
     private double bailout = 2;
@@ -124,7 +124,7 @@ public class MandelbrotEngine implements FractalEngine {
     }
 
     @Override
-    public List<Complex> calcOrbit(Complex c) {
+    public List<Complex> calcStraightOrbit(Complex c) {
         Complex z = new Complex(perterbation);
         List<Complex> orbit = new ArrayList<>(maxIter);
         orbit.add(z);
@@ -196,11 +196,11 @@ public class MandelbrotEngine implements FractalEngine {
 
     public void doRunGPU(int xOffset, int yOffset, ImagePlaneMapper imagePlaneMapper, double xSubSamplePos, double ySubSamplePos, int subSamples) {
         if (useGPUFull) {
-            mandelbrotGPUKernelFull.initArrays(xOffset, yOffset, imagePlaneMapper, xSubSamplePos, ySubSamplePos, subSamples);
+            mandelbrotGPUKernelFull.initArrays(xOffset, yOffset, imagePlaneMapper, xSubSamplePos, ySubSamplePos, subSamples, parameterMapper);
             Range range = Range.create2D(mandelbrotGPUKernelFull.getSubImageWidth(), mandelbrotGPUKernelFull.getSubImageHeight());
             mandelbrotGPUKernelFull.execute(range);
         } else if (useGPUFast) {
-            mandelbrotGPUKernelFast.initArrays(xOffset, yOffset, imagePlaneMapper, xSubSamplePos, ySubSamplePos, subSamples);
+            mandelbrotGPUKernelFast.initArrays(xOffset, yOffset, imagePlaneMapper, xSubSamplePos, ySubSamplePos, subSamples, parameterMapper);
             Range range = Range.create2D(mandelbrotGPUKernelFast.getSubImageWidth(), mandelbrotGPUKernelFast.getSubImageHeight());
             mandelbrotGPUKernelFast.execute(range);
         }
