@@ -212,11 +212,11 @@ public class JuliaEngine extends FractalEngine {
     
     public void doRunGPU(int xOffset, int yOffset, ImagePlaneMapper imagePlaneMapper, double xSubSamplePos, double ySubSamplePos, int subSamples) {
         if (useGPUFull) {
-            juliaGPUKernelFull.initArrays(xOffset, yOffset, imagePlaneMapper, xSubSamplePos, ySubSamplePos, subSamples, parameterMapper);
+            juliaGPUKernelFull.initArrays(xOffset, yOffset, imagePlaneMapper, xSubSamplePos, ySubSamplePos, subSamples, activeParameterMapper);
             Range range = Range.create2D(juliaGPUKernelFull.getSubImageWidth(), juliaGPUKernelFull.getSubImageHeight());
             juliaGPUKernelFull.execute(range);
         } else if (useGPUFast) {
-            juliaGPUKernelFast.initArrays(xOffset, yOffset, imagePlaneMapper, xSubSamplePos, ySubSamplePos, subSamples, parameterMapper);
+            juliaGPUKernelFast.initArrays(xOffset, yOffset, imagePlaneMapper, xSubSamplePos, ySubSamplePos, subSamples, activeParameterMapper);
             Range range = Range.create2D(juliaGPUKernelFast.getSubImageWidth(), juliaGPUKernelFast.getSubImageHeight());
             juliaGPUKernelFast.execute(range);
         }

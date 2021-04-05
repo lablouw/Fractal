@@ -9,4 +9,9 @@ public class StraightParameterMapper implements ParameterMapper {
 		return c;
 	}
 
+    @Override
+    public String getName() {
+        return "None";
+    }
+
 }

@@ -4,8 +4,10 @@
  */
 package fractal.common;
 
+import fractal.common.paremetermappers.InverseParameterMapper;
 import fractal.common.paremetermappers.ParameterMapper;
 import fractal.common.paremetermappers.StraightParameterMapper;
+import java.util.Arrays;
 
 import javax.swing.*;
 import java.util.List;
@@ -14,12 +16,16 @@ import java.util.List;
  * @author lloyd
  */
 public abstract class FractalEngine {
-
-	protected ParameterMapper parameterMapper = new StraightParameterMapper();
+    
+	protected ParameterMapper activeParameterMapper = ParameterMapper.availableParameterMappers.get(0);
 
 	public List<Complex> calcParameterMappedOrbit(Complex c) {
-		return calcStraightOrbit(parameterMapper.map(c));
+		return calcStraightOrbit(activeParameterMapper.map(c));
 	}
+    
+    public void setActiveParameterMapper(ParameterMapper parameterMapper) {
+        activeParameterMapper = parameterMapper;
+    }
 
 	protected abstract List<Complex> calcStraightOrbit(Complex c);
 
