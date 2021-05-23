@@ -126,7 +126,7 @@ public class MandelbrotEngine extends FractalEngine {
     @Override
     public List<Complex> calcStraightOrbit(Complex c) {
         Complex z = new Complex(perterbation);
-        List<Complex> orbit = new ArrayList<>(maxIter);
+        List<Complex> orbit = new ArrayList<>();
         orbit.add(z);
         int iter = 1;
         if (exponent.r == 2 && exponent.i == 0) {
