@@ -74,9 +74,9 @@ public class MandelbrotEngine extends FractalEngine {
                 perterbation.i = (Double) perterbI.getValue();
             }
         });
-        double gpuMem = ((double) ((OpenCLDevice) Device.best()).getGlobalMemSize()) / 1024d / 1024d / 1024d;
-        final JCheckBox useGpuCBFull = new JCheckBox("Use " + Device.best().getType() + " (" + gpuMem + "Gb) - Full orbit");
-        final JCheckBox useGpuCBFast = new JCheckBox("Use " + Device.best().getType() + " (" + gpuMem + "Gb) - Fast");
+//        double gpuMem = ((double) ((OpenCLDevice) Device.best()).getGlobalMemSize()) / 1024d / 1024d / 1024d;
+        final JCheckBox useGpuCBFull = new JCheckBox("Use " + Device.best().getType() + " (" + 1 + "Gb) - Full orbit");
+        final JCheckBox useGpuCBFast = new JCheckBox("Use " + Device.best().getType() + " (" + 1 + "Gb) - Fast");
         useGpuCBFull.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -155,19 +155,21 @@ public class MandelbrotEngine extends FractalEngine {
             if (mandelbrotGPUKernelFull == null) {
                 mandelbrotGPUKernelFull = new MandelbrotGPUKernelFull();
             }
-            
+
+            subImageWidth = 80;
+            subImageHeight = 60;
             // Calculate optimal subImageSize
-            long gpuMemAvailable = ((OpenCLDevice) Device.best()).getMaxMemAllocSize();
-            subImageWidth = imageWidth * 2;
-            subImageHeight = imageHeight * 2;
-            long maxMemImage = Long.MAX_VALUE;
-            long arrayLengthRequired = Long.MAX_VALUE;
-            while (maxMemImage > gpuMemAvailable || arrayLengthRequired > Integer.MAX_VALUE) {
-                if (subImageWidth > 1) subImageWidth /= 2;
-                if (subImageHeight > 1) subImageHeight /= 2;
-                maxMemImage = (long) subImageHeight * (long) subImageWidth * (long) maxIter * (long) Double.BYTES * 2L;
-                arrayLengthRequired = subImageWidth * subImageHeight * maxIter;
-            }
+//            long gpuMemAvailable = ((OpenCLDevice) Device.best()).getMaxMemAllocSize();
+//            subImageWidth = imageWidth * 2;
+//            subImageHeight = imageHeight * 2;
+//            long maxMemImage = Long.MAX_VALUE;
+//            long arrayLengthRequired = Long.MAX_VALUE;
+//            while (maxMemImage > gpuMemAvailable || arrayLengthRequired > Integer.MAX_VALUE) {
+//                if (subImageWidth > 1) subImageWidth /= 2;
+//                if (subImageHeight > 1) subImageHeight /= 2;
+//                maxMemImage = (long) subImageHeight * (long) subImageWidth * (long) maxIter * (long) Double.BYTES * 2L;
+//                arrayLengthRequired = subImageWidth * subImageHeight * maxIter;
+//            }
             System.out.println("subImage size: " + subImageWidth + "x" + subImageHeight);
 
             mandelbrotGPUKernelFull.initForRender(subImageWidth, subImageHeight, maxIter, bailoutSquared, perterbation);
@@ -175,19 +177,21 @@ public class MandelbrotEngine extends FractalEngine {
             if (mandelbrotGPUKernelFast == null) {
                 mandelbrotGPUKernelFast = new MandelbrotGPUKernelFast();
             }
-            
-            // Calculate optimal subImageSize
-            long gpuMemAvailable = ((OpenCLDevice) Device.best()).getMaxMemAllocSize();
+
             subImageWidth = 640;
             subImageHeight = 480;
-            long maxMemImage = Long.MAX_VALUE;
-            long arrayLengthRequired = Long.MAX_VALUE;
-            while (maxMemImage > gpuMemAvailable || arrayLengthRequired > Integer.MAX_VALUE && subImageWidth > imageWidth && subImageHeight > imageHeight) {
-                if (subImageWidth > 1) subImageWidth /= 2;
-                if (subImageHeight > 1) subImageHeight /= 2;
-                maxMemImage = (long) subImageHeight * (long) subImageWidth * 2 * (long) Double.BYTES * 2L;
-                arrayLengthRequired = subImageWidth * subImageHeight;
-            }
+            // Calculate optimal subImageSize
+//            long gpuMemAvailable = ((OpenCLDevice) Device.best()).getMaxMemAllocSize();
+//            subImageWidth = 640;
+//            subImageHeight = 480;
+//            long maxMemImage = Long.MAX_VALUE;
+//            long arrayLengthRequired = Long.MAX_VALUE;
+//            while (maxMemImage > gpuMemAvailable || arrayLengthRequired > Integer.MAX_VALUE && subImageWidth > imageWidth && subImageHeight > imageHeight) {
+//                if (subImageWidth > 1) subImageWidth /= 2;
+//                if (subImageHeight > 1) subImageHeight /= 2;
+//                maxMemImage = (long) subImageHeight * (long) subImageWidth * 2 * (long) Double.BYTES * 2L;
+//                arrayLengthRequired = subImageWidth * subImageHeight;
+//            }
             System.out.println("subImage size: " + subImageWidth + "x" + subImageHeight);
 
             mandelbrotGPUKernelFast.initForRender(subImageWidth, subImageHeight, maxIter, bailoutSquared, perterbation);
