@@ -4,25 +4,41 @@
  */
 package fractal.common;
 
+import fractal.common.paremetermappers.InverseParameterMapper;
+import fractal.common.paremetermappers.ParameterMapper;
+import fractal.common.paremetermappers.StraightParameterMapper;
+import java.util.Arrays;
+
+import javax.swing.*;
 import java.util.List;
-import javax.swing.JComponent;
 
 /**
  * @author lloyd
  */
-public interface FractalEngine {
-	List<Complex> calcOrbit(Complex c);
+public abstract class FractalEngine {
+    
+	protected ParameterMapper activeParameterMapper = ParameterMapper.availableParameterMappers.get(0);
 
-	void setMaxIter(int maxIter);
+	public List<Complex> calcParameterMappedOrbit(Complex c) {
+		return calcStraightOrbit(activeParameterMapper.map(c));
+	}
+    
+    public void setActiveParameterMapper(ParameterMapper parameterMapper) {
+        activeParameterMapper = parameterMapper;
+    }
 
-	int getMaxIter();
+	protected abstract List<Complex> calcStraightOrbit(Complex c);
 
-	Pair<Complex, Complex> getDefaultView();
+	public abstract void setMaxIter(int maxIter);
 
-	boolean isBailoutReached(List<Complex> orbit);
+	public abstract int getMaxIter();
 
-	boolean isBailoutReachedByLastOrbitPoint(Complex lastOrbitPoint);
+	public abstract Pair<Complex, Complex> getDefaultView();
 
-	JComponent getSettingsComponent();
+	public abstract boolean isBailoutReached(List<Complex> orbit);
+
+	public abstract boolean isBailoutReachedByLastOrbitPoint(Complex lastOrbitPoint);
+
+	public abstract JComponent getSettingsComponent();
 
 }

@@ -80,7 +80,7 @@ public class NewtonRenderer extends FractalRenderer<NewtonEngine> implements Ant
         if (orbitPreview)
         {
             if (orbitImageBase==null) orbitImageBase = getImage();
-            List<Complex> orbit = getFractalEngine().calcOrbit(pointOnImage);
+            List<Complex> orbit = getFractalEngine().calcParameterMappedOrbit(pointOnImage);
             SynchronizedBufferedImage orbitImage = new SynchronizedBufferedImage(ImageUtils.deepCopy(orbitImageBase.getBufferedImage()));
             for (Complex o : orbit)
             {
@@ -285,7 +285,7 @@ public class NewtonRenderer extends FractalRenderer<NewtonEngine> implements Ant
                     for (int y=0; y<imageHeight; y++)
                     {
                         Complex c = getImagePlaneMapper().mapToComplex(x, y);
-                        List<Complex> orbit = fractalEngine.calcOrbit(c);
+                        List<Complex> orbit = fractalEngine.calcParameterMappedOrbit(c);
                         points.add(new Point(x,y));
                         orbits.add(orbit);
                     }
@@ -304,7 +304,7 @@ public class NewtonRenderer extends FractalRenderer<NewtonEngine> implements Ant
                         for (double xSubSamplePos = 0; xSubSamplePos < subSamples; xSubSamplePos++) {
                             for (double ySubSamplePos = 0; ySubSamplePos < subSamples; ySubSamplePos++) {
                                 Complex c = getImagePlaneMapper().mapToComplex(x+xSubSamplePos/subSamples, y+ySubSamplePos/subSamples);
-                                List<Complex> orbit = fractalEngine.calcOrbit(c);
+                                List<Complex> orbit = fractalEngine.calcParameterMappedOrbit(c);
                                 repOrbit = orbit;
                                 Color color = activeColorCalculator.calcColor(x, y, orbit, fractalEngine);
                                 colorR += color.getRed();

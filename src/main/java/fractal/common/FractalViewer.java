@@ -4,6 +4,7 @@
  */
 package fractal.common;
 
+import fractal.common.paremetermappers.ParameterMapper;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -40,6 +41,7 @@ public class FractalViewer extends javax.swing.JFrame {
     public FractalViewer(FractalRenderer fractalRenderer) {
         initComponents();
         setResolutions();
+        setParameterizations();
         this.fractalRenderer = fractalRenderer;
         setTitle(fractalRenderer.getName());
 
@@ -86,6 +88,8 @@ public class FractalViewer extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jSpinner4 = new javax.swing.JSpinner();
         resolutionComboBox = new javax.swing.JComboBox<>();
+        parameterizationsComboBox = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
@@ -172,7 +176,7 @@ public class FractalViewer extends javax.swing.JFrame {
 
         jLabel3.setText("Resolution:");
 
-        jLabel7.setText("Anti Alias Grid Width:");
+        jLabel7.setText("Sub sampling:");
 
         jSpinner4.setModel(new javax.swing.SpinnerNumberModel(1, 1, 8, 1));
         jSpinner4.setValue(1);
@@ -182,22 +186,26 @@ public class FractalViewer extends javax.swing.JFrame {
             }
         });
 
+        parameterizationsComboBox.setName(""); // NOI18N
+
+        jLabel2.setText("Parameterization:");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addGap(18, 18, 18)
-                        .addComponent(jSpinner4, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(resolutionComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(parameterizationsComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jSpinner4)
+                    .addComponent(resolutionComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -209,7 +217,12 @@ public class FractalViewer extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jSpinner4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7)))
+                    .addComponent(jLabel7))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(parameterizationsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addContainerGap())
         );
 
         jLabel4.setText("jLabel4");
@@ -340,7 +353,7 @@ public class FractalViewer extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 593, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 555, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(redrawButton)
@@ -573,6 +586,7 @@ public class FractalViewer extends javax.swing.JFrame {
     private javax.swing.JPanel engineOptionsPanel;
     private javax.swing.JPanel fractalOptionsPanel;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -586,6 +600,7 @@ public class FractalViewer extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSpinner jSpinner4;
     private org.jdesktop.swingx.JXImagePanel jXImagePanel1;
+    private javax.swing.JComboBox<ParameterMapper> parameterizationsComboBox;
     private javax.swing.JButton redrawButton;
     private javax.swing.JButton resetButton;
     private javax.swing.JComboBox<Resolution> resolutionComboBox;
@@ -643,6 +658,29 @@ public class FractalViewer extends javax.swing.JFrame {
                 }
             }
         });
+    }
+    
+    private void setParameterizations() {
+        parameterizationsComboBox.removeAllItems();
+        ParameterMapper.availableParameterMappers.forEach(a -> parameterizationsComboBox.addItem(a));
+        parameterizationsComboBox.setSelectedItem(ParameterMapper.availableParameterMappers.get(0));
+        
+        parameterizationsComboBox.setRenderer(new ListCellRenderer<ParameterMapper>() {
+            @Override
+            public Component getListCellRendererComponent(JList<? extends ParameterMapper> list, ParameterMapper value, int index, boolean isSelected, boolean cellHasFocus) {
+                return new JLabel(value.getName());
+            }
+        });
+        
+        parameterizationsComboBox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    fractalRenderer.getFractalEngine().setActiveParameterMapper((ParameterMapper) e.getItem());
+                }
+            }
+        });
+        
     }
 
 }

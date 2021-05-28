@@ -22,7 +22,7 @@ import javax.swing.event.ChangeListener;
  *
  * @author lloyd
  */
-public class MandelbrotEngine implements FractalEngine {
+public class MandelbrotEngine extends FractalEngine {
 
     private Complex exponent = new Complex(2, 0);
     private double bailout = 2;
@@ -74,9 +74,9 @@ public class MandelbrotEngine implements FractalEngine {
                 perterbation.i = (Double) perterbI.getValue();
             }
         });
-        double gpuMem = ((double) ((OpenCLDevice) Device.best()).getGlobalMemSize()) / 1024d / 1024d / 1024d;
-        final JCheckBox useGpuCBFull = new JCheckBox("Use " + Device.best().getType() + " (" + gpuMem + "Gb) - Full orbit");
-        final JCheckBox useGpuCBFast = new JCheckBox("Use " + Device.best().getType() + " (" + gpuMem + "Gb) - Fast");
+//        double gpuMem = ((double) ((OpenCLDevice) Device.best()).getGlobalMemSize()) / 1024d / 1024d / 1024d;
+        final JCheckBox useGpuCBFull = new JCheckBox("Use " + Device.best().getType() + " (" + 1 + "Gb) - Full orbit");
+        final JCheckBox useGpuCBFast = new JCheckBox("Use " + Device.best().getType() + " (" + 1 + "Gb) - Fast");
         useGpuCBFull.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -124,9 +124,9 @@ public class MandelbrotEngine implements FractalEngine {
     }
 
     @Override
-    public List<Complex> calcOrbit(Complex c) {
+    public List<Complex> calcStraightOrbit(Complex c) {
         Complex z = new Complex(perterbation);
-        List<Complex> orbit = new ArrayList<>(maxIter);
+        List<Complex> orbit = new ArrayList<>();
         orbit.add(z);
         int iter = 1;
         if (exponent.r == 2 && exponent.i == 0) {
@@ -155,19 +155,21 @@ public class MandelbrotEngine implements FractalEngine {
             if (mandelbrotGPUKernelFull == null) {
                 mandelbrotGPUKernelFull = new MandelbrotGPUKernelFull();
             }
-            
+
+            subImageWidth = 80;
+            subImageHeight = 60;
             // Calculate optimal subImageSize
-            long gpuMemAvailable = ((OpenCLDevice) Device.best()).getMaxMemAllocSize();
-            subImageWidth = imageWidth * 2;
-            subImageHeight = imageHeight * 2;
-            long maxMemImage = Long.MAX_VALUE;
-            long arrayLengthRequired = Long.MAX_VALUE;
-            while (maxMemImage > gpuMemAvailable || arrayLengthRequired > Integer.MAX_VALUE) {
-                if (subImageWidth > 1) subImageWidth /= 2;
-                if (subImageHeight > 1) subImageHeight /= 2;
-                maxMemImage = (long) subImageHeight * (long) subImageWidth * (long) maxIter * (long) Double.BYTES * 2L;
-                arrayLengthRequired = subImageWidth * subImageHeight * maxIter;
-            }
+//            long gpuMemAvailable = ((OpenCLDevice) Device.best()).getMaxMemAllocSize();
+//            subImageWidth = imageWidth * 2;
+//            subImageHeight = imageHeight * 2;
+//            long maxMemImage = Long.MAX_VALUE;
+//            long arrayLengthRequired = Long.MAX_VALUE;
+//            while (maxMemImage > gpuMemAvailable || arrayLengthRequired > Integer.MAX_VALUE) {
+//                if (subImageWidth > 1) subImageWidth /= 2;
+//                if (subImageHeight > 1) subImageHeight /= 2;
+//                maxMemImage = (long) subImageHeight * (long) subImageWidth * (long) maxIter * (long) Double.BYTES * 2L;
+//                arrayLengthRequired = subImageWidth * subImageHeight * maxIter;
+//            }
             System.out.println("subImage size: " + subImageWidth + "x" + subImageHeight);
 
             mandelbrotGPUKernelFull.initForRender(subImageWidth, subImageHeight, maxIter, bailoutSquared, perterbation);
@@ -175,19 +177,21 @@ public class MandelbrotEngine implements FractalEngine {
             if (mandelbrotGPUKernelFast == null) {
                 mandelbrotGPUKernelFast = new MandelbrotGPUKernelFast();
             }
-            
-            // Calculate optimal subImageSize
-            long gpuMemAvailable = ((OpenCLDevice) Device.best()).getMaxMemAllocSize();
+
             subImageWidth = 640;
             subImageHeight = 480;
-            long maxMemImage = Long.MAX_VALUE;
-            long arrayLengthRequired = Long.MAX_VALUE;
-            while (maxMemImage > gpuMemAvailable || arrayLengthRequired > Integer.MAX_VALUE && subImageWidth > imageWidth && subImageHeight > imageHeight) {
-                if (subImageWidth > 1) subImageWidth /= 2;
-                if (subImageHeight > 1) subImageHeight /= 2;
-                maxMemImage = (long) subImageHeight * (long) subImageWidth * 2 * (long) Double.BYTES * 2L;
-                arrayLengthRequired = subImageWidth * subImageHeight;
-            }
+            // Calculate optimal subImageSize
+//            long gpuMemAvailable = ((OpenCLDevice) Device.best()).getMaxMemAllocSize();
+//            subImageWidth = 640;
+//            subImageHeight = 480;
+//            long maxMemImage = Long.MAX_VALUE;
+//            long arrayLengthRequired = Long.MAX_VALUE;
+//            while (maxMemImage > gpuMemAvailable || arrayLengthRequired > Integer.MAX_VALUE && subImageWidth > imageWidth && subImageHeight > imageHeight) {
+//                if (subImageWidth > 1) subImageWidth /= 2;
+//                if (subImageHeight > 1) subImageHeight /= 2;
+//                maxMemImage = (long) subImageHeight * (long) subImageWidth * 2 * (long) Double.BYTES * 2L;
+//                arrayLengthRequired = subImageWidth * subImageHeight;
+//            }
             System.out.println("subImage size: " + subImageWidth + "x" + subImageHeight);
 
             mandelbrotGPUKernelFast.initForRender(subImageWidth, subImageHeight, maxIter, bailoutSquared, perterbation);
@@ -196,11 +200,11 @@ public class MandelbrotEngine implements FractalEngine {
 
     public void doRunGPU(int xOffset, int yOffset, ImagePlaneMapper imagePlaneMapper, double xSubSamplePos, double ySubSamplePos, int subSamples) {
         if (useGPUFull) {
-            mandelbrotGPUKernelFull.initArrays(xOffset, yOffset, imagePlaneMapper, xSubSamplePos, ySubSamplePos, subSamples);
+            mandelbrotGPUKernelFull.initArrays(xOffset, yOffset, imagePlaneMapper, xSubSamplePos, ySubSamplePos, subSamples, activeParameterMapper);
             Range range = Range.create2D(mandelbrotGPUKernelFull.getSubImageWidth(), mandelbrotGPUKernelFull.getSubImageHeight());
             mandelbrotGPUKernelFull.execute(range);
         } else if (useGPUFast) {
-            mandelbrotGPUKernelFast.initArrays(xOffset, yOffset, imagePlaneMapper, xSubSamplePos, ySubSamplePos, subSamples);
+            mandelbrotGPUKernelFast.initArrays(xOffset, yOffset, imagePlaneMapper, xSubSamplePos, ySubSamplePos, subSamples, activeParameterMapper);
             Range range = Range.create2D(mandelbrotGPUKernelFast.getSubImageWidth(), mandelbrotGPUKernelFast.getSubImageHeight());
             mandelbrotGPUKernelFast.execute(range);
         }

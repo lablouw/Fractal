@@ -22,7 +22,7 @@ import javax.swing.JComponent;
  *
  * @author cp316928
  */
-public class WalkerEngine implements FractalEngine {
+public class WalkerEngine extends FractalEngine {
     
     private static final Random RANDOM = new Random();
     private boolean stopped = true;
@@ -50,7 +50,7 @@ public class WalkerEngine implements FractalEngine {
     }
 
     @Override
-    public List<Complex> calcOrbit(Complex c) {
+    public List<Complex> calcStraightOrbit(Complex c) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

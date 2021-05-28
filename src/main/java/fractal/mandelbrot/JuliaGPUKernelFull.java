@@ -8,6 +8,7 @@ package fractal.mandelbrot;
 import com.aparapi.Kernel;
 import fractal.common.Complex;
 import fractal.common.ImagePlaneMapper;
+import fractal.common.paremetermappers.ParameterMapper;
 
 /**
  *
@@ -48,10 +49,11 @@ public class JuliaGPUKernelFull extends Kernel {
         rawGpuOrbitContainer.orbitLengths = new int[subImageWidth][subImageHeight];
     }
 
-    public void initArrays(int xOffset, int yOffset, ImagePlaneMapper imagePlaneMapper, double xSubSamplePos, double ySubSamplePos, int subSamples) {
+    public void initArrays(int xOffset, int yOffset, ImagePlaneMapper imagePlaneMapper, double xSubSamplePos, double ySubSamplePos, int subSamples, ParameterMapper parameterMapper) {
         for (int x = 0; x < subImageWidth; x++) {
             for (int y = 0; y < subImageHeight; y++) {
                 Complex z0 = imagePlaneMapper.mapToComplex(x + xOffset, y + yOffset);
+                z0 = parameterMapper.map(z0);
                 z0r[x + y * subImageWidth] = z0.r;
                 z0i[x + y * subImageWidth] = z0.i;
             }

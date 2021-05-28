@@ -22,7 +22,7 @@ import javax.swing.event.ChangeListener;
  *
  * @author lloyd
  */
-public class JuliaEngine implements FractalEngine {
+public class JuliaEngine extends FractalEngine {
 
     private Complex exponent = new Complex(2, 0);
     private double bailout = 2;
@@ -75,9 +75,9 @@ public class JuliaEngine implements FractalEngine {
                 c.i = (Double) ciSpinner.getValue();
             }
         });
-        double gpuMem = ((double) ((OpenCLDevice) Device.best()).getGlobalMemSize()) / 1024d / 1024d / 1024d;
-        final JCheckBox useGpuCBFull = new JCheckBox("Use " + Device.best().getType() + " (" + gpuMem + "Gb) - Full orbit");
-        final JCheckBox useGpuCBFast = new JCheckBox("Use " + Device.best().getType() + " (" + gpuMem + "Gb) - Fast");
+//        double gpuMem = ((double) ((OpenCLDevice) Device.best()).getGlobalMemSize()) / 1024d / 1024d / 1024d;
+        final JCheckBox useGpuCBFull = new JCheckBox("Use " + Device.best().getType() + " (" + 1 + "Gb) - Full orbit");
+        final JCheckBox useGpuCBFast = new JCheckBox("Use " + Device.best().getType() + " (" + 1 + "Gb) - Fast");
         useGpuCBFull.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -141,8 +141,8 @@ public class JuliaEngine implements FractalEngine {
     }
 
     @Override
-    public List<Complex> calcOrbit(Complex z) {
-        List<Complex> orbit = new ArrayList<>(maxIter);
+    public List<Complex> calcStraightOrbit(Complex z) {
+        List<Complex> orbit = new ArrayList<>();
         orbit.add(z);
         int iter = 1;
         if (exponent.r == 2 && exponent.i == 0) {
@@ -172,18 +172,20 @@ public class JuliaEngine implements FractalEngine {
                 juliaGPUKernelFull = new JuliaGPUKernelFull();
             }
 
+            subImageWidth = 80;
+            subImageHeight = 60;
             // Calculate optimal subImageSize
-            long gpuMemAvailable = ((OpenCLDevice) Device.best()).getMaxMemAllocSize();
-            subImageWidth = imageWidth * 2;
-            subImageHeight = imageHeight * 2;
-            long maxMemImage = Long.MAX_VALUE;
-            long arrayLengthRequired = Long.MAX_VALUE;
-            while (maxMemImage > gpuMemAvailable || arrayLengthRequired > Integer.MAX_VALUE) {
-                if (subImageWidth > 1) subImageWidth /= 2;
-                if (subImageHeight > 1) subImageHeight /= 2;
-                maxMemImage = (long) subImageHeight * (long) subImageWidth * (long) maxIter * (long) Double.BYTES * 2L;
-                arrayLengthRequired = subImageWidth * subImageHeight * maxIter;
-            }
+//            long gpuMemAvailable = ((OpenCLDevice) Device.best()).getMaxMemAllocSize();
+//            subImageWidth = imageWidth * 2;
+//            subImageHeight = imageHeight * 2;
+//            long maxMemImage = Long.MAX_VALUE;
+//            long arrayLengthRequired = Long.MAX_VALUE;
+//            while (maxMemImage > gpuMemAvailable || arrayLengthRequired > Integer.MAX_VALUE) {
+//                if (subImageWidth > 1) subImageWidth /= 2;
+//                if (subImageHeight > 1) subImageHeight /= 2;
+//                maxMemImage = (long) subImageHeight * (long) subImageWidth * (long) maxIter * (long) Double.BYTES * 2L;
+//                arrayLengthRequired = subImageWidth * subImageHeight * maxIter;
+//            }
             System.out.println("subImage size: " + subImageWidth + "x" + subImageHeight);
 
             juliaGPUKernelFull.initForRender(subImageWidth, subImageHeight, maxIter, bailoutSquared, c);
@@ -191,19 +193,21 @@ public class JuliaEngine implements FractalEngine {
             if (juliaGPUKernelFast == null) {
                 juliaGPUKernelFast = new JuliaGPUKernelFast();
             }
-            
-            // Calculate optimal subImageSize
-            long gpuMemAvailable = ((OpenCLDevice) Device.best()).getMaxMemAllocSize();
+
             subImageWidth = 640;
             subImageHeight = 480;
-            long maxMemImage = Long.MAX_VALUE;
-            long arrayLengthRequired = Long.MAX_VALUE;
-            while (maxMemImage > gpuMemAvailable || arrayLengthRequired > Integer.MAX_VALUE) {
-                if (subImageWidth > 1) subImageWidth /= 2;
-                if (subImageHeight > 1) subImageHeight /= 2;
-                maxMemImage = (long) subImageHeight * (long) subImageWidth * 2 * (long) Double.BYTES * 2L;
-                arrayLengthRequired = subImageWidth * subImageHeight;
-            }
+            // Calculate optimal subImageSize
+//            long gpuMemAvailable = ((OpenCLDevice) Device.best()).getMaxMemAllocSize();
+//            subImageWidth = 640;
+//            subImageHeight = 480;
+//            long maxMemImage = Long.MAX_VALUE;
+//            long arrayLengthRequired = Long.MAX_VALUE;
+//            while (maxMemImage > gpuMemAvailable || arrayLengthRequired > Integer.MAX_VALUE) {
+//                if (subImageWidth > 1) subImageWidth /= 2;
+//                if (subImageHeight > 1) subImageHeight /= 2;
+//                maxMemImage = (long) subImageHeight * (long) subImageWidth * 2 * (long) Double.BYTES * 2L;
+//                arrayLengthRequired = subImageWidth * subImageHeight;
+//            }
             System.out.println("subImage size: " + subImageWidth + "x" + subImageHeight);
 
             juliaGPUKernelFast.initForRender(subImageWidth, subImageHeight, maxIter, bailoutSquared, c);
@@ -212,11 +216,11 @@ public class JuliaEngine implements FractalEngine {
     
     public void doRunGPU(int xOffset, int yOffset, ImagePlaneMapper imagePlaneMapper, double xSubSamplePos, double ySubSamplePos, int subSamples) {
         if (useGPUFull) {
-            juliaGPUKernelFull.initArrays(xOffset, yOffset, imagePlaneMapper, xSubSamplePos, ySubSamplePos, subSamples);
+            juliaGPUKernelFull.initArrays(xOffset, yOffset, imagePlaneMapper, xSubSamplePos, ySubSamplePos, subSamples, activeParameterMapper);
             Range range = Range.create2D(juliaGPUKernelFull.getSubImageWidth(), juliaGPUKernelFull.getSubImageHeight());
             juliaGPUKernelFull.execute(range);
         } else if (useGPUFast) {
-            juliaGPUKernelFast.initArrays(xOffset, yOffset, imagePlaneMapper, xSubSamplePos, ySubSamplePos, subSamples);
+            juliaGPUKernelFast.initArrays(xOffset, yOffset, imagePlaneMapper, xSubSamplePos, ySubSamplePos, subSamples, activeParameterMapper);
             Range range = Range.create2D(juliaGPUKernelFast.getSubImageWidth(), juliaGPUKernelFast.getSubImageHeight());
             juliaGPUKernelFast.execute(range);
         }

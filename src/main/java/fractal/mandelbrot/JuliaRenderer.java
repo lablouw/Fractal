@@ -206,7 +206,7 @@ public class JuliaRenderer extends FractalRenderer<JuliaEngine> implements Antia
             if (orbitImageBase == null) {
                 orbitImageBase = getImage();
             }
-            List<Complex> orbit = getFractalEngine().calcOrbit(pointOnImage);
+            List<Complex> orbit = getFractalEngine().calcParameterMappedOrbit(pointOnImage);
             SynchronizedBufferedImage orbitImage = new SynchronizedBufferedImage(ImageUtils.deepCopy(orbitImageBase.getBufferedImage()));
             for (Complex o : orbit) {
                 Point p = getImagePlaneMapper().mapToImage(o);

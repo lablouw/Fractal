@@ -4,7 +4,6 @@
  */
 package fractal.common;
 
-import fractal.common.Complex;
 import org.jdesktop.swingx.JXImagePanel;
 
 import java.awt.Point;
@@ -20,8 +19,8 @@ public class ImagePlaneMapper {
     private final int width;
     private final int height;
 
-    private double rStep; //horizontal distance per pixel
-    private double iStep; //vertical distance per pixel
+    private final double rStep; //horizontal distance per pixel
+    private final double iStep; //vertical distance per pixel
 
     public ImagePlaneMapper(Complex topLeft, Complex bottomRight, int width, int height) {
         this.topLeft = topLeft;

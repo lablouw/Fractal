@@ -34,7 +34,7 @@ public class MandelbrotCalculatorGPU4 implements Runnable {
     private int yOffset = 0;
 
     private boolean stopped = false;
-    List<Color>[][] preAAColors;
+    private List<Color>[][] preAAColors;
 
     private RawGpuOrbitContainer rawGpuOrbitContainer;
 
