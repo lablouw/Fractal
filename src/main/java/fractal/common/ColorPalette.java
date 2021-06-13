@@ -41,7 +41,7 @@ public class ColorPalette extends javax.swing.JDialog {
     private double gamma = 1;
     private double gammaOffset = 0;
     private final Redrawable redrawable;
-
+    
     public JPanel getRepresentativePanel() {
         return representativePanel;
     }
