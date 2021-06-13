@@ -92,6 +92,12 @@ public class OperatorNode extends TreeNode {
         else if ("sqrt".equals(stringValue)) {
             return leftChild.evaluate(x).sqrt();
         }
+        else if ("re".equals(stringValue)) {
+            return new Complex(leftChild.evaluate(x).r, 0);
+        }
+        else if ("im".equals(stringValue)) {
+            return new Complex(0, leftChild.evaluate(x).i);
+        }
         throw new Exception("Unknown function: \""+stringValue+"\"");
     }
     

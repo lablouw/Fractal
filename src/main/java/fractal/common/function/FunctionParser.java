@@ -132,7 +132,9 @@ public class FunctionParser {
                 && !"exp".equals(sub)
                 && !"pi".equals(sub)
                 && !"E".equals(sub)
-                && !"sqrt".equals(sub));
+                && !"sqrt".equals(sub)
+                && !"re".equals(sub)
+                && !"im".equals(sub));
         
         if ("E".equals(sub) || "pi".equals(sub)) {
             return new OperandNode(sub);
