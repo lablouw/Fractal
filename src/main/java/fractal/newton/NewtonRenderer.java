@@ -5,6 +5,8 @@
  */
 package fractal.newton;
 
+import fractal.common.function.TreeNode;
+import fractal.common.function.FunctionParser;
 import fractal.common.Antialiasable;
 import fractal.common.Complex;
 import fractal.common.FractalRenderer;
