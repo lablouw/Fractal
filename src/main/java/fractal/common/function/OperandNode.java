@@ -41,11 +41,6 @@ public class OperandNode extends TreeNode {
     }
 
     @Override
-    public boolean isOperatorNode() {
-        return false;
-    }
-
-    @Override
     public Complex evaluate(Complex x) throws Exception {
         if ("x".equals(stringValue)) {
             return x;

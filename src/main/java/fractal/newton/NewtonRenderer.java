@@ -152,8 +152,8 @@ public class NewtonRenderer extends FractalRenderer<NewtonEngine> implements Ant
         FunctionParser functionParser = new FunctionParser();
         TreeNode fxRoot, dfdxRoot;
         try {
-            fxRoot = functionParser.buildTree(fx);
-            dfdxRoot = functionParser.buildTree(dfdx);
+            fxRoot = functionParser.parseFunction(fx);
+            dfdxRoot = functionParser.parseFunction(dfdx);
             fractalEngine.setFxRootNode(fxRoot);
             fractalEngine.setDfdxRootNode(dfdxRoot);
         } catch (Exception ex) {

@@ -27,7 +27,7 @@ public class UserDefinedFunctionParameterMapper implements ParameterMapper {
         try {
             if (treeNode == null) {
             synchronized(function) {
-                treeNode = functionParser.buildTree(function);
+                treeNode = functionParser.parseFunction(function);
             }}
             eval = treeNode.evaluate(c);
         } catch (Exception ex) {

@@ -41,8 +41,6 @@ public abstract class TreeNode {
         return stringValue;
     }
 
-    public abstract boolean isOperatorNode();
-    
     public abstract Complex evaluate(Complex x) throws Exception ;
     
 }

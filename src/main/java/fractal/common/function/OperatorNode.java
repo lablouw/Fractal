@@ -101,11 +101,6 @@ public class OperatorNode extends TreeNode {
         throw new Exception("Unknown function: \""+stringValue+"\"");
     }
     
-    @Override
-    public boolean isOperatorNode() {
-        return true;
-    }
-    
     public int getNumOperands() {
         if ("+".equals(stringValue) ||
                  "-".equals(stringValue) ||

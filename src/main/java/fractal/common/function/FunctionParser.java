@@ -15,16 +15,16 @@ import java.util.List;
  */
 public class FunctionParser {
     
-    private final Stack<OperatorNode> operatorStack = new Stack<OperatorNode>();
-    private final List<TreeNode> postfixNodes = new ArrayList<TreeNode>();
+    private final Stack<OperatorNode> operatorStack = new Stack<>();
+    private final List<TreeNode> postfixNodes = new ArrayList<>();
     
     public static void main(String[] args) throws Exception {
         FunctionParser fp = new FunctionParser();
-        TreeNode treeNode = fp.buildTree("sin(pi/2)");
+        TreeNode treeNode = fp.parseFunction("sin(pi/2)");
         System.out.println(treeNode.evaluate(new Complex(0,0)));
     }
     
-    public TreeNode buildTree(String function) throws Exception {
+    public TreeNode parseFunction(String function) throws Exception {
         int index = 0;
         
         //construct postFix list
@@ -46,7 +46,7 @@ public class FunctionParser {
 //        System.out.println("operatorStack: \n"+printList(operatorStack, false)); System.out.println("postfixStack: \n"+printList(postfixNodes, true));
         
         //Convert postfix list to tree
-        Stack<TreeNode> treeStack = new Stack<TreeNode>();
+        Stack<TreeNode> treeStack = new Stack<>();
         for (int i=0; i<postfixNodes.size(); i++) {
             TreeNode n = postfixNodes.get(i);
             if (n instanceof OperandNode) {
