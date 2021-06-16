@@ -88,7 +88,7 @@ public class ColorPalette extends javax.swing.JDialog {
         jSpinner1.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                spectrumCycles = (double) jSpinner1.getValue();
+                spectrumCycles = (float) jSpinner1.getValue();
                 if (redrawable != null && redrawCheckBox.isSelected()) {
                     redrawable.redraw();
                 }
