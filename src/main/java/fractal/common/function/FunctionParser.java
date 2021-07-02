@@ -14,27 +14,26 @@ import java.util.List;
  * @author cp316928
  */
 public class FunctionParser {
-    
+
     private final Stack<OperatorNode> operatorStack = new Stack<>();
     private final List<TreeNode> postfixNodes = new ArrayList<>();
-    
+
     public static void main(String[] args) throws Exception {
         FunctionParser fp = new FunctionParser();
         TreeNode treeNode = fp.parseFunction("sin(pi/2)");
         System.out.println(treeNode.evaluate(new Complex(0,0)));
     }
-    
+
     public TreeNode parseFunction(String function) throws Exception {
         int index = 0;
-        
+
         //construct postFix list
         while (index < function.length()) {
             TreeNode treeNode = parseToken(function, index);
 //            System.out.println("\n\n\n\nParsed \""+treeNode+"\"");
             if (treeNode instanceof OperandNode) {
                 operandNodeParsed((OperandNode) treeNode);
-            }
-            else {
+            } else {
                 operatorNodeParsed((OperatorNode) treeNode);
             }
 //            System.out.println("operatorStack: \n"+printList(operatorStack, false)); System.out.println("postfixStack: \n"+printList(postfixNodes, true));
@@ -44,20 +43,17 @@ public class FunctionParser {
             postfixNodes.add(operatorStack.pop());
         }
 //        System.out.println("operatorStack: \n"+printList(operatorStack, false)); System.out.println("postfixStack: \n"+printList(postfixNodes, true));
-        
+
         //Convert postfix list to tree
         Stack<TreeNode> treeStack = new Stack<>();
-        for (int i=0; i<postfixNodes.size(); i++) {
-            TreeNode n = postfixNodes.get(i);
+        for (TreeNode n : postfixNodes) {
             if (n instanceof OperandNode) {
                 treeStack.push(n);
-            }
-            else if (n instanceof OperatorNode) {
-                if (((OperatorNode)n).getNumOperands() == 1) {
+            } else if (n instanceof OperatorNode) {
+                if (((OperatorNode) n).getNumOperands() == 1) {
                     n.setLeftChild(treeStack.pop());
                     treeStack.push(n);
-                }
-                else {
+                } else {
                     n.setRightChild(treeStack.pop());
                     n.setLeftChild(treeStack.pop());
                     treeStack.push(n);
@@ -66,7 +62,7 @@ public class FunctionParser {
         }
         return treeStack.pop();
     }
-    
+
     private void operatorNodeParsed(OperatorNode operatorNode) throws Exception {
         if (operatorNode.isOpeningParen()) {
             operatorStack.push(operatorNode);
@@ -87,11 +83,11 @@ public class FunctionParser {
             operatorStack.push(operatorNode);
         }
     }
-    
+
     private void operandNodeParsed(OperandNode operandNode) {
         postfixNodes.add(operandNode);
     }
-    
+
     private TreeNode parseToken(String function, int index) {
         if (isOperand(function.substring(index, index+1))) {
             return parseOperand(function, index);
@@ -115,42 +111,54 @@ public class FunctionParser {
                 && !"*".equals(sub)
                 && !"/".equals(sub)
                 && !"^".equals(sub)
-                && !"abs".equals(sub)
+
+                && !"sin".equals(sub)
                 && !"cos".equals(sub)
                 && !"tan".equals(sub)
-                && !"sin".equals(sub)
-                && !"sinh".equals(sub)
-                && !"cosh".equals(sub)
-                && !"tanh".equals(sub)
                 && !"cosec".equals(sub)
                 && !"sec".equals(sub)
                 && !"cot".equals(sub)
-                && !"cosech".equals(sub)
-                && !"sech".equals(sub)
-                && !"coth".equals(sub)
+
+                && !"hsin".equals(sub)
+                && !"hcos".equals(sub)
+                && !"htan".equals(sub)
+                && !"hcsc".equals(sub)
+                && !"hsec".equals(sub)
+                && !"hcot".equals(sub)
+
+                && !"asin".equals(sub)
+                && !"acos".equals(sub)
+                && !"atan".equals(sub)
+                && !"acsc".equals(sub)
+                && !"asec".equals(sub)
+                && !"acot".equals(sub)
+
+                && !"abs".equals(sub)
                 && !"log".equals(sub)
                 && !"exp".equals(sub)
-                && !"pi".equals(sub)
-                && !"E".equals(sub)
                 && !"sqrt".equals(sub)
                 && !"RE".equals(sub)
-                && !"IM".equals(sub));
-        
-        if ("E".equals(sub) || "pi".equals(sub)) {
+                && !"IM".equals(sub)
+                && !"conj".equals(sub)
+                && !"PI".equals(sub)
+                && !"E".equals(sub)
+        );
+
+        if ("E".equals(sub) || "PI".equals(sub)) {
             return new OperandNode(sub);
         }
-        
+
         return new OperatorNode(sub);
-        
+
     }
-    
+
     private TreeNode parseOperand(String function, int index) {
         int startIndex = index;
         do {
             index++;
         } while (index < function.length() && isOperand(function.substring(startIndex, index)));
         if (index < function.length() || function.substring(startIndex, index).endsWith(")")) index--;
-        
+
         return new OperandNode(function.substring(startIndex, index));
     }
 
@@ -169,8 +177,8 @@ public class FunctionParser {
             return false;
         }
     }
-    
-    
+
+
     private String printList(List l, boolean horizontal) {
         String ss = "";
         if (horizontal) {
@@ -185,5 +193,5 @@ public class FunctionParser {
         }
         return ss;
     }
-    
+
 }

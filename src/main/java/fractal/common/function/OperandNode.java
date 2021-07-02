@@ -14,7 +14,7 @@ import fractal.common.Complex;
 public class OperandNode extends TreeNode {
     private final Complex value;
 
-    public OperandNode(String stringValue) {
+    OperandNode(String stringValue) {
         this.stringValue = stringValue;
         value = new Complex();
         
@@ -22,7 +22,7 @@ public class OperandNode extends TreeNode {
             return;
         }
         
-        if ("pi".equals(stringValue)) {
+        if ("PI".equals(stringValue)) {
             value.r = Math.PI;
         }
         else if ("E".equals(stringValue)) {

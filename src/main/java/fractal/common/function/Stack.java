@@ -6,23 +6,22 @@
 package fractal.common.function;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
  * @author cp316928
  */
-public class Stack<T> extends ArrayList<T>{
+class Stack<T> extends ArrayList<T>{
     
-    public void push(T t) {
+    void push(T t) {
         add(t);
     }
     
-    public T pop() {
+    T pop() {
         return remove(size()-1);
     }
     
-    public T peek() {
+    T peek() {
         return get(size()-1);
     }
     

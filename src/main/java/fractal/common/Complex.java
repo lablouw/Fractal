@@ -12,8 +12,10 @@ public class Complex
 {
     public double r=0, i=0;
     private static final double EPSILON = 1E-15;
-    public static final Complex ONE = new Complex(1, 0);
     public static final Complex ZERO = new Complex(0, 0);
+    public static final Complex ONE = new Complex(1, 0);
+    public static final Complex TWO = new Complex(2, 0);
+    public static final Complex I = new Complex(0, 1);
 
     public Complex(double r, double i) {
         this.r = r;
@@ -65,38 +67,27 @@ public class Complex
         return new Complex(r*Math.cos(theta),r*Math.sin(theta));
     }
     
-    private double cosh(double theta) {
+    private double hcos(double theta) {
         return (Math.exp(theta)+Math.exp(-theta))/2;
     }
     
-    private double sinh(double theta) {
+    private double hsin(double theta) {
         return (Math.exp(theta)-Math.exp(-theta))/2;
     }
-    
+
+    //Trig
     public Complex sin() {
-        return new Complex(cosh(i)*Math.sin(r),sinh(i)*Math.cos(r));
+        return new Complex(hcos(i)*Math.sin(r), hsin(i)*Math.cos(r));
     }
     
     public Complex cos() {
-        return new Complex(cosh(i)*Math.cos(r),-sinh(i)*Math.sin(r));
+        return new Complex(hcos(i)*Math.cos(r),-hsin(i)*Math.sin(r));
     }
-    
-    public Complex sinh() {
-        return new Complex(sinh(r)*Math.cos(i),cosh(r)*Math.sin(i));
-    }
-    
-    public Complex cosh() {
-        return new Complex(cosh(r)*Math.cos(i),sinh(r)*Math.sin(i));
-    }
-    
-    public Complex tanh() {
-        return new Complex(sinh().div(cosh()));
-    }
-    
+
     public Complex tan() {
-        return (sin()).div(cos());
+        return sin().div(cos());
     }
-    
+
     public Complex cosec() {
         return ONE.div(sin());
     }
@@ -106,20 +97,59 @@ public class Complex
     }
 
     public Complex cot() {
-        return ONE.div(tan()); 
+        return ONE.div(tan());
     }
 
-    public Complex cosech() {
-        return ONE.div(sinh());
+    //Hyperbolic trig
+    public Complex hsin() {
+        return new Complex(hsin(r)*Math.cos(i), hcos(r)*Math.sin(i));
     }
 
-    public Complex sech() {
-        return ONE.div(cosh());
+    public Complex hcos() {
+        return new Complex(hcos(r)*Math.cos(i), hsin(r)*Math.sin(i));
     }
 
-    public Complex coth() {
-        return ONE.div(tanh());
+    public Complex htan() {
+        return hsin().div(hcos());
     }
+
+    public Complex hcosec() {
+        return ONE.div(hsin());
+    }
+
+    public Complex hsec() {
+        return ONE.div(hcos());
+    }
+
+    public Complex hcot() {
+        return ONE.div(htan());
+    }
+
+    //Inverse trig
+    public Complex asin() {
+        return ONE.sub(square()).sqrt().add(mult(I)).log().mult(I.negate());
+    }
+
+    public Complex acos() {
+        return add(ONE.sub(square()).sqrt()).log().mult(I.negate());
+    }
+
+    public Complex atan() {
+        return I.div(TWO).mult( ONE.sub(mult(I)).log() ).sub( ONE.add(mult(I)).log() );
+    }
+
+    public Complex acosec() {
+        return I.negate().mult(ONE.sub(ONE.div(square())).sqrt().add(I.div(this)).log());
+    }
+
+    public Complex asec() {
+        return I.negate().mult(ONE.div(square()).sub(ONE).sqrt().add(I.div(this)).log());
+    }
+
+    public Complex acot() {
+        return I.div(TWO).mult( ONE.sub(I.div(this)).log() ).sub( ONE.add(I.div(this)).log() );
+    }
+
     
     public Complex negate() {
         return new Complex(-r,-i);

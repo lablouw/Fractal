@@ -13,11 +13,11 @@ import fractal.common.Complex;
  */
 public class OperatorNode extends TreeNode {
     
-    public OperatorNode(String operator) {
+	OperatorNode(String operator) {
         this.stringValue = operator;
     }
     
-    public String getOperator() {
+    String getOperator() {
         return getStringValue();
     }
     
@@ -44,26 +44,18 @@ public class OperatorNode extends TreeNode {
             //a^b = E^(b*log(a))
             return leftChild.evaluate(x).log().mult(rightChild.evaluate(x)).exp();
         }
-        else if ("sinh".equals(stringValue)) {
-            return leftChild.evaluate(x).sinh();
-        }
-        else if ("sin".equals(stringValue)) {
-            return leftChild.evaluate(x).sin();
-        }
         else if ("abs".equals(stringValue)) {
             return new Complex(leftChild.evaluate(x).modulus(), 0);
+        }
+
+        else if ("sin".equals(stringValue)) {
+            return leftChild.evaluate(x).sin();
         }
         else if ("cos".equals(stringValue)) {
             return leftChild.evaluate(x).cos();
         }
         else if ("tan".equals(stringValue)) {
             return leftChild.evaluate(x).tan();
-        }
-        else if ("cosh".equals(stringValue)) {
-            return leftChild.evaluate(x).cosh();
-        }
-        else if ("tanh".equals(stringValue)) {
-            return leftChild.evaluate(x).tanh();
         }
         else if ("cosec".equals(stringValue)) {
             return leftChild.evaluate(x).cosec();
@@ -74,15 +66,45 @@ public class OperatorNode extends TreeNode {
         else if ("cot".equals(stringValue)) {
             return leftChild.evaluate(x).cot();
         }
-        else if ("cosech".equals(stringValue)) {
-            return leftChild.evaluate(x).cosech();
+
+        else if ("hsin".equals(stringValue)) {
+            return leftChild.evaluate(x).hsin();
         }
-        else if ("sech".equals(stringValue)) {
-            return leftChild.evaluate(x).sech();
+        else if ("hcos".equals(stringValue)) {
+            return leftChild.evaluate(x).hcos();
         }
-        else if ("coth".equals(stringValue)) {
-            return leftChild.evaluate(x).coth();
+        else if ("htan".equals(stringValue)) {
+            return leftChild.evaluate(x).htan();
         }
+        else if ("hcosec".equals(stringValue)) {
+            return leftChild.evaluate(x).hcosec();
+        }
+        else if ("hsec".equals(stringValue)) {
+            return leftChild.evaluate(x).hsec();
+        }
+        else if ("hcot".equals(stringValue)) {
+            return leftChild.evaluate(x).hcot();
+        }
+
+        else if ("asin".equals(stringValue)) {
+            return leftChild.evaluate(x).asin();
+        }
+        else if ("acos".equals(stringValue)) {
+            return leftChild.evaluate(x).acos();
+        }
+        else if ("atan".equals(stringValue)) {
+            return leftChild.evaluate(x).atan();
+        }
+        else if ("acsc".equals(stringValue)) {
+            return leftChild.evaluate(x).acosec();
+        }
+        else if ("asec".equals(stringValue)) {
+            return leftChild.evaluate(x).asec();
+        }
+        else if ("acot".equals(stringValue)) {
+            return leftChild.evaluate(x).acot();
+        }
+
         else if ("log".equals(stringValue)) {
             return leftChild.evaluate(x).log();
         }
@@ -98,10 +120,13 @@ public class OperatorNode extends TreeNode {
         else if ("IM".equals(stringValue)) {
             return new Complex(0, leftChild.evaluate(x).i);
         }
+        else if ("conj".equals(stringValue)) {
+            return leftChild.evaluate(x).conj();
+        }
         throw new Exception("Unknown function: \""+stringValue+"\"");
     }
     
-    public int getNumOperands() {
+    int getNumOperands() {
         if ("+".equals(stringValue) ||
                  "-".equals(stringValue) ||
                  "*".equals(stringValue) ||
@@ -114,7 +139,7 @@ public class OperatorNode extends TreeNode {
         }
     }
     
-    public int getPrecedence() {
+    int getPrecedence() {
         if ("(".equals(stringValue)) {
             return 6;
         }
@@ -130,20 +155,18 @@ public class OperatorNode extends TreeNode {
         else return 2;
     }
 
-    public boolean isOpeningParen() {
+    boolean isOpeningParen() {
         return "(".equals(stringValue) || "[".equals(stringValue) || "{".equals(stringValue);
     }
     
-    public boolean isClosingParen() {
+    boolean isClosingParen() {
         return ")".equals(stringValue) || "]".equals(stringValue) || "}".equals(stringValue);
     }
     
-    public boolean isMatchingParen(OperatorNode closingParenNode) throws Exception {
-        if (")".equals(closingParenNode.toString()) && stringValue.equals("(")) return true;
-        if ("]".equals(closingParenNode.toString()) && stringValue.equals("[")) return true;
-        if ("}".equals(closingParenNode.toString()) && stringValue.equals("{")) return true;
-        
-        return false;
+    boolean isMatchingParen(OperatorNode closingParenNode) {
+        return ")".equals(closingParenNode.toString()) && stringValue.equals("(") ||
+            "]".equals(closingParenNode.toString()) && stringValue.equals("[") ||
+            "}".equals(closingParenNode.toString()) && stringValue.equals("{");
     }
 
 }

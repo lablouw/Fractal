@@ -12,27 +12,19 @@ import fractal.common.Complex;
  * @author cp316928
  */
 public abstract class TreeNode {
-    protected TreeNode leftChild = null;
-    protected TreeNode rightChild = null;
-    protected String stringValue;
+    TreeNode leftChild = null;
+    TreeNode rightChild = null;
+    String stringValue;
 
-    public TreeNode getLeftChild() {
-        return leftChild;
-    }
-
-    public void setLeftChild(TreeNode leftChild) {
+    void setLeftChild(TreeNode leftChild) {
         this.leftChild = leftChild;
     }
 
-    public TreeNode getRightChild() {
-        return rightChild;
-    }
-
-    public void setRightChild(TreeNode rightChild) {
+    void setRightChild(TreeNode rightChild) {
         this.rightChild = rightChild;
     }
 
-    public String getStringValue() {
+    String getStringValue() {
         return stringValue;
     }
     

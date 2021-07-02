@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ParameterMapper {
     
-    final List<ParameterMapper> availableParameterMappers = Arrays.asList(
+    List<ParameterMapper> availableParameterMappers = Arrays.asList(
             new StraightParameterMapper(),
             new InverseParameterMapper(),
             new UserDefinedFunctionParameterMapper()
