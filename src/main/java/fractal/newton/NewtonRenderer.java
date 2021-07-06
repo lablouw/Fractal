@@ -5,6 +5,8 @@
  */
 package fractal.newton;
 
+import fractal.common.function.TreeNode;
+import fractal.common.function.FunctionParser;
 import fractal.common.Antialiasable;
 import fractal.common.Complex;
 import fractal.common.FractalRenderer;
@@ -150,8 +152,8 @@ public class NewtonRenderer extends FractalRenderer<NewtonEngine> implements Ant
         FunctionParser functionParser = new FunctionParser();
         TreeNode fxRoot, dfdxRoot;
         try {
-            fxRoot = functionParser.buildTree(fx);
-            dfdxRoot = functionParser.buildTree(dfdx);
+            fxRoot = functionParser.parseFunction(fx);
+            dfdxRoot = functionParser.parseFunction(dfdx);
             fractalEngine.setFxRootNode(fxRoot);
             fractalEngine.setDfdxRootNode(dfdxRoot);
         } catch (Exception ex) {

@@ -54,10 +54,9 @@ public class BevelColorCalculator implements ColorCalculator {
 
         Complex dc = Complex.ONE; // derivitive of c
         Complex dz = new Complex(dc);
-        Complex two = new Complex(2, 0);
 
         for (int i = 1; i < orbit.size(); i++) {
-            dz = two.mult(dz).mult(orbit.get(i - 1)).add(dc);
+            dz = Complex.TWO.mult(dz).mult(orbit.get(i - 1)).add(dc);
         }
 
         Complex normal = orbit.get(orbit.size() - 1).div(dz).normalize();
@@ -95,25 +94,12 @@ public class BevelColorCalculator implements ColorCalculator {
     }
 
     private Color calcLights(Complex normal) {
-        double dotRed = normal.r * lightAngleRed.r + normal.i * lightAngleRed.i + heightRed;
-        dotRed = dotRed / (1 + heightRed);
-        if (dotRed < 0) {
-            dotRed = 0;
-        }
+        double dotRed = calcDotRed(normal);
+        double dotGreen = calcDotGreen(normal);
+        double dotBlue = calcDotBlue(normal);
+
         int rgbRed = (int) Math.floor(dotRed * 255);
-
-        double dotGreen = normal.r * lightAngleGreen.r + normal.i * lightAngleGreen.i + heightGreen;
-        dotGreen = dotGreen / (1 + heightGreen);
-        if (dotGreen < 0) {
-            dotGreen = 0;
-        }
         int rgbGreen = (int) Math.floor(dotGreen * 255);
-
-        double dotBlue = normal.r * lightAngleBlue.r + normal.i * lightAngleBlue.i + heightBlue;
-        dotBlue = dotBlue / (1 + heightBlue);
-        if (dotBlue < 0) {
-            dotBlue = 0;
-        }
         int rgbBlue = (int) Math.floor(dotBlue * 255);
 
         return new Color(rgbRed, rgbGreen, rgbBlue);
@@ -204,25 +190,12 @@ public class BevelColorCalculator implements ColorCalculator {
                     continue;
                 }
 
-                double dotRed = normal.r * lightAngleRed.r + normal.i * lightAngleRed.i + heightRed;
-                dotRed = dotRed / (1 + heightRed);
-                if (dotRed < 0) {
-                    dotRed = 0;
-                }
+                double dotRed = calcDotRed(normal);
+                double dotGreen = calcDotGreen(normal);
+                double dotBlue = calcDotBlue(normal);
+
                 int rgbRed = (int) Math.floor(dotRed * 255);
-
-                double dotGreen = normal.r * lightAngleGreen.r + normal.i * lightAngleGreen.i + heightGreen;
-                dotGreen = dotGreen / (1 + heightGreen);
-                if (dotGreen < 0) {
-                    dotGreen = 0;
-                }
                 int rgbGreen = (int) Math.floor(dotGreen * 255);
-
-                double dotBlue = normal.r * lightAngleBlue.r + normal.i * lightAngleBlue.i + heightBlue;
-                dotBlue = dotBlue / (1 + heightBlue);
-                if (dotBlue < 0) {
-                    dotBlue = 0;
-                }
                 int rgbBlue = (int) Math.floor(dotBlue * 255);
 
                 fractalRenderer.getImage().setColor(x, y, new Color(rgbRed, rgbGreen, rgbBlue));
@@ -230,6 +203,33 @@ public class BevelColorCalculator implements ColorCalculator {
             }
         }
         fractalRenderer.updateGui();
+    }
+
+    private double calcDotRed(Complex normal) {
+        double dotRed = normal.r * lightAngleRed.r + normal.i * lightAngleRed.i + heightRed;
+        dotRed = dotRed / (1 + heightRed);
+        if (dotRed < 0) {
+            dotRed = 0;
+        }
+        return dotRed;
+    }
+
+    private double calcDotGreen(Complex normal) {
+        double dotGreen = normal.r * lightAngleGreen.r + normal.i * lightAngleGreen.i + heightGreen;
+        dotGreen = dotGreen / (1 + heightGreen);
+        if (dotGreen < 0) {
+            dotGreen = 0;
+        }
+        return dotGreen;
+    }
+
+    private double calcDotBlue(Complex normal) {
+        double dotBlue = normal.r * lightAngleBlue.r + normal.i * lightAngleBlue.i + heightBlue;
+        dotBlue = dotBlue / (1 + heightBlue);
+        if (dotBlue < 0) {
+            dotBlue = 0;
+        }
+        return dotBlue;
     }
 
     @Override

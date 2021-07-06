@@ -39,7 +39,7 @@ public final class ColorInterpolator {
         }
         step = step % 1;
         
-        List<Color> colorsCircular = new ArrayList<Color>(colors.size() + 1);
+        List<Color> colorsCircular = new ArrayList<>(colors.size() + 1);
         colorsCircular.addAll(colors);
         if (modular) {
             colorsCircular.add(colors.get(0));
