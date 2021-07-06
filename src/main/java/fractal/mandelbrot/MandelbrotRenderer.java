@@ -15,6 +15,7 @@ import fractal.mandelbrot.coloring.AverageAngleColorCalculator;
 import fractal.mandelbrot.coloring.BandColorCalculator;
 import fractal.mandelbrot.coloring.BevelColorCalculator;
 import fractal.mandelbrot.coloring.BuddahColorCalculator;
+import fractal.mandelbrot.coloring.FieldColorCalculator;
 import fractal.mandelbrot.coloring.OrbitTrapColorCalculator;
 import fractal.mandelbrot.coloring.SmoothColorCalculator;
 import org.jdesktop.swingx.JXLabel;
@@ -91,6 +92,7 @@ public class MandelbrotRenderer extends FractalRenderer<MandelbrotEngine> implem
         addColorCalculator(new AverageAngleColorCalculator());
         addColorCalculator(new BevelColorCalculator());
         addColorCalculator(new OrbitTrapColorCalculator(this));
+        addColorCalculator(new FieldColorCalculator());
         
         this.fractalViewer = new FractalViewer(this);
     }

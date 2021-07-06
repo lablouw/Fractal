@@ -19,7 +19,7 @@ public interface ColorCalculator {
 
     String getName();
 
-    void initForRender(FractalRenderer fractalRenderer);
+    void initForRender(FractalRenderer<?> fractalRenderer);
 
     void complete(SynchronizedBufferedImage synchronizedBufferedImage);
 

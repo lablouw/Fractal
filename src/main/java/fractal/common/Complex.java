@@ -45,6 +45,10 @@ public class Complex
     {
         return new Complex(r*other.r - i*other.i, r*other.i + i*other.r);
     }
+
+    public Complex mult(double a) {
+        return new Complex(r*a, i*a);
+    }
     
     public Complex div(Complex w) {
         double d = w.r*w.r+w.i*w.i;

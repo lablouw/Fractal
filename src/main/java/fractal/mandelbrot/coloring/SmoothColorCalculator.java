@@ -20,14 +20,14 @@ import javax.swing.JPanel;
  */
 public class SmoothColorCalculator implements ColorCalculator, Redrawable {
 
-    private final FractalRenderer fractalRenderer;
+    private final FractalRenderer<?> fractalRenderer;
     private JPanel settingsPanel;
     private Complex[][] orbitEndPoints;
     private int[][] orbitLengths;
     
     private final ColorPalette colorPalette;
 
-    public SmoothColorCalculator(final FractalRenderer renderer) {
+    public SmoothColorCalculator(final FractalRenderer<?> renderer) {
         this.fractalRenderer = renderer;
         colorPalette = new ColorPalette(null, false, this);
         initSettingsPanel();

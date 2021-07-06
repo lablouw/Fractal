@@ -36,9 +36,9 @@ public class OrbitTrapColorCalculator implements ColorCalculator {
 
     private JPanel settingsPanel;
     private OrbitTrap activeOrbitTrap;
-    private final FractalRenderer fractalRenderer;
+    private final FractalRenderer<?> fractalRenderer;
 
-    public OrbitTrapColorCalculator(FractalRenderer fractalRenderer) {
+    public OrbitTrapColorCalculator(FractalRenderer<?> fractalRenderer) {
         this.fractalRenderer = fractalRenderer;
         
         orbitTraps = new OrbitTrap[]{

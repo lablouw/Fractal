@@ -43,10 +43,10 @@ public class BuddahColorCalculator implements ColorCalculator {
     private int maxIterGreen = 100;
     private int maxIterBlue = 100;
     
-    private final FractalRenderer fractalRenderer;
-    private Object lock = new Object();
+    private final FractalRenderer<?> fractalRenderer;
+    private final Object lock = new Object();
     
-    public BuddahColorCalculator(FractalRenderer fractalRenderer) {
+    public BuddahColorCalculator(FractalRenderer<?> fractalRenderer) {
         this.fractalRenderer = fractalRenderer;
     }
 

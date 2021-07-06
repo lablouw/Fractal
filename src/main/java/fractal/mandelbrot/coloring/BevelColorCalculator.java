@@ -28,7 +28,7 @@ import javax.swing.JSlider;
  */
 public class BevelColorCalculator implements ColorCalculator {
 
-    private FractalRenderer fractalRenderer;
+    private FractalRenderer<?> fractalRenderer;
 
     private double angleRed = Math.PI / 4d;
     private double angleGreen = Math.PI / 4d;
