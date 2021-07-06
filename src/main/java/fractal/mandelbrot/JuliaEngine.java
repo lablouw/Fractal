@@ -147,8 +147,7 @@ public class JuliaEngine extends FractalEngine {
         int iter = 1;
         if (exponent.r == 2 && exponent.i == 0) {
             while (z.r * z.r + z.i * z.i < bailoutSquared && iter < maxIter) {
-                z = z.square();
-                z = z.add(c);
+                z = z.square().add(c);
                 orbit.add(z);
                 iter++;
             }
@@ -186,7 +185,7 @@ public class JuliaEngine extends FractalEngine {
                 maxMemImage = (long) subImageHeight * (long) subImageWidth * (long) maxIter * (long) Double.BYTES * 2L;
                 arrayLengthRequired = subImageWidth * subImageHeight * maxIter;
             }
-            System.out.println("subImage size: " + subImageWidth + "x" + subImageHeight);
+//            System.out.println("subImage size: " + subImageWidth + "x" + subImageHeight);
 
             juliaGPUKernelFull.initForRender(subImageWidth, subImageHeight, maxIter, bailoutSquared, c);
         } else if (useGPUFast) {
@@ -208,7 +207,7 @@ public class JuliaEngine extends FractalEngine {
                 maxMemImage = (long) subImageHeight * (long) subImageWidth * 2 * (long) Double.BYTES * 2L;
                 arrayLengthRequired = subImageWidth * subImageHeight;
             }
-            System.out.println("subImage size: " + subImageWidth + "x" + subImageHeight);
+//            System.out.println("subImage size: " + subImageWidth + "x" + subImageHeight);
 
             juliaGPUKernelFast.initForRender(subImageWidth, subImageHeight, maxIter, bailoutSquared, c);
         }

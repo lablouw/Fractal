@@ -5,6 +5,7 @@
  */
 package fractal.newton;
 
+import fractal.common.function.TreeNode;
 import fractal.common.Complex;
 import fractal.common.FractalEngine;
 import fractal.common.Pair;
