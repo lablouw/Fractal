@@ -174,7 +174,7 @@ public class JuliaEngine extends FractalEngine {
             subImageWidth = 80;
             subImageHeight = 60;
             // Calculate optimal subImageSize
-//            long gpuMemAvailable = ((OpenCLDevice) Device.best()).getMaxMemAllocSize();
+            long gpuMemAvailable = ((OpenCLDevice) Device.best()).getMaxMemAllocSize();
             subImageWidth = imageWidth * 2;
             subImageHeight = imageHeight * 2;
             long maxMemImage = Long.MAX_VALUE;
